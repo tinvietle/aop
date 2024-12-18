@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.media.MediaView?>
+
+<Pane fx:id="Pane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.OnlyMedia">
+    <children>
+        <MediaView fx:id="mediaView" preserveRatio="true" />
+    </children>
+</Pane>
