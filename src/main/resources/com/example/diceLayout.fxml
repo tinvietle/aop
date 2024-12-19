@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.DiceController">
+   <children>
+      <Button fx:id="rollButton" layoutX="47.0" layoutY="162.0" mnemonicParsing="false" onAction="#roll" text="Roll">
+         <font>
+            <Font size="35.0" />
+         </font></Button>
+      <ImageView fx:id="dice1" fitHeight="100.0" fitWidth="100.0" layoutX="181.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../java/com/example/balls/1pokeball.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="dice2" fitHeight="100.0" fitWidth="100.0" layoutX="342.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../java/com/example/balls/2pokeball.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="dice3" fitHeight="100.0" fitWidth="100.0" layoutX="479.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../java/com/example/balls/3pokeball.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="dice4" fitHeight="100.0" fitWidth="100.0" layoutX="610.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../java/com/example/balls/GreatBall.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="dice7" fitHeight="100.0" fitWidth="100.0" layoutX="560.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../java/com/example/balls/UltraBall.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="dice5" fitHeight="100.0" fitWidth="100.0" layoutX="262.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../java/com/example/balls/MasterBall.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="dice6" fitHeight="100.0" fitWidth="100.0" layoutX="429.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../java/com/example/balls/MasterBall.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
