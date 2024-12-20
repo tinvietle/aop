@@ -8,9 +8,9 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.DiceController">
    <children>
-      <Button fx:id="rollButton" layoutX="47.0" layoutY="162.0" mnemonicParsing="false" onAction="#roll" text="Roll">
+      <Button fx:id="rollButton" layoutX="47.0" layoutY="117.0" mnemonicParsing="false" onAction="#roll" prefHeight="65.0" prefWidth="107.0" text="Roll">
          <font>
-            <Font size="35.0" />
+            <Font size="30.0" />
          </font></Button>
       <ImageView fx:id="dice1" fitHeight="100.0" fitWidth="100.0" layoutX="181.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -47,5 +47,10 @@
             <Image url="@../../../java/com/example/balls/MasterBall.png" />
          </image>
       </ImageView>
+      <Button fx:id="endButton" layoutX="47.0" layoutY="243.0" mnemonicParsing="false" onAction="#endTurn" prefHeight="65.0" prefWidth="107.0" text="End">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
