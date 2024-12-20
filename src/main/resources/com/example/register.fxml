@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="Infinity" prefWidth="Infinity" spacing="15" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.registerController">
+    <children>
+        <!-- Title -->
+        <Label alignment="CENTER" text="Set Up Your Game">
+            <font>
+                <Font name="Arial Bold" size="24" />
+            </font>
+        </Label>
+
+        <!-- Number of Players -->
+        <HBox alignment="CENTER" spacing="10">
+            <Label text="Number of Players:" />
+            <Spinner fx:id="playerCountSpinner" initialValue="2" max="6" min="2" prefWidth="100" />
+        </HBox>
+
+        <!-- Player Names Section -->
+        <VBox fx:id="playerNamesContainer" alignment="CENTER" spacing="10" VBox.vgrow="ALWAYS">
+            <!-- Dynamic player name fields will be added here by the controller -->
+        </VBox>
+
+        <!-- Control Buttons -->
+        <HBox alignment="CENTER" spacing="20">
+            <Button fx:id="backButton" prefWidth="100" text="Back" />
+            <Button fx:id="startGameButton" prefWidth="100" text="Start Game" />
+        </HBox>
+    </children>
+</VBox>
