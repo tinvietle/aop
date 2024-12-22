@@ -3,6 +3,7 @@ package com.example;
 import java.io.IOException;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -48,9 +49,9 @@ public class registerController {
 
     private void handleBack() {
         try {
-            Parent loadingScreenRoot = App.loadFXML("menu"); // Load the LoadingScreen.fxml file
+            Parent menuRoot = App.loadFXML("menu"); // Load the LoadingScreen.fxml file
             Scene scene = startGameButton.getScene(); // Get the current scene
-            scene.setRoot(loadingScreenRoot); // Set the new root
+            scene.setRoot(menuRoot); // Set the new root
         } catch (IOException e) {
             System.err.println("Error loading .fxml file: " + e.getMessage());
         }
@@ -76,10 +77,16 @@ public class registerController {
 
         // Start the game
         try {
-            Parent startGameRoot = App.loadFXML("game"); // Load the primary.fxml file
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("game.fxml"));
+            Parent startGameRoot = fxmlLoader.load(); // Load the game.fxml file
+            gameController controller = fxmlLoader.getController();
+
             Scene scene = startGameButton.getScene(); // Get the current scene
             scene.setRoot(startGameRoot); // Set the new root
+
+            controller.updatePlayerBoard(playerNames);
         } catch (IOException e) {
+            System.out.println("Error loading .fxml file: " + e.getMessage());
             System.err.println("Error loading StartGame.fxml: " + e.getMessage());
         }
     }

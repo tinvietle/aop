@@ -1,5 +1,5 @@
 module com.example {
-    requires javafx.media;
+    requires transitive javafx.media;
     requires transitive javafx.graphics;
     requires transitive javafx.controls;
     requires transitive javafx.fxml;
