@@ -1,5 +1,8 @@
 package com.example;
 
+import java.io.IOException;
+import java.util.Optional;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,16 +11,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.Optional;
-
 /**
  * JavaFX App
  */
 public class App extends Application {
 
     // private static Scene scene;
-
+ 
     @Override
     public void start(Stage stage) {
         try {

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="com.example.ResultDisplay"
+            prefWidth="800" prefHeight="600" style="-fx-background-color: #1a1a1a;">
+    
+    <!-- Left side - Winner Display -->
+    <VBox alignment="CENTER" layoutX="50" layoutY="50" spacing="20" 
+          style="-fx-background-color: #2a2a2a; -fx-background-radius: 15;" 
+          prefWidth="300" prefHeight="500">
+        
+        <!-- Trophy Icon Placeholder -->
+        <ImageView fx:id="trophyIcon" fitWidth="100" fitHeight="100" 
+                   preserveRatio="true">
+            <VBox.margin>
+                <Insets top="20"/>
+            </VBox.margin>
+        </ImageView>
+        
+        <Label text="WINNER!" style="-fx-font-size: 32; -fx-text-fill: gold; -fx-font-weight: bold;"/>
+        
+        <!-- Winner Avatar Placeholder -->
+        <ImageView fx:id="winnerAvatar" fitWidth="200" fitHeight="200" 
+                   preserveRatio="true" style="-fx-effect: dropshadow(three-pass-box, gold, 10, 0, 0, 0);">
+            <VBox.margin>
+                <Insets top="10"/>
+            </VBox.margin>
+        </ImageView>
+        
+        <Label fx:id="winnerName" text="Player Name" 
+               style="-fx-font-size: 24; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        
+        <Label fx:id="winnerScore" text="Score: 1000" 
+               style="-fx-font-size: 20; -fx-text-fill: #ffd700;"/>
+    </VBox>
+    
+    <!-- Right side - Leaderboard -->
+    <VBox layoutX="400" layoutY="50" spacing="10" prefWidth="350" prefHeight="500">
+        <Label text="LEADERBOARD" 
+               style="-fx-font-size: 28; -fx-text-fill: white; -fx-font-weight: bold; -fx-alignment: center;"
+               prefWidth="350"/>
+        
+        <!-- Leaderboard ListView with custom styling -->
+        <ListView fx:id="leaderboardList" 
+                  style="-fx-background-color: #2a2a2a; 
+                         -fx-background-insets: 0;
+                         -fx-padding: 10;
+                         -fx-control-inner-background: #2a2a2a;">
+            <VBox.margin>
+                <Insets top="10" bottom="10"/>
+            </VBox.margin>
+        </ListView>
+        
+        <!-- Play Again Button -->
+        <Button fx:id="playAgainButton" text="Play Again" 
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; 
+                       -fx-font-size: 18; -fx-background-radius: 5;"
+                prefWidth="200" prefHeight="40">
+            <VBox.margin>
+                <Insets top="20"/>
+            </VBox.margin>
+        </Button>
+    </VBox>
+    
+</AnchorPane>

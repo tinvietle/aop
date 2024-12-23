@@ -1,36 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="Infinity" prefWidth="Infinity" spacing="15" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.registerController">
-    <children>
-        <!-- Title -->
-        <Label alignment="CENTER" text="Set Up Your Game">
-            <font>
-                <Font name="Arial Bold" size="24" />
-            </font>
-        </Label>
-
-        <!-- Number of Players -->
-        <HBox alignment="CENTER" spacing="10">
-            <Label text="Number of Players:" />
-            <Spinner fx:id="playerCountSpinner" initialValue="2" max="6" min="2" prefWidth="100" />
-        </HBox>
-
-        <!-- Player Names Section -->
-        <VBox fx:id="playerNamesContainer" alignment="CENTER" spacing="10" VBox.vgrow="ALWAYS">
-            <!-- Dynamic player name fields will be added here by the controller -->
+<StackPane fx:id="registerRootPane" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.registerController">
+    <VBox alignment="CENTER" spacing="20" style="-fx-background-color: rgba(0, 0, 0, 0.5);" prefWidth="400" prefHeight="600">
+        <Label text="Register Players" style="-fx-font-size: 24; -fx-text-fill: white;"/>
+        
+        <Label text="Number of Players:" style="-fx-font-size: 16; -fx-text-fill: white;"/>
+        <Spinner fx:id="playerCountSpinner" min="2" max="10" initialValue="2" 
+                 prefWidth="200" editable="true" style="-fx-font-size: 14;"/>
+        
+        <VBox fx:id="playerNamesContainer" spacing="10" 
+              style="-fx-background-color: rgba(255, 255, 255, 0.8); -fx-padding: 20; -fx-background-radius: 10;" 
+              maxHeight="300" maxWidth="350">
+            <!-- Player name fields will be added here dynamically -->
         </VBox>
-
-        <!-- Control Buttons -->
-        <HBox alignment="CENTER" spacing="20">
-            <Button fx:id="backButton" prefWidth="100" text="Back" />
-            <Button fx:id="startGameButton" prefWidth="100" text="Start Game" />
-        </HBox>
-    </children>
-</VBox>
+        
+        <Button fx:id="startGameButton" text="Start Game" 
+                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16;" 
+                prefWidth="200"/>
+        <Button fx:id="backButton" text="Back" 
+                style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 16;" 
+                prefWidth="200"/>
+    </VBox>
+</StackPane>

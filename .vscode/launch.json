@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ResultDisplayApp",
+            "request": "launch",
+            "mainClass": "com.example/com.example.ResultDisplayApp",
+            "projectName": "demo"
+        },
+        {
+            "type": "java",
             "name": "MediaPlay",
             "request": "launch",
             "mainClass": "com.example/com.example.MediaPlay",
@@ -37,6 +44,13 @@
             "request": "launch",
             "mainClass": "com.example/com.example.App",
             "projectName": "demo"
+        },
+        {
+            "type": "java",
+            "name": "ResultDisplay",
+            "request": "launch",
+            "mainClass": "com.example/com.example.ResultDisplay",
+            "projectName": "aop"
         }
     ]
 }

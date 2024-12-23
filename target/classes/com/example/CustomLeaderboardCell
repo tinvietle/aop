@@ -1,0 +1,68 @@
+package com.example;
+
+import javafx.scene.control.ListCell;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Insets;
+import javafx.scene.paint.Color;
+
+public class CustomLeaderboardCell{
+    private HBox content;
+    private Label rank;
+    private VBox playerInfo;
+    private Label name;
+    private Label score;
+
+    public CustomLeaderboardCell() {
+        content = new HBox();
+        content.setSpacing(10);
+        content.setPadding(new Insets(5, 10, 5, 10));
+        
+        rank = new Label();
+        rank.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #ffd700;");
+        rank.setMinWidth(30);
+        
+        playerInfo = new VBox();
+        playerInfo.setSpacing(2);
+        HBox.setHgrow(playerInfo, Priority.ALWAYS);
+        
+        name = new Label();
+        name.setStyle("-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: white;");
+        
+        score = new Label();
+        score.setStyle("-fx-font-size: 14; -fx-text-fill: #8a8a8a;");
+        
+        playerInfo.getChildren().addAll(name, score);
+        content.getChildren().addAll(rank, playerInfo);
+        
+        // Add hover effect
+        content.setOnMouseEntered(e -> {
+            content.setStyle("-fx-background-color: #3a3a3a; -fx-background-radius: 5;");
+        });
+        
+        content.setOnMouseExited(e -> {
+            content.setStyle("-fx-background-color: transparent;");
+        });
+    }
+
+    @Override
+    protected void updateItem(String item, boolean empty) {
+        super.updateItem(item, empty);
+        
+        if (empty || item == null) {
+            setGraphic(null);
+        } else {
+            // Parse the item string (format: "Name: Score")
+            String[] parts = item.split(": ");
+            int index = getIndex() + 1;
+            
+            rank.setText("#" + index);    
+            name.setText(parts[0]);
+            score.setText(parts[1] + " points");
+            
+            setGraphic(content);
+        }
+    }
+}
