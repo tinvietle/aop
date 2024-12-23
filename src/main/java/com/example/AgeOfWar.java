@@ -119,12 +119,15 @@ public class AgeOfWar {
         // castles.add(new Castle("Gyarados", 2, Map.of("infantry", "8", "daimyo", 1), "Blue"));
         // https://www.youtube.com/watch?v=9m_c326kspw
         // castles.add(new Castle("Jellicent", 1, Map.of("cavalry", 1, "daimyo", 2), "Blue"));
+        // https://www.youtube.com/watch?v=t8YxlS1A9to
         // castles.add(new Castle("Gengar", 4, Map.of("archer", 2, "cavalry", 2), "Purple"));
-        // castles.add(new Castle("Naganadel", 1, Map.of("infantry", "6", "archer", 1, "cavalry", 1, "daimyo", 1), "Purple"));
-        // castles.add(new Castle("Zapdos", 2, Map.of("cavalry", 1, "archer", 1, "daimyo", 1), "Yellow"));
-        // castles.add(new Castle("Electivire", 2, Map.of("infantry", "7", "archer", 2), "Yellow"));
-        // castles.add(new Castle("Vespiquen", 1, Map.of("infantry", "10"), "Yellow"));
-        // castles.add(new Castle("Fan Rotom", 3, Map.of("infantry", "5", "archer", 1, "cavalry", 2), "Yellow"));
+        // https://www.youtube.com/watch?v=hadNtDUcq8w
+        // castles.add(new Castle("Cloyster", 1, Map.of("infantry", "6", "archer", 1, "cavalry", 1, "daimyo", 1), "Purple"));
+        // https://www.youtube.com/watch?v=Idx0otnxxcU
+        // castles.add(new Castle("Pikachu", 2, Map.of("cavalry", 1, "archer", 1, "daimyo", 1), "Yellow"));
+        // castles.add(new Castle("Helioptile", 2, Map.of("infantry", "7", "archer", 2), "Yellow"));
+        // castles.add(new Castle("Manectric", 1, Map.of("infantry", "10"), "Yellow"));
+        // castles.add(new Castle("Galvantula", 3, Map.of("infantry", "5", "archer", 1, "cavalry", 2), "Yellow"));
 
         // Create players
         System.out.println("Enter the number of players:");
