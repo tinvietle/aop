@@ -2,16 +2,27 @@ package com.example;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.nio.file.Paths;
 
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class registerController {
 
@@ -28,12 +39,29 @@ public class registerController {
     private Button startGameButton;
 
     @FXML
-    public void initialize() {
-        // Add listener to spinner to generate player name fields
-        playerCountSpinner.valueProperty().addListener((obs, oldVal, newVal) -> updatePlayerNameFields(newVal));
+    private StackPane registerRootPane;
 
-        // Initialize with default number of players
-        updatePlayerNameFields(playerCountSpinner.getValue());
+    @FXML
+    public void initialize() {
+        // Set background image
+        String imagePath = Paths.get("assets\\register.jpg").toUri().toString();
+        Image backgroundImage = new Image(imagePath);
+        BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+        registerRootPane.setBackground(new Background(background));
+
+        // Initialize the Spinner with value factory (updated max value to 6)
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 6, 2);
+        playerCountSpinner.setValueFactory(valueFactory);
+
+        // Add listener to spinner to generate player name fields
+        playerCountSpinner.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                updatePlayerNameFields(newVal);
+            }
+        });
+
+        // Initialize with default number of players (2)
+        updatePlayerNameFields(2);
 
         // Set up button event handlers
         backButton.setOnAction(event -> handleBack());
@@ -51,11 +79,38 @@ public class registerController {
 
     private void handleBack() {
         try {
-            Parent menuRoot = App.loadFXML("menu"); // Load the LoadingScreen.fxml file
-            Scene scene = startGameButton.getScene(); // Get the current scene
-            scene.setRoot(menuRoot); // Set the new root
-        } catch (IOException e) {
-            System.err.println("Error loading .fxml file: " + e.getMessage());
+            // Load the menu screen first
+            Parent menuRoot = App.loadFXML("menu");
+            Scene currentScene = registerRootPane.getScene();
+            double sceneWidth = currentScene.getWidth();
+            
+            // Create a container for both screens
+            StackPane container = new StackPane();
+            menuRoot.setTranslateX(-sceneWidth);
+            container.getChildren().addAll(registerRootPane, menuRoot);
+            
+            // Set the container as the new root
+            currentScene.setRoot(container);
+            
+            // Create parallel transitions for both screens
+            TranslateTransition slideOut = new TranslateTransition(Duration.millis(500), registerRootPane);
+            slideOut.setToX(sceneWidth);
+            
+            TranslateTransition slideIn = new TranslateTransition(Duration.millis(500), menuRoot);
+            slideIn.setToX(0);
+            
+            // Play both transitions
+            slideOut.play();
+            slideIn.play();
+            
+            // When animation finishes, clean up
+            slideIn.setOnFinished(event -> {
+                container.getChildren().remove(registerRootPane);
+            });
+            
+        } catch (Exception e) {
+            System.err.println("Error during transition: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -101,6 +156,13 @@ public class registerController {
 
             controller.updatePlayerBoard(playerNames, scores);
 
+            // Stop the background video before starting the game
+            System.out.println("Stopping background video before starting the game");
+            VideoPlayer.stopBackgroundVideo();
+
+            Parent startGameRoot = App.loadFXML("game"); // Load the primary.fxml file
+            Scene scene = startGameButton.getScene(); // Get the current scene
+            scene.setRoot(startGameRoot); // Set the new root
         } catch (IOException e) {
             System.out.println("Error loading .fxml file: " + e.getMessage());
         }

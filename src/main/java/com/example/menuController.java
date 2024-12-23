@@ -1,18 +1,19 @@
 package com.example;
 
-import java.io.IOException;
 
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.media.MediaView; 
 
+import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class menuController {
-
-    // @FXML
-    // private StackPane rootPane; 
 
     @FXML
     private MediaView backgroundVideo;
@@ -27,13 +28,13 @@ public class menuController {
     private Button exitButton;
 
     @FXML
+    private StackPane rootPane;  // Add this FXML injection for the root pane
+
+    @FXML
     public void initialize() {
         // Initialize the background video player
         VideoPlayer.playBackgroundVideo(backgroundVideo);
 
-        // Bind MediaView size to StackPane size
-        // backgroundVideo.fitWidthProperty().bind(rootPane.widthProperty());
-        // backgroundVideo.fitHeightProperty().bind(rootPane.heightProperty());
         backgroundVideo.setPreserveRatio(false);
 
         // Set up button event handlers
@@ -44,20 +45,50 @@ public class menuController {
 
     private void handleStartGame() {
         try {
-            Parent startGameRoot = App.loadFXML("register"); // Load the StartGame.fxml file
-            Scene scene = startButton.getScene(); // Get the current scene
-            scene.setRoot(startGameRoot); // Set the new root
+            // Load the next screen first
+            Parent registerRoot = App.loadFXML("register");
+            Scene currentScene = rootPane.getScene();
+            Stage stage = (Stage) currentScene.getWindow();
+            double sceneWidth = currentScene.getWidth();
+            double sceneHeight = currentScene.getHeight();
             
-        } catch (IOException e) {
-            System.err.println("Error loading .fxml file: " + e.getMessage());
+            // Create a container for both screens
+            StackPane container = new StackPane();
+            registerRoot.setTranslateX(sceneWidth);
+            container.getChildren().addAll(rootPane, registerRoot);
+            
+            // Set the container as the new root
+            currentScene.setRoot(container);
+            
+            // Create parallel transitions for both screens
+            TranslateTransition slideOut = new TranslateTransition(Duration.millis(500), rootPane);
+            slideOut.setToX(-sceneWidth);
+            
+            TranslateTransition slideIn = new TranslateTransition(Duration.millis(500), registerRoot);
+            slideIn.setToX(0);
+            
+            // Play both transitions
+            slideOut.play();
+            slideIn.play();
+            
+            // When animation finishes, clean up
+            slideIn.setOnFinished(event -> {
+                VideoPlayer.stopBackgroundVideo();
+                container.getChildren().remove(rootPane);
+            });
+            
+        } catch (Exception e) {
+            System.err.println("Error during transition: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void handleSettings() {
-        
+        // Handle settings action
     }
 
     private void handleExit() {
+        System.out.println("Exiting application");
         Utils.closeProgram();
     }
 }
