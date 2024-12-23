@@ -1,6 +1,7 @@
 package com.example;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class registerController {
 
@@ -70,6 +72,9 @@ public class registerController {
             }
         }
 
+        String[] scores = new String[playerNames.length]; // Array of String objects, initially null
+        Arrays.fill(scores, "0"); // Fills the array with 0
+
         System.out.println("Starting game with players:");
         for (String name : playerNames) {
             System.out.println(name);
@@ -77,17 +82,27 @@ public class registerController {
 
         // Start the game
         try {
+            // Load the FXML file and create the scene
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("game.fxml"));
-            Parent startGameRoot = fxmlLoader.load(); // Load the game.fxml file
+            Parent gameRoot = fxmlLoader.load();
+            Scene gameScene = new Scene(gameRoot);
+
+            // Retrieve the controller after the FXML is loaded
             gameController controller = fxmlLoader.getController();
 
-            Scene scene = startGameButton.getScene(); // Get the current scene
-            scene.setRoot(startGameRoot); // Set the new root
+            Stage stage = (Stage) startGameButton.getScene().getWindow();
 
-            controller.updatePlayerBoard(playerNames);
+            stage.setTitle("Age of Pokemon");
+            stage.setScene(gameScene);
+            stage.setMaximized(true); // Maximize the window
+            stage.setResizable(true); 
+            stage.centerOnScreen();
+            stage.show();
+
+            controller.updatePlayerBoard(playerNames, scores);
+
         } catch (IOException e) {
             System.out.println("Error loading .fxml file: " + e.getMessage());
-            System.err.println("Error loading StartGame.fxml: " + e.getMessage());
         }
     }
 }

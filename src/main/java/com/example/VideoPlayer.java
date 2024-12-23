@@ -12,7 +12,7 @@ public class VideoPlayer {
     public static void playBackgroundVideo(MediaView mediaView) {
         try {
 
-            String videoPath = Paths.get("C:\\Users\\PC\\Desktop\\Tech\\VGU\\3rd_year\\Fra-Uas\\OOP_Java\\aop\\assets\\intro_pokemon_2.mp4").toUri().toString(); 
+            String videoPath = Paths.get("C:\\Users\\PC\\Desktop\\Tech\\VGU\\3rd_year\\Fra-Uas\\OOP_Java\\aop\\assets\\stocks\\intro_pokemon_2.mp4").toUri().toString(); 
             Media media = new Media(videoPath);
             MediaPlayer mediaPlayer = new MediaPlayer(media);
             GaussianBlur blur = new GaussianBlur(10);

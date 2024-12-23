@@ -2,17 +2,22 @@ package com.example;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.Node;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Optional;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import javafx.scene.input.MouseEvent;
 
 public class gameController {
 
@@ -20,14 +25,22 @@ public class gameController {
     private GridPane playerInfo;
 
     @FXML
-    private ImageView charizard;
+    private ImageView talonflame;
 
     @FXML
     private void newGame() throws IOException {
         System.out.println("New Game");
-        Parent menuRoot = App.loadFXML("menu");
-        Scene scene = playerInfo.getScene(); // Get the current scene
-        scene.setRoot(menuRoot); // Set the new root
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("menu.fxml"));
+        Scene menuScene = new Scene(fxmlLoader.load()); // Load the onlymedia.fxml file
+
+        Stage stage = (Stage) playerInfo.getScene().getWindow();
+
+        stage.setTitle("Age of Pokemon");
+        stage.setScene(menuScene);
+        stage.setMaximized(true); // Maximize the window
+        stage.setResizable(true); // Enable resizing
+        stage.centerOnScreen();
+        stage.show();
     }
 
     @FXML
@@ -36,13 +49,49 @@ public class gameController {
     }
 
     @FXML
-    private void confirmCatch() {
-        Alert alert = Utils.confirmBox("Catch a Pokemon", "Are you sure that you want to catch this pokemon?", "Press OK to catch the pokemon.");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) System.out.println("Pokemon caught!");
+    private void catchPokemon(MouseEvent event) {
+        // Get the node that triggered the event
+        Node source = (Node) event.getSource();
+        String pokemonName = (String) source.getId(); // Retrieve userData
+
+        String path = "assets\\stocks\\%s.mp4";
+        String videoPath = Paths.get(String.format(path, pokemonName)).toUri().toString();
+
+        if (confirmCatch()) {
+            try {
+                playVideo((Stage) talonflame.getScene().getWindow(), videoPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void updatePlayerBoard(String[] names) {
+    @FXML
+    private boolean confirmCatch() {
+        Alert alert = Utils.confirmBox("Catch a Pokemon", "Are you sure that you want to catch this pokemon?", "Press OK to catch the pokemon.");
+        Optional<ButtonType> result = alert.showAndWait();
+        return (result.get() == ButtonType.OK);
+    }
+
+    private void playVideo(Stage stage, String videoPath) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("onlymedia.fxml"));
+        Scene onlyMediaScene = new Scene(fxmlLoader.load()); // Load the onlymedia.fxml file
+        OnlyMedia controller = fxmlLoader.getController();
+
+        controller.initializeMedia(videoPath, 1);
+
+        // Pass the stage and the previous scene to the controller
+        controller.setPreviousScene(stage, stage.getScene());
+
+        stage.setTitle("JavaFX MediaPlayer!");
+        stage.setScene(onlyMediaScene);
+        stage.setMaximized(true); // Maximize the window
+        stage.setResizable(true);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    public void updatePlayerBoard(String[] names, String[] scores) {
         playerInfo.getChildren().clear();
         Label playerHeader = new Label("Players");
         Label scoreHeader = new Label("Scores");
@@ -51,13 +100,11 @@ public class gameController {
 
         for (int i = 0; i < names.length; i++) {
             Label name = new Label(names[i]);
-            Label score = new Label("0");
+            Label score = new Label(scores[i]);
             playerInfo.add(name, 0, i+1);
             playerInfo.add(score, 1, i+1);
         }
     }
-
-    
 
     @FXML
     private void initialize() {
@@ -68,7 +115,7 @@ public class gameController {
         tooltip.setShowDelay(javafx.util.Duration.ZERO);
 
         // Set the Tooltip on the ImageView
-        Tooltip.install(charizard, tooltip);
+        Tooltip.install(talonflame, tooltip);
     }
 }
 
