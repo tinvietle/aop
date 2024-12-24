@@ -1,7 +1,6 @@
 package com.example;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.nio.file.Paths;
 
 import javafx.animation.TranslateTransition;
@@ -24,7 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class registerController {
+public class RegisterController {
 
     @FXML
     private Spinner<Integer> playerCountSpinner;
@@ -127,9 +126,6 @@ public class registerController {
             }
         }
 
-        String[] scores = new String[playerNames.length]; // Array of String objects, initially null
-        Arrays.fill(scores, "0"); // Fills the array with 0
-
         System.out.println("Starting game with players:");
         for (String name : playerNames) {
             System.out.println(name);
@@ -143,7 +139,7 @@ public class registerController {
             Scene gameScene = new Scene(gameRoot);
 
             // Retrieve the controller after the FXML is loaded
-            gameController controller = fxmlLoader.getController();
+            GameController controller = fxmlLoader.getController();
 
             Stage stage = (Stage) startGameButton.getScene().getWindow();
 
@@ -154,7 +150,8 @@ public class registerController {
             stage.centerOnScreen();
             stage.show();
 
-            controller.updatePlayerBoard(playerNames, scores);
+            controller.registerPlayer(playerNames);
+            controller.setCurPlayer(playerNames[0]);
 
             // Stop the background video before starting the game
             System.out.println("Stopping background video before starting the game");

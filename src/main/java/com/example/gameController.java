@@ -7,10 +7,11 @@ import javafx.scene.Node;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -19,13 +20,57 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.input.MouseEvent;
 
-public class gameController {
+
+public class GameController {
+
+    HashMap<String, Player> players = new HashMap<String, Player>();
+
+    HashMap<String, Pokemon> pokemons = new HashMap<String, Pokemon>();
+
+    HashMap<String, ImageView> pokemonImages = new HashMap<String, ImageView>();
+
+    ArrayList<Pokemon> pokemonLists;
+    
+    Player curPlayer;
 
     @FXML
     private GridPane playerInfo;
 
     @FXML
+    private ImageView cloyster;
+    @FXML
+    private ImageView galvantula;
+    @FXML
+    private ImageView gengar;
+    @FXML
+    private ImageView gyarados;
+    @FXML
+    private ImageView hawlucha;
+    @FXML
+    private ImageView helioptile;
+    @FXML
+    private ImageView jellicent;
+    @FXML
+    private ImageView klingklang;
+    @FXML
+    private ImageView ludicolo;
+    @FXML
+    private ImageView machamp;
+    @FXML
+    private ImageView manectric;
+    @FXML
+    private ImageView pangoro;
+    @FXML
     private ImageView talonflame;
+
+
+    public GameController() {
+        PokemonReader reader = new PokemonReader();
+        pokemonLists = reader.readPokemons();
+        for (Pokemon pokemon : pokemonLists) {
+            pokemons.put(pokemon.getName(), pokemon);
+        }
+    }
 
     @FXML
     private void newGame() throws IOException {
@@ -60,6 +105,8 @@ public class gameController {
         if (confirmCatch()) {
             try {
                 playVideo((Stage) talonflame.getScene().getWindow(), videoPath);
+                curPlayer.addScore(1);
+                updatePlayerBoard(players);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -91,31 +138,69 @@ public class gameController {
         stage.show();
     }
 
-    public void updatePlayerBoard(String[] names, String[] scores) {
+    public void registerPlayer(String[] names) {
+        for (String name : names) {
+            Player player = new Player(name);
+            players.put(name, player);
+            System.out.println("Player registered: " + player.getName());
+        }
+
+        // String[] scores = new String[players.size()]; // Array of String objects, initially null
+        // Arrays.fill(scores, "0"); // Fills the array with 0
+
+        updatePlayerBoard(players);
+    }
+
+    public void updatePlayerBoard(HashMap<String, Player> players) {
         playerInfo.getChildren().clear();
         Label playerHeader = new Label("Players");
         Label scoreHeader = new Label("Scores");
         playerInfo.add(playerHeader, 0, 0);
         playerInfo.add(scoreHeader, 1, 0);
 
-        for (int i = 0; i < names.length; i++) {
-            Label name = new Label(names[i]);
-            Label score = new Label(scores[i]);
+        int i = 0;
+        for (Player player: players.values()) {
+            Label name = new Label(player.getName());
+            Label score = new Label(Integer.toString(player.getScore()));
             playerInfo.add(name, 0, i+1);
             playerInfo.add(score, 1, i+1);
+            i++;
         }
     }
 
     @FXML
     private void initialize() {
-        // Create the Tooltip
-        Tooltip tooltip = new Tooltip("This is an image!\nCharizard is a Fire/Flying type Pokemon.");
+        pokemonImages.put("cloyster", cloyster);
+        pokemonImages.put("galvantula", galvantula);
+        pokemonImages.put("gengar", gengar);
+        pokemonImages.put("gyarados", gyarados);
+        pokemonImages.put("hawlucha", hawlucha);
+        pokemonImages.put("helioptile", helioptile);
+        pokemonImages.put("jellicent", jellicent);
+        pokemonImages.put("klingklang", klingklang);
+        pokemonImages.put("ludicolo", ludicolo);
+        pokemonImages.put("machamp", machamp);
+        pokemonImages.put("manectric", manectric);
+        pokemonImages.put("pangoro", pangoro);
+        pokemonImages.put("talonflame", talonflame);
 
-        // Set the show delay to 0 milliseconds (instant display)
-        tooltip.setShowDelay(javafx.util.Duration.ZERO);
+        for (String name : pokemonImages.keySet()) {
 
-        // Set the Tooltip on the ImageView
-        Tooltip.install(talonflame, tooltip);
+            ImageView image = pokemonImages.get(name);
+
+            // Create the Tooltip
+            Tooltip tooltip = new Tooltip(pokemons.get(name).toString());
+
+            // Set the show delay to 0 milliseconds (instant display)
+            tooltip.setShowDelay(javafx.util.Duration.ZERO);
+
+            // Set the Tooltip on the ImageView
+            Tooltip.install(image, tooltip);
+        }
+    }
+
+    public void setCurPlayer(String name) {
+        curPlayer = players.get(name);
     }
 }
 

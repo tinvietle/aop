@@ -10,7 +10,7 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.menuController">
+<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.MenuController">
     <children>
         <!-- Background Video -->
         <MediaView fx:id="backgroundVideo">

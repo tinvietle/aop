@@ -9,11 +9,10 @@ import javafx.scene.control.Button;
 import javafx.scene.media.MediaView; 
 
 import javafx.scene.layout.StackPane;
-import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class menuController {
+public class MenuController {
 
     @FXML
     private MediaView backgroundVideo;
@@ -61,10 +60,10 @@ public class menuController {
             currentScene.setRoot(container);
             
             // Create parallel transitions for both screens
-            TranslateTransition slideOut = new TranslateTransition(Duration.millis(500), rootPane);
+            TranslateTransition slideOut = new TranslateTransition(Duration.millis(250), rootPane);
             slideOut.setToX(-sceneWidth);
             
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(500), registerRoot);
+            TranslateTransition slideIn = new TranslateTransition(Duration.millis(250), registerRoot);
             slideIn.setToX(0);
             
             // Play both transitions
