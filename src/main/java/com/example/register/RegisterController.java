@@ -83,7 +83,7 @@ public class RegisterController {
     private void handleBack() {
         try {
             // Load the menu screen first
-            Parent menuRoot = App.loadFXML("menu");
+            Parent menuRoot = App.loadFXML("menu/menu");
             Scene currentScene = registerRootPane.getScene();
             double sceneWidth = currentScene.getWidth();
             

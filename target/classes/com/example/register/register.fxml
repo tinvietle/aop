@@ -17,7 +17,7 @@
             <!-- Player name fields will be added here dynamically -->
         </VBox>
         
-        <Button fx:id="startGameButton" prefWidth="200" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16;" text="Start Game" />
-        <Button fx:id="backButton" prefWidth="200" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 16;" text="Back" />
+        <Button fx:id="startGameButton" prefWidth="200" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16; -fx-cursor: hand;" text="Start Game" />
+        <Button fx:id="backButton" prefWidth="200" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 16; -fx-cursor: hand;" text="Back" />
     </VBox>
 </StackPane>
