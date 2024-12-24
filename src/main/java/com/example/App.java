@@ -21,7 +21,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            Parent root = loadFXML("menu");
+            Parent root = loadFXML("menu/menu");
 
             Scene scene = new Scene(root);
             stage.setScene(scene);
@@ -35,13 +35,12 @@ public class App extends Application {
             stage.show();
             
         } catch (IOException | NullPointerException e) {
-            System.err.println(e.getMessage());
             System.err.println("Error loading FXML file: " + e.getMessage());
         }
     }
 
     public static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/" + fxml + ".fxml"));
         return fxmlLoader.load();
     }
 
