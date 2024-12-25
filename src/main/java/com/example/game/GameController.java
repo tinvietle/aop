@@ -107,7 +107,7 @@ public class GameController {
         Node source = (Node) event.getSource();
         String pokemonName = (String) source.getId(); // Retrieve userData
 
-        String path = "assets\\stocks\\%s.mp4";
+        String path = "src\\main\\resources\\com\\example\\assets\\stocks\\%s.mp4";
         String videoPath = Paths.get(String.format(path, pokemonName)).toUri().toString();
 
         if (confirmCatch()) {

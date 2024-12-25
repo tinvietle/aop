@@ -22,18 +22,18 @@ public class MediaPlay extends Application {
     public void start(@SuppressWarnings("exports") Stage primaryStage) {
         // Create dictionary to store pokemon and their respective video using hashmap
         HashMap<String, String> pokemonVideo = new HashMap<String, String>();
-        pokemonVideo.put("gyarados", "/com/example/stocks/gyarados.mp4");
-        pokemonVideo.put("hawlucha", "/com/example/stocks/hawlucha.mp4");
-        pokemonVideo.put("jellicent", "/com/example/stocks/jellicent.mp4");
-        pokemonVideo.put("klingklang", "/com/example/stocks/klingklang.mp4");
-        pokemonVideo.put("machamp", "/com/example/stocks/machamp.mp4");
-        pokemonVideo.put("pangoro", "/com/example/stocks/pangoro.mp4");
-        pokemonVideo.put("talonflame", "/com/example/stocks/talonflame.mp4");
+        pokemonVideo.put("gyarados", "/com/example/assets/stocks/gyarados.mp4");
+        pokemonVideo.put("hawlucha", "/com/example/assets/stocks/hawlucha.mp4");
+        pokemonVideo.put("jellicent", "/com/example/assets/stocks/jellicent.mp4");
+        pokemonVideo.put("klingklang", "/com/example/assets/stocks/klingklang.mp4");
+        pokemonVideo.put("machamp", "/com/example/assets/stocks/machamp.mp4");
+        pokemonVideo.put("pangoro", "/com/example/assets/stocks/pangoro.mp4");
+        pokemonVideo.put("talonflame", "/com/example/assets/stocks/talonflame.mp4");
 
         // Create the GIF ImageViews
         HashMap<String, ImageView> pokemonGifs = new HashMap<>();
         for (String pokemon : pokemonVideo.keySet()) {
-            Image gifImage = new Image("file:src/main/java/com/example/stocks/" + pokemon + ".gif");
+            Image gifImage = new Image("file:src/main/resources/com/example/assets/stocks/" + pokemon + ".gif");
             ImageView gifView = new ImageView(gifImage);
             gifView.setFitWidth(60);
             gifView.setPreserveRatio(true);

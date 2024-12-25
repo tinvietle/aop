@@ -3,8 +3,6 @@ package com.example.register;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import com.example.menu.VideoPlayer;
-
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,7 +45,7 @@ public class RegisterController {
     @FXML
     public void initialize() {
         // Set background image
-        String imagePath = Paths.get("assets\\register.jpg").toUri().toString();
+        String imagePath = Paths.get("src\\main\\resources\\com\\example\\assets\\register.jpg").toUri().toString();
         Image backgroundImage = new Image(imagePath);
         BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
         registerRootPane.setBackground(new Background(background));
@@ -157,11 +155,11 @@ public class RegisterController {
             controller.registerPlayer(playerNames);
             controller.setCurPlayer(playerNames[0]);
 
-            // Stop the background video before starting the game
-            System.out.println("Stopping background video before starting the game");
-            VideoPlayer.stopBackgroundVideo();
+            // // Stop the background video before starting the game
+            // System.out.println("Stopping background video before starting the game");
+            // VideoPlayer.stopBackgroundVideo();
 
-            Parent startGameRoot = App.loadFXML("game"); // Load the primary.fxml file
+            Parent startGameRoot = App.loadFXML("game/game"); 
             Scene scene = startGameButton.getScene(); // Get the current scene
             scene.setRoot(startGameRoot); // Set the new root
         } catch (IOException e) {

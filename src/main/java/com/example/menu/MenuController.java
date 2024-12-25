@@ -72,7 +72,7 @@ public class MenuController {
             
             // When animation finishes, clean up
             slideIn.setOnFinished(event -> {
-                VideoPlayer.stopBackgroundVideo();
+                VideoPlayer.stopBackgroundVideo(backgroundVideo);
                 container.getChildren().remove(rootPane);
             });
             

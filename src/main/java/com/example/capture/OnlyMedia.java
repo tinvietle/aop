@@ -64,7 +64,8 @@ public class OnlyMedia {
             "-fx-background-color: rgba(0, 0, 0, 0.7); " +
             "-fx-padding: 15px; " +
             "-fx-border-radius: 10px; " +
-            "-fx-background-radius: 10px;");
+            "-fx-background-radius: 10px;" +
+            "-fx-cursor: hand; ");
         messageLabel.setVisible(false);
 
         // Wrap the MediaView and Label in a StackPane to overlay the label

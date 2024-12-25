@@ -13,7 +13,7 @@ public class PokemonReader {
         try {
             // Parse JSON into a List of Pokemon objects
             ArrayList<Pokemon> pokemons = objectMapper.readValue(
-                new File("assets\\stocks\\pokemon.json"),
+                new File("src\\main\\resources\\com\\example\\assets\\stocks\\pokemon.json"),
                 new TypeReference<ArrayList<Pokemon>>() {}
             );
 

@@ -39,18 +39,20 @@ public class VideoPlayer {
     private static void initializeMediaPlayer(MediaView mediaView) {
         try {
             // Get video resource URL from the classpath
-            String videoPath = Paths.get("assets\\intro_pokemon_2.mp4").toUri().toString();
+            String videoPath = Paths.get("src\\main\\resources\\com\\example\\assets\\intro_pokemon_2.mp4").toUri().toString();
             Media media = new Media(videoPath);
             mediaPlayer = new MediaPlayer(media);
             
             // Add error handling for media player
             mediaPlayer.setOnError(() -> {
                 System.err.println("Media Player Error: " + mediaPlayer.getError().getMessage());
+                initializeMediaPlayer(mediaView);
             });
 
             // Apply effects and settings
             GaussianBlur blur = new GaussianBlur(10);
             mediaView.setEffect(blur);
+            mediaView.setMediaPlayer(null);
             mediaView.setMediaPlayer(mediaPlayer);
             mediaPlayer.setAutoPlay(true);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
@@ -73,7 +75,11 @@ public class VideoPlayer {
         }
     }
 
-    public static void stopBackgroundVideo() {
+    public static void stopBackgroundVideo(MediaView mediaView) {
+        if (mediaView != null) {
+            mediaView.setMediaPlayer(null);
+        }
+
         if (mediaPlayer != null) {
             System.out.println("Stopping and disposing media player");
             mediaPlayer.stop();

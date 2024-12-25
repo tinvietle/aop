@@ -9,7 +9,6 @@ module com.example {
     opens com.example to javafx.fxml, com.fasterxml.jackson.databind;
     opens com.example.capture to javafx.fxml, com.fasterxml.jackson.databind;
     opens com.example.menu to javafx.fxml, com.fasterxml.jackson.databind;
-    opens com.example.dice to javafx.fxml, com.fasterxml.jackson.databind;
     opens com.example.game to javafx.fxml, com.fasterxml.jackson.databind;
     opens com.example.misc to javafx.fxml, com.fasterxml.jackson.databind;
     opens com.example.register to javafx.fxml, com.fasterxml.jackson.databind;
@@ -18,7 +17,6 @@ module com.example {
     exports com.example;
     exports com.example.capture;
     exports com.example.menu;
-    exports com.example.dice;
     exports com.example.game;
     exports com.example.misc;
     exports com.example.register;
