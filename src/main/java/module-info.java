@@ -13,6 +13,7 @@ module com.example {
     opens com.example.misc to javafx.fxml, com.fasterxml.jackson.databind;
     opens com.example.register to javafx.fxml, com.fasterxml.jackson.databind;
     opens com.example.result to javafx.fxml, com.fasterxml.jackson.databind;
+    opens com.example.settings to javafx.fxml, com.fasterxml.jackson.databind;
 
     exports com.example;
     exports com.example.capture;

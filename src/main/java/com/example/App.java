@@ -3,6 +3,8 @@ package com.example;
 import java.io.IOException;
 import java.util.Optional;
 
+import com.example.misc.SoundManager;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,6 +23,8 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
+            SoundManager.getInstance().playRandomBGM();
+            
             Parent root = loadFXML("menu/menu");
 
             Scene scene = new Scene(root);

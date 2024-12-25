@@ -38,7 +38,6 @@ public class DiceController {
     void initialize() {
         try {
             File dir = new File(getClass().getResource("/com/example/assets/balls").toURI());
-            System.out.println("hello");
             File[] files = dir.listFiles((d, name) -> name.endsWith(".png"));
             if (files != null) {
                 for (File file : files) {

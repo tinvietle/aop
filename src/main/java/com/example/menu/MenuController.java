@@ -83,7 +83,40 @@ public class MenuController {
     }
 
     private void handleSettings() {
-        // Handle settings action
+        try {
+            // Update the path to match your project structure
+            Parent settingsRoot = App.loadFXML("settings/settings");
+            Scene currentScene = rootPane.getScene();
+            double sceneWidth = currentScene.getWidth();
+            
+            // Create a container for both screens
+            StackPane container = new StackPane();
+            settingsRoot.setTranslateX(sceneWidth);
+            container.getChildren().addAll(rootPane, settingsRoot);
+            
+            // Set the container as the new root
+            currentScene.setRoot(container);
+            
+            // Create transitions for both screens
+            TranslateTransition slideOut = new TranslateTransition(Duration.millis(500), rootPane);
+            slideOut.setToX(-sceneWidth);
+            
+            TranslateTransition slideIn = new TranslateTransition(Duration.millis(500), settingsRoot);
+            slideIn.setToX(0);
+            
+            // Play both transitions
+            slideOut.play();
+            slideIn.play();
+            
+            // When animation finishes, clean up
+            slideIn.setOnFinished(event -> {
+                container.getChildren().remove(rootPane);
+            });
+            
+        } catch (Exception e) {
+            System.err.println("Error loading settings: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void handleExit() {
