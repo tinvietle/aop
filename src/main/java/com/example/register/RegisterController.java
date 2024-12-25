@@ -3,6 +3,9 @@ package com.example.register;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import com.example.App;
+import com.example.game.GameController;
+
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,10 +23,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Duration;
-import com.example.App;
-import com.example.game.GameController;
 
 public class RegisterController {
 
@@ -116,7 +116,7 @@ public class RegisterController {
     }
 
     private void handleStartGame() {
-        // Retrieve player names
+        // Validate player names
         int playerCount = playerCountSpinner.getValue();
         String[] playerNames = new String[playerCount];
         for (int i = 0; i < playerCount; i++) {
@@ -128,42 +128,45 @@ public class RegisterController {
             }
         }
 
-        System.out.println("Starting game with players:");
-        for (String name : playerNames) {
-            System.out.println(name);
-        }
-
-        // Start the game
         try {
-            // Load the FXML file and create the scene
+            // Load the game scene
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/game/game.fxml"));
             Parent gameRoot = fxmlLoader.load();
-            Scene gameScene = new Scene(gameRoot);
-
-            // Retrieve the controller after the FXML is loaded
             GameController controller = fxmlLoader.getController();
+            
+            // Get current scene dimensions
+            Scene currentScene = registerRootPane.getScene();
+            double sceneWidth = currentScene.getWidth();
+            
+            // Create container for transition
+            StackPane container = new StackPane();
+            gameRoot.setTranslateX(sceneWidth); // Start from right
+            container.getChildren().addAll(registerRootPane, gameRoot);
+            
+            // Set the container as the root while maintaining size
+            currentScene.setRoot(container);
+            
+            // Create transitions
+            TranslateTransition slideOutCurrent = new TranslateTransition(Duration.millis(250), registerRootPane);
+            slideOutCurrent.setToX(-sceneWidth);
+            
+            TranslateTransition slideInNew = new TranslateTransition(Duration.millis(250), gameRoot);
+            slideInNew.setToX(0);
+            
+            // Play transitions
+            slideOutCurrent.play();
+            slideInNew.play();
+            
+            // Set up game after transition
+            slideInNew.setOnFinished(event -> {
+                container.getChildren().remove(registerRootPane);
+                controller.registerPlayer(playerNames);
+                controller.setCurPlayer(playerNames[0]);
+            });
 
-            Stage stage = (Stage) startGameButton.getScene().getWindow();
-
-            stage.setTitle("Age of Pokemon");
-            stage.setScene(gameScene);
-            stage.setMaximized(true); // Maximize the window
-            stage.setResizable(true); 
-            stage.centerOnScreen();
-            stage.show();
-
-            controller.registerPlayer(playerNames);
-            controller.setCurPlayer(playerNames[0]);
-
-            // // Stop the background video before starting the game
-            // System.out.println("Stopping background video before starting the game");
-            // VideoPlayer.stopBackgroundVideo();
-
-            Parent startGameRoot = App.loadFXML("game/game"); 
-            Scene scene = startGameButton.getScene(); // Get the current scene
-            scene.setRoot(startGameRoot); // Set the new root
         } catch (IOException e) {
-            System.out.println("Error loading .fxml file: " + e.getMessage());
+            System.err.println("Error loading game scene: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

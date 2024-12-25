@@ -21,7 +21,7 @@
                         style="-fx-control-inner-background: white;"/>
             </VBox>
 
-            <Button text="Back to Menu" onAction="#backToMenu" 
+            <Button text="Back" onAction="#backToMenu" 
                     style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
         </VBox>
     </VBox>

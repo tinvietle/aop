@@ -14,6 +14,7 @@ import com.example.misc.Player;
 import com.example.misc.Pokemon;
 import com.example.misc.PokemonReader;
 import com.example.misc.Utils;
+import com.example.settings.SettingsController;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.Parent;
+import javafx.scene.layout.StackPane;
+import javafx.animation.TranslateTransition;
+import javafx.util.Duration;
 
 
 public class GameController {
@@ -99,6 +104,16 @@ public class GameController {
     @FXML
     private void closeProgram() {
         Utils.closeProgram();
+    }
+    
+    @FXML
+    private void openSettings() throws IOException {   
+        // Load settings scene
+        Parent settingsRoot = App.loadFXML("settings/settings");
+        Scene currentScene = playerInfo.getScene();
+        
+        // Direct scene switch without transition
+        currentScene.setRoot(settingsRoot);
     }
 
     @FXML

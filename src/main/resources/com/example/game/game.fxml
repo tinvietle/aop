@@ -27,6 +27,7 @@
           <Menu mnemonicParsing="false" text="Edit">
             <items>
               <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem mnemonicParsing="false" onAction="#openSettings" text="Settings" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
@@ -42,7 +43,7 @@
                <children>
                   <ImageView fitHeight="609.0" fitWidth="1094.0" layoutX="-14.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../assets/map.png" />
+                        <Image url="@../assets/map_Tin.png" />
                      </image>
                   </ImageView>
                   <Accordion>
