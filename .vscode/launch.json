@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "testDynamic",
+            "request": "launch",
+            "mainClass": "com.example/com.example.testDynamic",
+            "projectName": "demo"
+        },
+        {
+            "type": "java",
             "name": "rollDice",
             "request": "launch",
             "mainClass": "com.example/com.example.rollDice",
