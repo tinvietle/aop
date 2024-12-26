@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -29,6 +30,8 @@ public class DiceController {
     private Runnable onRollComplete; // Callback for roll completion
 
     @FXML
+    private Pane Pane;
+    @FXML
     private ImageView dice1, dice2, dice3, dice4, dice5, dice6, dice7;
 
     @FXML
@@ -36,6 +39,51 @@ public class DiceController {
 
     @FXML
     void initialize() {
+
+        // Bind the width and height of the dice images to the parent pane
+        dice1.fitWidthProperty().bind(Pane.widthProperty().multiply(0.0625));
+        dice1.fitHeightProperty().bind(dice1.fitWidthProperty());
+        dice2.fitWidthProperty().bind(Pane.widthProperty().multiply(0.0625));
+        dice2.fitHeightProperty().bind(dice2.fitWidthProperty());
+        dice3.fitWidthProperty().bind(Pane.widthProperty().multiply(0.0625));
+        dice3.fitHeightProperty().bind(dice3.fitWidthProperty());
+        dice4.fitWidthProperty().bind(Pane.widthProperty().multiply(0.0625));
+        dice4.fitHeightProperty().bind(dice4.fitWidthProperty());
+        dice5.fitWidthProperty().bind(Pane.widthProperty().multiply(0.0625));
+        dice5.fitHeightProperty().bind(dice5.fitWidthProperty());
+        dice6.fitWidthProperty().bind(Pane.widthProperty().multiply(0.0625));
+        dice6.fitHeightProperty().bind(dice6.fitWidthProperty());
+        dice7.fitWidthProperty().bind(Pane.widthProperty().multiply(0.0625));
+        dice7.fitHeightProperty().bind(dice7.fitWidthProperty());
+
+        // Bind the buttons width to the parent pane
+        rollButton.prefWidthProperty().bind(Pane.widthProperty().multiply(0.1));
+        rollButton.prefHeightProperty().bind(rollButton.widthProperty().multiply(0.5));
+        endButton.prefWidthProperty().bind(Pane.widthProperty().multiply(0.1));
+        endButton.prefHeightProperty().bind(endButton.widthProperty().multiply(0.5));
+
+        // Bind the layout of buttons and dices to the parent pane
+        rollButton.layoutXProperty().bind(Pane.widthProperty().multiply(26.0 / 800.0));
+        rollButton.layoutYProperty().bind(Pane.heightProperty().multiply(23.0 / 76.0));
+        endButton.layoutXProperty().bind(Pane.widthProperty().multiply(110.0 / 800.0));
+        endButton.layoutYProperty().bind(Pane.heightProperty().multiply(23.0 / 76.0));
+        dice1.layoutXProperty().bind(Pane.widthProperty().multiply(208.0 / 800.0));
+        dice1.layoutYProperty().bind(Pane.heightProperty().multiply(13.0 / 76.0));
+        dice2.layoutXProperty().bind(Pane.widthProperty().multiply(300.0 / 800.0));
+        dice2.layoutYProperty().bind(Pane.heightProperty().multiply(13.0 / 76.0));
+        dice3.layoutXProperty().bind(Pane.widthProperty().multiply(392.0 / 800.0));
+        dice3.layoutYProperty().bind(Pane.heightProperty().multiply(13.0 / 76.0));
+        dice4.layoutXProperty().bind(Pane.widthProperty().multiply(478.0 / 800.0));
+        dice4.layoutYProperty().bind(Pane.heightProperty().multiply(13.0 / 76.0));
+        dice5.layoutXProperty().bind(Pane.widthProperty().multiply(558.0 / 800.0));
+        dice5.layoutYProperty().bind(Pane.heightProperty().multiply(13.0 / 76.0));
+        dice6.layoutXProperty().bind(Pane.widthProperty().multiply(637.0 / 800.0));
+        dice6.layoutYProperty().bind(Pane.heightProperty().multiply(13.0 / 76.0));
+        dice7.layoutXProperty().bind(Pane.widthProperty().multiply(714.0 / 800.0));
+        dice7.layoutYProperty().bind(Pane.heightProperty().multiply(13.0 / 76.0));
+        
+
+
         try {
             File dir = new File(getClass().getResource("/com/example/assets/balls").toURI());
             File[] files = dir.listFiles((d, name) -> name.endsWith(".png"));
@@ -53,7 +101,7 @@ public class DiceController {
     }
 
     @FXML
-    void roll(ActionEvent event) {
+    void rollHandler(ActionEvent event) {
         rollButton.setDisable(true);
         List<ImageView> diceImages = List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7);
 

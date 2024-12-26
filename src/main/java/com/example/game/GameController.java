@@ -1,5 +1,6 @@
 package com.example.game;
 
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.Node;
@@ -7,6 +8,8 @@ import javafx.scene.Node;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.Stack;
+
 
 import com.example.App;
 import com.example.capture.OnlyMedia;
@@ -23,14 +26,23 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.animation.TranslateTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.util.Duration;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
@@ -40,6 +52,8 @@ import javafx.animation.ParallelTransition;
 import javafx.beans.InvalidationListener;
 import javafx.scene.paint.Color;
 import javafx.stage.Window;
+import javafx.stage.Screen;
+import javafx.beans.binding.Bindings;
 
 
 public class GameController {
@@ -84,13 +98,28 @@ public class GameController {
     @FXML
     private ImageView pangoro;
     @FXML
-    private ImageView talonflame;
-
+    private ImageView pikachu;
     @FXML
-    private StackPane mainContainer; // Add this field to your existing FXML fields
-
-    private boolean isProcessingTurn = false; // Add this flag
-    private StackPane turnOverlay; // Add this field to track the turn overlay
+    private ImageView talonflame;
+    @FXML
+    private BorderPane borderPane;
+    @FXML
+    private Pane rollIncludedPane;
+    @FXML
+    private MenuBar menuBar;
+    @FXML
+    private ImageView mapView;
+    @FXML
+    private StackPane stackPane;
+    @FXML
+    private Menu fileMenu;
+    @FXML
+    private Menu editMenu;
+    @FXML
+    private Menu helpMenu;
+    @FXML
+    private Accordion accordionView;
+    
 
     public GameController() {
         PokemonReader reader = new PokemonReader();
@@ -142,12 +171,23 @@ public class GameController {
 
         if (confirmCatch()) {
             try {
-                // Update score before playing video
+                // Get the stage from the current scene and play the video
+                Stage stage = (Stage) playerInfo.getScene().getWindow();
+                playVideo(stage, videoPath);
                 curPlayer.addScore(1);
+                Pokemon pokemon = pokemons.get(pokemonName);
+                pokemon.updateOwner(curPlayer);
+                ImageView image = pokemonImages.get(pokemonName);
+                image.setOpacity(0.5);
                 updatePlayerBoard(players);
-                
-                // Play the video
-                playVideo((Stage) talonflame.getScene().getWindow(), videoPath);
+                // Create the Tooltip
+                Tooltip tooltip = new Tooltip(pokemon.toString());
+
+                // Set the show delay to 0 milliseconds (instant display)
+                tooltip.setShowDelay(javafx.util.Duration.ZERO);
+
+                // Set the Tooltip on the ImageView
+                Tooltip.install(image, tooltip);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -168,17 +208,18 @@ public class GameController {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));
         Scene onlyMediaScene = new Scene(fxmlLoader.load());
         OnlyMedia controller = fxmlLoader.getController();
-        
-        // Store the game scene
-        Scene gameScene = stage.getScene();
-        
-        // Initialize media player
-        controller.initializeMedia(videoPath, 1);
-        controller.setPreviousScene(stage, gameScene);
-        
-        // Switch to video scene
+
+        // Get the size of current stage to pass to the controller
+        controller.initializeMedia(videoPath, stage.getWidth(), stage.getHeight());
+
+        // Pass the stage and the previous scene to the controller
+        controller.setPreviousScene(stage, stage.getScene());
+
+        // Close the current stage and show the new stage
+        stage.close();
+        stage.setTitle("JavaFX MediaPlayer!");
         stage.setScene(onlyMediaScene);
-        stage.setMaximized(true);
+        // stage.setMaximized(true); // Maximize the window
         stage.setResizable(true);
         
         // Create the listener
@@ -279,6 +320,7 @@ public class GameController {
         pokemonImages.put("machamp", machamp);
         pokemonImages.put("manectric", manectric);
         pokemonImages.put("pangoro", pangoro);
+        pokemonImages.put("pikachu", pikachu);
         pokemonImages.put("talonflame", talonflame);
 
         for (String name : pokemonImages.keySet()) {
@@ -295,51 +337,70 @@ public class GameController {
             Tooltip.install(image, tooltip);
         }
 
-        // Remove the showNextPlayerTurn() call from here
+        // Get screen dimensions
+        double screenWidth = Screen.getPrimary().getBounds().getWidth();
+        double screenHeight = Screen.getPrimary().getBounds().getHeight();
+
+        // Set the menuBar's dimensions to BorderPane
+        menuBar.prefWidthProperty().bind(borderPane.widthProperty());
+        menuBar.prefHeightProperty().bind(borderPane.heightProperty().multiply(24.0 / 500.0));
+
+        // Set stackPane size to screen dimensions
+        stackPane.setPrefWidth(screenWidth);
+        stackPane.setPrefHeight(screenHeight);
+
+        // Bind stackPane's dimensions to the borderPane
+        stackPane.prefWidthProperty().bind(borderPane.widthProperty());
+        stackPane.prefHeightProperty().bind(borderPane.heightProperty().multiply(400.0 / 500.0));
+
+        // Bind the mapView's dimensions to the stackPane
+        mapView.fitWidthProperty().bind(stackPane.widthProperty());
+        mapView.fitHeightProperty().bind(stackPane.heightProperty());
+
+        // Bind the rollIncludedPane's dimensions to the BorderPane
+        rollIncludedPane.prefWidthProperty().bind(borderPane.widthProperty());
+        rollIncludedPane.prefHeightProperty().bind(borderPane.heightProperty().multiply(76.0 / 500.0));
+
+        // Bind the playerInfo's dimensions to the BorderPane
+        playerInfo.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.2));
+        playerInfo.prefHeightProperty().bind(borderPane.heightProperty().multiply(200 / 500.0));
+
+        // Bind the accordionView's dimensions to the BorderPane
+        accordionView.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.2));
+        accordionView.prefHeightProperty().bind(borderPane.heightProperty().multiply(200 / 500.0));
+        
+        // Bind all ImageView sizes to the stackPane size
+        bindImageView(talonflame, 645.0, 39.0, 0.09, 0.1);   // Example ratios
+        bindImageView(cloyster, 562.0, 323.0, 0.08, 0.07);
+        bindImageView(galvantula, 219.0, 158.0, 0.15, 0.09);
+        bindImageView(gengar, 105.0, 245.0, 0.07, 0.07);
+        bindImageView(gyarados, 654.0, 140.0, 0.08, 0.1);
+        bindImageView(hawlucha, 297.0, 25.0, 0.05, 0.05);
+        bindImageView(helioptile, 301.0, 245.0, 0.06, 0.05);
+        bindImageView(jellicent, 567.0, 205.0, 0.07, 0.08);
+        bindImageView(klingklang, 359.0, 64.0, 0.08, 0.05);
+        bindImageView(ludicolo, 427.0,313.0, 0.09, 0.1);
+        bindImageView(machamp, 458.0, 107.0, 0.08, 0.12);
+        bindImageView(manectric, 668.0, 309.0, 0.05, 0.05);
+        bindImageView(pangoro, 425.0, 199.0, 0.07, 0.08);
+
+        // Bind text of each Menu to the BorderPane
+        fileMenu.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", borderPane.heightProperty().multiply(0.02), ";",
+                "-fx-text-fill: black;"));
+        editMenu.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", borderPane.heightProperty().multiply(0.02), ";",
+                "-fx-text-fill: black;")); 
+        helpMenu.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", borderPane.heightProperty().multiply(0.02), ";",
+                "-fx-text-fill: black;"));
     }
 
-    private void showNextPlayerTurn() {
-        if (turnOverlay != null) {
-            mainContainer.getChildren().remove(turnOverlay); // Remove existing overlay if any
-        }
-
-        try {
-            // Load the turn overlay
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
-            turnOverlay = loader.load();
-            Text turnText = (Text) turnOverlay.lookup("#turnText");
-            turnText.setText(curPlayer.getName() + "'s Turn");
-            
-            // Add overlay to the main scene
-            mainContainer.getChildren().add(turnOverlay);
-            
-            // Create animations
-            FadeTransition fade = new FadeTransition(Duration.seconds(0.5), turnOverlay);
-            fade.setFromValue(0);
-            fade.setToValue(1);
-            
-            ScaleTransition scale = new ScaleTransition(Duration.seconds(0.5), turnText);
-            scale.setFromX(0.5);
-            scale.setFromY(0.5);
-            scale.setToX(1.0);
-            scale.setToY(1.0);
-            
-            // Combine animations
-            ParallelTransition parallel = new ParallelTransition(fade, scale);
-            parallel.setOnFinished(e -> {
-                // Remove overlay after delay
-                FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), turnOverlay);
-                fadeOut.setDelay(Duration.seconds(1));
-                fadeOut.setFromValue(1);
-                fadeOut.setToValue(0);
-                fadeOut.setOnFinished(event -> mainContainer.getChildren().remove(turnOverlay));
-                fadeOut.play();
-            });
-            
-            parallel.play();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void bindImageView(ImageView imageView, double X, double Y, double width, double height) {
+        imageView.layoutXProperty().bind(stackPane.widthProperty().multiply(X / 800.0));
+        imageView.layoutYProperty().bind(stackPane.heightProperty().multiply(Y / 400.0));
+        imageView.fitWidthProperty().bind(stackPane.widthProperty().multiply(width));
+        imageView.fitHeightProperty().bind(stackPane.heightProperty().multiply(height));
     }
 
     public void setCurPlayer(String name) {

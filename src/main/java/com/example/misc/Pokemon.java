@@ -60,4 +60,13 @@ public class Pokemon {
     public void setGroup(String group) {
         this.group = group;
     }
+
+    public void updateOwner(Player owner) {
+        this.owner = owner;
+        if (!this.owned) {
+            this.owned = true;
+            requirements.get("master ball").set(0, requirements.get("master ball").get(0) + 1);
+        }
+        owner.addPokemon(this);
+    }
 }
