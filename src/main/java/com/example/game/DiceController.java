@@ -134,7 +134,8 @@ public class DiceController {
                 }).start();
             } else {
                 // set dice image to null
-                diceImage.setImage(null);
+                // diceImage.setImage(null);
+                diceImage.setOpacity(0.0);
             }
         }
 
@@ -173,6 +174,9 @@ public class DiceController {
 
         for (ImageView diceImage : diceImages) {
             diceImage.setOnMouseClicked(mouseEvent -> {
+                if (firstRoll) {
+                    return;
+                }
                 if (keepDice.contains(diceImage)) {
                     // Unkeep the dice
                     keepDice.remove(diceImage);
@@ -197,15 +201,15 @@ public class DiceController {
         // Add the final kept dice to the result and ignore null dice images
         keepDice.clear();
         for (ImageView diceImage : List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7)) {
-            if (diceImage.getImage() != null) {
+            if (diceImage.getOpacity() > 0) {
                 keepDice.add(diceImage);
             }
         }
 
-        // Set the opacity to 1
-        for (ImageView diceImage : keepDice) {
-            diceImage.setOpacity(1.0);
-        }
+        // // Set the opacity to 1
+        // for (ImageView diceImage : keepDice) {
+        //     diceImage.setOpacity(1.0);
+        // }
 
         // Use StringBuilder to concatenate the name of file of the dice images
         for (ImageView diceImage : keepDice) {
@@ -217,10 +221,14 @@ public class DiceController {
         // Remove the last comma and space
         result.delete(result.length() - 2, result.length());
 
-        // Notify the roll completion
-        if (onRollComplete != null) {
-            onRollComplete.run();
-        }
+        System.out.println("Result: " + result.toString());
+        
+        resetTurn();
+
+        // // Notify the roll completion
+        // if (onRollComplete != null) {
+        //     onRollComplete.run();
+        // }
     }
 
     public String getResult(){
@@ -229,5 +237,24 @@ public class DiceController {
 
     public void setOnRollComplete(Runnable onRollComplete) {
         this.onRollComplete = onRollComplete;
+    }
+
+    public void resetTurn() {
+        System.out.println("Resetting turn");
+
+        // Reset the number of kept dice
+        numKeptDice = 0;
+        totalDice = 7;
+        firstRoll = true;
+        result = new StringBuilder();
+
+        // Reset the opacity of the dice images
+        for (ImageView diceImage : List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7)) {
+            diceImage.setOpacity(1.0);
+        }
+
+        // Enable the roll button
+        rollButton.setDisable(false);
+        endButton.setDisable(false);
     }
 }
