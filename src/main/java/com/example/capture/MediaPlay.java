@@ -41,7 +41,7 @@ public class MediaPlay extends Application {
         }
 
         // Get screen dimension
-        Rectangle2D screenBounds = Screen.getPrimary().getBounds();
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         double screenWidth = screenBounds.getWidth();
         double screenHeight = screenBounds.getHeight();
 
@@ -95,10 +95,12 @@ public class MediaPlay extends Application {
             layout.getChildren().add(currentRow);
         }
 
-        Scene mainScene = new Scene(layout, targetWidth, targetHeight);
+        Scene mainScene = new Scene(layout);
 
         primaryStage.setTitle("GIF to Video Example");
         primaryStage.setScene(mainScene);
+        primaryStage.setMaximized(true);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
@@ -112,18 +114,13 @@ public class MediaPlay extends Application {
         Scene scene = new Scene(fxmlLoader.load());
 
         OnlyMedia controller = fxmlLoader.getController();
-
-        // Get the media file
         String mediaPath = getClass().getResource(videoPath).toString();
-        controller.initializeMedia(mediaPath, 1);
-
-        // Pass the stage and the previous scene to the controller
+        controller.initializeMedia(mediaPath, 1.0);
         controller.setPreviousScene(stage, stage.getScene());
 
-        stage.setTitle("JavaFX MediaPlayer!");
         stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.show();
+        stage.setMaximized(true);
+        stage.setResizable(false);
     }
 
     public static void main(String[] args) {

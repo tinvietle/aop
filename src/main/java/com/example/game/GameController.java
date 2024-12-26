@@ -32,6 +32,12 @@ import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
+import javafx.scene.text.Text;
+import javafx.scene.text.Font;
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.ParallelTransition;
+import javafx.scene.paint.Color;
 
 
 public class GameController {
@@ -45,6 +51,8 @@ public class GameController {
     ArrayList<Pokemon> pokemonLists;
     
     Player curPlayer;
+
+    private ArrayList<String> playerOrder; // Add this field to track player order
 
     @FXML
     private GridPane playerInfo;
@@ -76,6 +84,9 @@ public class GameController {
     @FXML
     private ImageView talonflame;
 
+    @FXML
+    private StackPane mainContainer; // Add this field to your existing FXML fields
+
 
     public GameController() {
         PokemonReader reader = new PokemonReader();
@@ -102,7 +113,7 @@ public class GameController {
     }
 
     @FXML
-    private void closeProgram() {
+    private void closeProgram() {   
         Utils.closeProgram();
     }
     
@@ -130,6 +141,7 @@ public class GameController {
                 playVideo((Stage) talonflame.getScene().getWindow(), videoPath);
                 curPlayer.addScore(1);
                 updatePlayerBoard(players);
+                // Remove the showNextPlayerTurn() call from here since it's now handled in playVideo
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -145,33 +157,64 @@ public class GameController {
 
     private void playVideo(Stage stage, String videoPath) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));
-        Scene onlyMediaScene = new Scene(fxmlLoader.load()); // Load the onlymedia.fxml file
+        Scene onlyMediaScene = new Scene(fxmlLoader.load());
         OnlyMedia controller = fxmlLoader.getController();
-
+        
+        // Store the game scene
+        Scene gameScene = stage.getScene();
+        
+        // Initialize media player
         controller.initializeMedia(videoPath, 1);
-
-        // Pass the stage and the previous scene to the controller
-        controller.setPreviousScene(stage, stage.getScene());
-
-        stage.setTitle("JavaFX MediaPlayer!");
+        controller.setPreviousScene(stage, gameScene);
+        
+        // Switch to video scene
         stage.setScene(onlyMediaScene);
-        stage.setMaximized(true); // Maximize the window
+        stage.setMaximized(true);
         stage.setResizable(true);
-        stage.centerOnScreen();
-        stage.show();
+        
+        // Add listener for scene restoration
+        gameScene.windowProperty().addListener((obs, oldWindow, newWindow) -> {
+            if (newWindow != null) {
+                javafx.application.Platform.runLater(() -> {
+                    // Force layout updates
+                    gameScene.getRoot().layout();
+                    
+                    // Ensure proper window state
+                    stage.setMaximized(true);
+                    stage.setFullScreen(false);
+                    
+                    // Refresh UI components
+                    updatePlayerBoard(players);
+                    
+                    // Switch to next player and show turn
+                    switchToNextPlayer();
+                    showNextPlayerTurn();
+                    
+                    // Request focus to ensure controls work
+                    gameScene.getRoot().requestFocus();
+                });
+            }
+        });
     }
 
     public void registerPlayer(String[] names) {
+        playerOrder = new ArrayList<>();
         for (String name : names) {
             Player player = new Player(name);
             players.put(name, player);
+            playerOrder.add(name);
             System.out.println("Player registered: " + player.getName());
         }
-
-        // String[] scores = new String[players.size()]; // Array of String objects, initially null
-        // Arrays.fill(scores, "0"); // Fills the array with 0
-
         updatePlayerBoard(players);
+        
+        setCurPlayer(names[0]);
+        showNextPlayerTurn();
+    }
+
+    private void switchToNextPlayer() {
+        int currentIndex = playerOrder.indexOf(curPlayer.getName());
+        int nextIndex = (currentIndex + 1) % playerOrder.size();
+        setCurPlayer(playerOrder.get(nextIndex));
     }
 
     public void updatePlayerBoard(HashMap<String, Player> players) {
@@ -219,6 +262,48 @@ public class GameController {
 
             // Set the Tooltip on the ImageView
             Tooltip.install(image, tooltip);
+        }
+
+        // Remove the showNextPlayerTurn() call from here
+    }
+
+    private void showNextPlayerTurn() {
+        try {
+            // Load the turn overlay
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
+            StackPane turnOverlay = loader.load();
+            Text turnText = (Text) turnOverlay.lookup("#turnText");
+            turnText.setText(curPlayer.getName() + "'s Turn");
+            
+            // Add overlay to the main scene
+            mainContainer.getChildren().add(turnOverlay);
+            
+            // Create animations
+            FadeTransition fade = new FadeTransition(Duration.seconds(0.5), turnOverlay);
+            fade.setFromValue(0);
+            fade.setToValue(1);
+            
+            ScaleTransition scale = new ScaleTransition(Duration.seconds(0.5), turnText);
+            scale.setFromX(0.5);
+            scale.setFromY(0.5);
+            scale.setToX(1.0);
+            scale.setToY(1.0);
+            
+            // Combine animations
+            ParallelTransition parallel = new ParallelTransition(fade, scale);
+            parallel.setOnFinished(e -> {
+                // Remove overlay after delay
+                FadeTransition fadeOut = new FadeTransition(Duration.seconds(0.5), turnOverlay);
+                fadeOut.setDelay(Duration.seconds(1));
+                fadeOut.setFromValue(1);
+                fadeOut.setToValue(0);
+                fadeOut.setOnFinished(event -> mainContainer.getChildren().remove(turnOverlay));
+                fadeOut.play();
+            });
+            
+            parallel.play();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

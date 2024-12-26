@@ -160,8 +160,7 @@ public class RegisterController {
             // Set up game after transition
             slideInNew.setOnFinished(event -> {
                 container.getChildren().remove(registerRootPane);
-                controller.registerPlayer(playerNames);
-                controller.setCurPlayer(playerNames[0]);
+                controller.registerPlayer(playerNames); // This will now handle both player registration and initial turn display
             });
 
         } catch (IOException e) {
