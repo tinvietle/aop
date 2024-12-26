@@ -37,7 +37,9 @@ import javafx.scene.text.Font;
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.ParallelTransition;
+import javafx.beans.InvalidationListener;
 import javafx.scene.paint.Color;
+import javafx.stage.Window;
 
 
 public class GameController {
@@ -87,6 +89,8 @@ public class GameController {
     @FXML
     private StackPane mainContainer; // Add this field to your existing FXML fields
 
+    private boolean isProcessingTurn = false; // Add this flag
+    private StackPane turnOverlay; // Add this field to track the turn overlay
 
     public GameController() {
         PokemonReader reader = new PokemonReader();
@@ -131,17 +135,19 @@ public class GameController {
     private void catchPokemon(MouseEvent event) {
         // Get the node that triggered the event
         Node source = (Node) event.getSource();
-        String pokemonName = (String) source.getId(); // Retrieve userData
+        String pokemonName = source.getId();
 
         String path = "src\\main\\resources\\com\\example\\assets\\stocks\\%s.mp4";
         String videoPath = Paths.get(String.format(path, pokemonName)).toUri().toString();
 
         if (confirmCatch()) {
             try {
-                playVideo((Stage) talonflame.getScene().getWindow(), videoPath);
+                // Update score before playing video
                 curPlayer.addScore(1);
                 updatePlayerBoard(players);
-                // Remove the showNextPlayerTurn() call from here since it's now handled in playVideo
+                
+                // Play the video
+                playVideo((Stage) talonflame.getScene().getWindow(), videoPath);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -156,6 +162,9 @@ public class GameController {
     }
 
     private void playVideo(Stage stage, String videoPath) throws IOException {
+        if (isProcessingTurn) return;
+        
+        isProcessingTurn = true;
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));
         Scene onlyMediaScene = new Scene(fxmlLoader.load());
         OnlyMedia controller = fxmlLoader.getController();
@@ -172,29 +181,43 @@ public class GameController {
         stage.setMaximized(true);
         stage.setResizable(true);
         
-        // Add listener for scene restoration
-        gameScene.windowProperty().addListener((obs, oldWindow, newWindow) -> {
-            if (newWindow != null) {
-                javafx.application.Platform.runLater(() -> {
-                    // Force layout updates
-                    gameScene.getRoot().layout();
-                    
-                    // Ensure proper window state
-                    stage.setMaximized(true);
-                    stage.setFullScreen(false);
-                    
-                    // Refresh UI components
-                    updatePlayerBoard(players);
-                    
-                    // Switch to next player and show turn
-                    switchToNextPlayer();
-                    showNextPlayerTurn();
-                    
-                    // Request focus to ensure controls work
-                    gameScene.getRoot().requestFocus();
-                });
+        // Create the listener
+        javafx.beans.value.ChangeListener<Window> windowListener = new javafx.beans.value.ChangeListener<>() {
+            @Override
+            public void changed(javafx.beans.value.ObservableValue<? extends Window> obs, Window oldWindow, Window newWindow) {
+                if (newWindow != null) {
+                    javafx.application.Platform.runLater(() -> {
+                        try {
+                            // Force layout updates
+                            gameScene.getRoot().layout();
+                            
+                            // Ensure proper window state
+                            stage.setMaximized(true);
+                            stage.setFullScreen(false);
+                            
+                            // Switch to next player and show turn
+                            switchToNextPlayer();
+                            
+                            // Update UI after switching player
+                            updatePlayerBoard(players);
+                            showNextPlayerTurn();
+                            
+                            // Request focus to ensure controls work
+                            gameScene.getRoot().requestFocus();
+                        } finally {
+                            // Reset the processing flag
+                            isProcessingTurn = false;
+                            
+                            // Remove the listener correctly
+                            gameScene.windowProperty().removeListener(this);
+                        }
+                    });
+                }
             }
-        });
+        };
+        
+        // Add the listener
+        gameScene.windowProperty().addListener(windowListener);
     }
 
     public void registerPlayer(String[] names) {
@@ -212,9 +235,17 @@ public class GameController {
     }
 
     private void switchToNextPlayer() {
+        // Find current player index
         int currentIndex = playerOrder.indexOf(curPlayer.getName());
+        
+        // Calculate next player index
         int nextIndex = (currentIndex + 1) % playerOrder.size();
-        setCurPlayer(playerOrder.get(nextIndex));
+        
+        // Set next player as current
+        String nextPlayerName = playerOrder.get(nextIndex);
+        setCurPlayer(nextPlayerName);
+        
+        System.out.println("Switching to next player: " + nextPlayerName); // Debug log
     }
 
     public void updatePlayerBoard(HashMap<String, Player> players) {
@@ -268,10 +299,14 @@ public class GameController {
     }
 
     private void showNextPlayerTurn() {
+        if (turnOverlay != null) {
+            mainContainer.getChildren().remove(turnOverlay); // Remove existing overlay if any
+        }
+
         try {
             // Load the turn overlay
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
-            StackPane turnOverlay = loader.load();
+            turnOverlay = loader.load();
             Text turnText = (Text) turnOverlay.lookup("#turnText");
             turnText.setText(curPlayer.getName() + "'s Turn");
             
