@@ -51,7 +51,7 @@
                <children>
                   <ImageView fx:id="mapView" fitHeight="400.0" fitWidth="800.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../assets/map.png" />
+                        <Image url="@../assets/map_Tin_2.png" />
                      </image>
                   </ImageView>
                   <Accordion fx:id="accordionView">
@@ -225,7 +225,7 @@
                         <DropShadow spread="0.5" />
                      </effect>
                   </ImageView>
-                  <ImageView fx:id="pikachu" fitHeight="36.0" fitWidth="39.0" layoutX="238.0" layoutY="350.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="pikachu" fitHeight="36.0" fitWidth="39.0" layoutX="238.0" layoutY="350.0" onMouseClicked="#catchPokemon" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
                      <image>
                         <Image url="@../assets/stocks/pikachu.gif" />
                      </image>
