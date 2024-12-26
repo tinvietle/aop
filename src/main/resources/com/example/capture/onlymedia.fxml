@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.Pane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
 
-<Pane fx:id="Pane" xmlns="http://javafx.com/javafx/13" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.capture.OnlyMedia">
-    <children>
-        <MediaView fx:id="mediaView" preserveRatio="true" />
-    </children>
-</Pane>
+<StackPane fx:id="Pane" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.capture.OnlyMedia">
+   <children>
+        <MediaView fx:id="mediaView" fitHeight="450.0" fitWidth="800.0" preserveRatio="true">
+         <StackPane.margin>
+            <Insets />
+         </StackPane.margin></MediaView>
+      <Label fx:id="messageLabel" text="Click anywhere to return">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+   </children>
+</StackPane>

@@ -5,6 +5,7 @@ module com.example {
     requires transitive javafx.fxml;
 
     requires com.fasterxml.jackson.databind;
+    requires javafx.base;
 
     opens com.example to javafx.fxml, com.fasterxml.jackson.databind;
     opens com.example.capture to javafx.fxml, com.fasterxml.jackson.databind;
