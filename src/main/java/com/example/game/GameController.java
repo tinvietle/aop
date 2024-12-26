@@ -188,7 +188,7 @@ public class GameController {
         controller.setPreviousScene(stage, stage.getScene());
 
         // Close the current stage and show the new stage
-        stage.close();
+        // stage.close();
         stage.setTitle("JavaFX MediaPlayer!");
         stage.setScene(onlyMediaScene);
         // stage.setMaximized(true); // Maximize the window
