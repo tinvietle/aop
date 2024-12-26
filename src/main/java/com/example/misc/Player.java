@@ -6,12 +6,12 @@ import java.util.ArrayList;
 public class Player {
     String name;
     int score;
-    List<Pokemon> capturedCastles;
+    List<Pokemon> capturedPokemons;
 
     public Player(String name) {
         this.name = name;
         this.score = 0;
-        this.capturedCastles = new ArrayList<>();
+        this.capturedPokemons = new ArrayList<>();
     }
 
     public String getName() {
@@ -24,5 +24,9 @@ public class Player {
 
     public void addScore(int points) {
         score += points;
+    }
+
+    public void addPokemon(Pokemon pokemon) {
+        capturedPokemons.add(pokemon);
     }
 }

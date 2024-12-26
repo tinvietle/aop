@@ -53,7 +53,7 @@ public class DiceController {
     }
 
     @FXML
-    void roll(ActionEvent event) {
+    void rollHandler(ActionEvent event) {
         rollButton.setDisable(true);
         List<ImageView> diceImages = List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7);
 

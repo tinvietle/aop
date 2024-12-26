@@ -24,6 +24,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -73,6 +74,8 @@ public class GameController {
     private ImageView manectric;
     @FXML
     private ImageView pangoro;
+    @FXML
+    private ImageView pikachu;
     @FXML
     private ImageView talonflame;
 
@@ -129,7 +132,19 @@ public class GameController {
             try {
                 playVideo((Stage) talonflame.getScene().getWindow(), videoPath);
                 curPlayer.addScore(1);
+                Pokemon pokemon = pokemons.get(pokemonName);
+                pokemon.updateOwner(curPlayer);
+                ImageView image = pokemonImages.get(pokemonName);
+                image.setOpacity(0.5);
                 updatePlayerBoard(players);
+                // Create the Tooltip
+                Tooltip tooltip = new Tooltip(pokemon.toString());
+
+                // Set the show delay to 0 milliseconds (instant display)
+                tooltip.setShowDelay(javafx.util.Duration.ZERO);
+
+                // Set the Tooltip on the ImageView
+                Tooltip.install(image, tooltip);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -205,6 +220,7 @@ public class GameController {
         pokemonImages.put("machamp", machamp);
         pokemonImages.put("manectric", manectric);
         pokemonImages.put("pangoro", pangoro);
+        pokemonImages.put("pikachu", pikachu);
         pokemonImages.put("talonflame", talonflame);
 
         for (String name : pokemonImages.keySet()) {
