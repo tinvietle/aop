@@ -9,37 +9,37 @@
 <Pane fx:id="Pane" prefHeight="76.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.game.DiceController">
    <children>
       <Button fx:id="endButton" layoutX="110.0" layoutY="23.0" mnemonicParsing="false" onAction="#endTurn" prefHeight="30.0" prefWidth="60.0" text="End" />
-      <ImageView fx:id="dice6" fitHeight="51.0" fitWidth="51.0" layoutX="637.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="dice6" fitHeight="51.0" fitWidth="51.0" layoutX="637.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
          <image>
             <Image url="@../assets/balls/MasterBall.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="dice5" fitHeight="51.0" fitWidth="51.0" layoutX="558.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="dice5" fitHeight="51.0" fitWidth="51.0" layoutX="558.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
          <image>
             <Image url="@../assets/balls/UltraBall.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="dice7" fitHeight="51.0" fitWidth="51.0" layoutX="714.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="dice7" fitHeight="51.0" fitWidth="51.0" layoutX="714.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
          <image>
             <Image url="@../assets/balls/MasterBall.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="dice4" fitHeight="51.0" fitWidth="51.0" layoutX="478.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="dice4" fitHeight="51.0" fitWidth="51.0" layoutX="478.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
          <image>
             <Image url="@../assets/balls/GreatBall.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="dice3" fitHeight="51.0" fitWidth="51.0" layoutX="392.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="dice3" fitHeight="51.0" fitWidth="51.0" layoutX="392.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
          <image>
             <Image url="@../assets/balls/3Pokeball.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="dice2" fitHeight="51.0" fitWidth="51.0" layoutX="300.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="dice2" fitHeight="51.0" fitWidth="51.0" layoutX="300.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
          <image>
             <Image url="@../assets/balls/2Pokeball.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="dice1" fitHeight="51.0" fitWidth="51.0" layoutX="208.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="dice1" fitHeight="51.0" fitWidth="51.0" layoutX="208.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
          <image>
             <Image url="@../assets/balls/1Pokeball.png" />
          </image>
