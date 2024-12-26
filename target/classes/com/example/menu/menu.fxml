@@ -10,7 +10,7 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.menu.MenuController">
+<StackPane fx:id="rootPane" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.menu.MenuController">
     <children>
         <!-- Background Video -->
         <MediaView fx:id="backgroundVideo">
@@ -21,30 +21,34 @@
         <!-- Game UI -->
         <BorderPane>
             <top>
-                <Label text="Age Of Pokemon" BorderPane.alignment="CENTER">
+                <Label fx:id="titleText" text="Age Of Pokemon" BorderPane.alignment="CENTER">
                     <font>
                         <Font name="Arial Bold" size="36" />
                     </font>
-                    <padding>
-                        <Insets top="20" />
-                    </padding>
+               <padding>
+                  <Insets top="20.0" />
+               </padding>
                 </Label>
             </top>
             <center>
                 <VBox alignment="CENTER" spacing="15">
                     <children>
-                        <Button fx:id="startButton" prefWidth="200" style="-fx-cursor: hand;" text="Start Game" />
-                        <Button fx:id="settingsButton" prefWidth="200" style="-fx-cursor: hand;" text="Settings" />
-                        <Button fx:id="exitButton" prefWidth="200" style="-fx-cursor: hand;" text="Exit" />
+                        <Button fx:id="startButton" prefHeight="50.0" prefWidth="500.0" style="-fx-cursor: hand;" text="Start Game" />
+                        <Button fx:id="settingsButton" prefHeight="50.0" prefWidth="500.0" style="-fx-cursor: hand;" text="Settings" />
+                        <Button fx:id="exitButton" prefHeight="50.0" prefWidth="500.0" style="-fx-cursor: hand;" text="Exit" />
                     </children>
                 </VBox>
             </center>
             <bottom>
-                <Label text="© 2024 TAM Studio" BorderPane.alignment="CENTER">
-                    <padding>
-                        <Insets bottom="10" />
-                    </padding>
-                </Label>
+            <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+               <children>
+                      <Label text="© 2024 TAM Studio">
+                          <padding>
+                              <Insets bottom="10" />
+                          </padding>
+                      </Label>
+               </children>
+            </VBox>
             </bottom>
         </BorderPane>
     </children>

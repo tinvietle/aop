@@ -5,10 +5,12 @@ import com.example.App;
 import com.example.misc.Utils;
 
 import javafx.animation.TranslateTransition;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.media.MediaView; 
 
 import javafx.scene.layout.StackPane;
@@ -32,11 +34,45 @@ public class MenuController {
     private StackPane rootPane;  // Add this FXML injection for the root pane
 
     @FXML
+    private Label titleText;
+
+    @FXML
     public void initialize() {
         // Initialize the background video player
         VideoPlayer.playBackgroundVideo(backgroundVideo);
 
         backgroundVideo.setPreserveRatio(false);
+
+        // Bind background video size to the root pane size
+        backgroundVideo.fitWidthProperty().bind(rootPane.widthProperty());
+        backgroundVideo.fitHeightProperty().bind(rootPane.heightProperty());
+
+        // Bind buttons width to the root pane width
+        startButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
+        settingsButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
+        exitButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
+
+        // Bind buttons height to the root pane height
+        startButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
+        settingsButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
+        exitButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
+
+        // Bind font size to scene width, and add other attributes: bold, black
+        titleText.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.05), ";",
+                "-fx-font-weight: bold; ",
+                "-fx-text-fill: black;"));
+
+        // Bind button font size to scene width, and add other attributes: bold, black
+        startButton.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.01), ";",
+                "-fx-text-fill: black;"));
+        settingsButton.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.01), ";",
+                "-fx-text-fill: black;"));
+        exitButton.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.01), ";",
+                "-fx-text-fill: black;"));
 
         // Set up button event handlers
         startButton.setOnAction(event -> handleStartGame());
