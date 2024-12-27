@@ -42,7 +42,7 @@
       </MenuBar>
    </top>
    <bottom>
-      <fx:include fx:id="rollIncludedPane" source="diceLayout.fxml" />
+      <fx:include fx:id="dicePane" source="diceLayout.fxml" />
    </bottom>
    <center>
       <StackPane fx:id="stackPane" prefHeight="400.0" prefWidth="800.0" BorderPane.alignment="CENTER">

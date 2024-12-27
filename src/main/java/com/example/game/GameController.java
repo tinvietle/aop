@@ -20,6 +20,7 @@ import com.example.misc.Utils;
 import com.example.settings.SettingsController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.ArrayList;
 
 import javafx.fxml.FXML;
@@ -62,6 +63,9 @@ public class GameController {
 
     @FXML
     private GridPane playerInfo;
+    
+    @FXML
+    public DiceController dicePaneController;
 
     @FXML
     private ImageView cloyster;
@@ -94,7 +98,7 @@ public class GameController {
     @FXML
     private BorderPane borderPane;
     @FXML
-    private Pane rollIncludedPane;
+    private Pane dicePane;
     @FXML
     private MenuBar menuBar;
     @FXML
@@ -242,6 +246,24 @@ public class GameController {
         }
     }
 
+    public void nextTurn() {
+        System.out.println("Next Turn");
+
+        dicePaneController.resetDice();
+
+        // Get the list of keys (player names) in the map
+        List<String> keys = new ArrayList<>(players.keySet());
+        
+        // Find the current player's index
+        int index = keys.indexOf(curPlayer.getName());
+
+        // Determine the next player's index
+        int nextIndex = (index + 1) % keys.size(); // Wrap around using modulo
+
+        // Update the current player to the next player
+        setCurPlayer(keys.get(nextIndex));
+    }
+
     @FXML
     private void initialize() {
         pokemonImages.put("cloyster", cloyster);
@@ -273,6 +295,8 @@ public class GameController {
             Tooltip.install(image, tooltip);
         }
 
+        dicePaneController.setOnRollComplete(() -> nextTurn());
+
         // Get screen dimensions
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
@@ -293,9 +317,9 @@ public class GameController {
         mapView.fitWidthProperty().bind(stackPane.widthProperty());
         mapView.fitHeightProperty().bind(stackPane.heightProperty());
 
-        // Bind the rollIncludedPane's dimensions to the BorderPane
-        rollIncludedPane.prefWidthProperty().bind(borderPane.widthProperty());
-        rollIncludedPane.prefHeightProperty().bind(borderPane.heightProperty().multiply(76.0 / 500.0));
+        // Bind the dicePane's dimensions to the BorderPane
+        dicePane.prefWidthProperty().bind(borderPane.widthProperty());
+        dicePane.prefHeightProperty().bind(borderPane.heightProperty().multiply(76.0 / 500.0));
 
         // Bind the playerInfo's dimensions to the BorderPane
         playerInfo.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.2));

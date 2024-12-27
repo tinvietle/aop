@@ -222,13 +222,11 @@ public class DiceController {
         result.delete(result.length() - 2, result.length());
 
         System.out.println("Result: " + result.toString());
-        
-        resetTurn();
 
-        // // Notify the roll completion
-        // if (onRollComplete != null) {
-        //     onRollComplete.run();
-        // }
+        // Notify the roll completion
+        if (onRollComplete != null) {
+            onRollComplete.run();
+        }
     }
 
     public String getResult(){
@@ -239,7 +237,7 @@ public class DiceController {
         this.onRollComplete = onRollComplete;
     }
 
-    public void resetTurn() {
+    public void resetDice() {
         System.out.println("Resetting turn");
 
         // Reset the number of kept dice

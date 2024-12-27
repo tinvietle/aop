@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import com.example.App;
+import com.example.game.DiceController;
 import com.example.game.GameController;
 
 import javafx.animation.TranslateTransition;
