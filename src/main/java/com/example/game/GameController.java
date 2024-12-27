@@ -232,7 +232,7 @@ public class GameController {
         
         // Add a callback to handle turn transition after video ends
         controller.setOnVideoFinished(() -> {
-            switchToNextPlayer();
+            nextTurn();
             SoundManager.getInstance().playRandomBGM();
         });
 
@@ -291,12 +291,6 @@ public class GameController {
         }
     }
 
-    private void switchToNextPlayer() {
-        currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
-        curPlayer = playerList.get(currentPlayerIndex);
-        showTurnTransition();
-    }
-
     public void updatePlayerBoard(HashMap<String, Player> players) {
         playerInfo.getChildren().clear();
         Label playerHeader = new Label("Players");
@@ -323,13 +317,12 @@ public class GameController {
         List<String> keys = new ArrayList<>(players.keySet());
         
         // Find the current player's index
-        int index = keys.indexOf(curPlayer.getName());
-
-        // Determine the next player's index
-        int nextIndex = (index + 1) % keys.size(); // Wrap around using modulo
+        currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
 
         // Update the current player to the next player
-        setCurPlayer(keys.get(nextIndex));
+        setCurPlayer(keys.get(currentPlayerIndex));
+
+        showTurnTransition();
     }
 
     @FXML
