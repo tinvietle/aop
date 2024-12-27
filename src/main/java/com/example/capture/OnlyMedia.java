@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -27,6 +26,11 @@ public class OnlyMedia {
     private Stage primaryStage;
     private Scene previousScene;
     private boolean isMediaLoading = false;
+    private Runnable onVideoFinished;
+
+    public void setOnVideoFinished(Runnable callback) {
+        this.onVideoFinished = callback;
+    }
 
     public void initializeMedia(String mediaPath, double width, double height) {
         try {
@@ -88,21 +92,7 @@ public class OnlyMedia {
         messageLabel.setVisible(false);
 
         mediaPlayer.setOnEndOfMedia(() -> {
-            System.out.println("Media playback completed");
-            // Apply blur effect to the video
-            GaussianBlur blur = new GaussianBlur(15);
-            mediaView.setEffect(blur);
-
-            // Show the label
-            messageLabel.setVisible(true);
-
-            // Allow clicking anywhere to return to the previous scene
-            Pane.setOnMouseClicked(event -> {
-                if (primaryStage != null && previousScene != null) {
-                    primaryStage.setScene(previousScene);
-                    primaryStage.centerOnScreen();
-                }
-            });
+            handleVideoEnd();
         });
 
         mediaPlayer.statusProperty().addListener((observable, oldStatus, newStatus) -> {
@@ -158,6 +148,20 @@ public class OnlyMedia {
         }
 
         isMediaLoading = false;
+    }
+
+    private void handleVideoEnd() {
+        if (onVideoFinished != null) {
+            onVideoFinished.run();
+        }
+        returnToPreviousScene();
+    }
+
+    private void returnToPreviousScene() {
+        if (primaryStage != null && previousScene != null) {
+            primaryStage.setScene(previousScene);
+            primaryStage.centerOnScreen();
+        }
     }
 
     // Method to set reference to the stage and the previous scene

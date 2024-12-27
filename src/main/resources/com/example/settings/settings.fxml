@@ -17,8 +17,10 @@
             <Label style="-fx-font-size: 24px; -fx-text-fill: white;" text="Sound Settings" />
             
             <VBox alignment="CENTER" spacing="10">
-                <Label style="-fx-text-fill: white;" text="BGM Volume" />
-                <Slider fx:id="volumeSlider" max="1" min="0" prefWidth="300" showTickLabels="true" showTickMarks="true" style="-fx-control-inner-background: white;" value="0.5" />
+                <Label text="BGM Volume" style="-fx-text-fill: white;"/>
+                <Slider fx:id="volumeSlider" min="0" max="1" value="0.25" 
+                        showTickLabels="true" showTickMarks="true" prefWidth="300"
+                        style="-fx-control-inner-background: white;"/>
             </VBox>
 
             <Button onAction="#backToMenu" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;" text="Back" />
