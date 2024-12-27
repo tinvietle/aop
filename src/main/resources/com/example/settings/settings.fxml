@@ -16,7 +16,7 @@
             
             <VBox alignment="CENTER" spacing="10">
                 <Label text="BGM Volume" style="-fx-text-fill: white;"/>
-                <Slider fx:id="volumeSlider" min="0" max="1" value="0.5" 
+                <Slider fx:id="volumeSlider" min="0" max="1" value="0.25" 
                         showTickLabels="true" showTickMarks="true" prefWidth="300"
                         style="-fx-control-inner-background: white;"/>
             </VBox>

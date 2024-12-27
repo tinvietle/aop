@@ -3,17 +3,19 @@ package com.example.menu;
 
 import com.example.App;
 import com.example.misc.Utils;
+import com.example.settings.SettingsController;
 
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.media.MediaView; 
-
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaView;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class MenuController {
@@ -120,34 +122,18 @@ public class MenuController {
 
     private void handleSettings() {
         try {
-            // Update the path to match your project structure
-            Parent settingsRoot = App.loadFXML("settings/settings");
-            Scene currentScene = rootPane.getScene();
-            double sceneWidth = currentScene.getWidth();
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/settings/settings.fxml"));
+            Parent settingsRoot = loader.load();
+            Scene settingsScene = new Scene(settingsRoot);
+            Stage stage = (Stage) rootPane.getScene().getWindow();
             
-            // Create a container for both screens
-            StackPane container = new StackPane();
-            settingsRoot.setTranslateX(sceneWidth);
-            container.getChildren().addAll(rootPane, settingsRoot);
+            // Get the controller and set the previous scene
+            SettingsController settingsController = loader.getController();
+            settingsController.setPreviousScene(stage, stage.getScene());
             
-            // Set the container as the new root
-            currentScene.setRoot(container);
-            
-            // Create transitions for both screens
-            TranslateTransition slideOut = new TranslateTransition(Duration.millis(500), rootPane);
-            slideOut.setToX(-sceneWidth);
-            
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(500), settingsRoot);
-            slideIn.setToX(0);
-            
-            // Play both transitions
-            slideOut.play();
-            slideIn.play();
-            
-            // When animation finishes, clean up
-            slideIn.setOnFinished(event -> {
-                container.getChildren().remove(rootPane);
-            });
+            // Switch to settings scene
+            stage.setScene(settingsScene);
+            stage.centerOnScreen();
             
         } catch (Exception e) {
             System.err.println("Error loading settings: " + e.getMessage());

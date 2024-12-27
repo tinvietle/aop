@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Text?>
+
+<StackPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:id="turnOverlay" style="-fx-background-color: rgba(0, 0, 0, 0.5);" mouseTransparent="true">
+    <children>
+        <Text fx:id="turnText" style="-fx-font-size: 48px; -fx-fill: white;" />
+    </children>
+</StackPane>

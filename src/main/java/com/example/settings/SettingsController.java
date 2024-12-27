@@ -6,9 +6,7 @@ import java.net.URL;
 import com.example.App;
 import com.example.misc.SoundManager;
 
-import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
@@ -18,7 +16,7 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
+import javafx.stage.Stage;
 
 public class SettingsController {
     @FXML
@@ -26,6 +24,9 @@ public class SettingsController {
 
     @FXML
     private StackPane settingsRootPane;
+
+    private Stage primaryStage;
+    private Scene previousScene;
 
     @FXML
     public void initialize() {
@@ -72,33 +73,15 @@ public class SettingsController {
     }
 
     @FXML
-    private void backToMenu() throws IOException {
-        Parent menuRoot = App.loadFXML("menu/menu");
-        Scene currentScene = settingsRootPane.getScene();
-        double sceneWidth = currentScene.getWidth();
-        
-        // Create a container for both screens
-        StackPane container = new StackPane();
-        menuRoot.setTranslateX(-sceneWidth);
-        container.getChildren().addAll(settingsRootPane, menuRoot);
-        
-        // Set the container as the new root
-        currentScene.setRoot(container);
-        
-        // Create transitions for both screens
-        TranslateTransition slideOut = new TranslateTransition(Duration.millis(500), settingsRootPane);
-        slideOut.setToX(sceneWidth);
-        
-        TranslateTransition slideIn = new TranslateTransition(Duration.millis(500), menuRoot);
-        slideIn.setToX(0);
-        
-        // Play both transitions
-        slideOut.play();
-        slideIn.play();
-        
-        // When animation finishes, clean up
-        slideIn.setOnFinished(event -> {
-            container.getChildren().remove(settingsRootPane);
-        });
+    private void backToMenu() {
+        if (primaryStage != null && previousScene != null) {
+            primaryStage.setScene(previousScene);
+            primaryStage.centerOnScreen();
+        }
+    }
+
+    public void setPreviousScene(Stage stage, Scene scene) {
+        this.primaryStage = stage;
+        this.previousScene = scene;
     }
 }

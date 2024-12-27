@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.Stack;
-
+import java.util.List;
+import javafx.animation.FadeTransition;
+import javafx.scene.text.Text;
 
 import com.example.App;
 import com.example.capture.OnlyMedia;
@@ -58,6 +60,9 @@ public class GameController {
     ArrayList<Pokemon> pokemonLists;
     
     Player curPlayer;
+    
+    private List<Player> playerList;
+    private int currentPlayerIndex = 0;
 
     @FXML
     private GridPane playerInfo;
@@ -106,6 +111,10 @@ public class GameController {
     private Menu helpMenu;
     @FXML
     private Accordion accordionView;
+    @FXML
+    private StackPane turnOverlay;
+    @FXML
+    private Text turnText;
     
 
     public GameController() {
@@ -139,30 +148,41 @@ public class GameController {
     
     @FXML
     private void openSettings() throws IOException {   
-        // Load settings scene
-        Parent settingsRoot = App.loadFXML("settings/settings");
-        Scene currentScene = playerInfo.getScene();
-        
-        // Direct scene switch without transition
-        currentScene.setRoot(settingsRoot);
+        try {
+            // Load settings scene
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/settings/settings.fxml"));
+            Parent settingsRoot = loader.load();
+            Scene settingsScene = new Scene(settingsRoot);
+            Stage stage = (Stage) borderPane.getScene().getWindow();
+            
+            // Get the controller and set the previous scene
+            SettingsController settingsController = loader.getController();
+            settingsController.setPreviousScene(stage, stage.getScene());
+            
+            // Switch to settings scene
+            stage.setScene(settingsScene);
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            System.err.println("Error opening settings: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void catchPokemon(MouseEvent event) {
-        // Get the node that triggered the event
         Node source = (Node) event.getSource();
-        String pokemonName = (String) source.getId(); // Retrieve userData
+        String pokemonName = (String) source.getId();
 
         String path = "src\\main\\resources\\com\\example\\assets\\stocks\\%s.mp4";
         String videoPath = Paths.get(String.format(path, pokemonName)).toUri().toString();
 
         if (confirmCatch()) {
             try {
-                // Get the stage from the current scene and play the video
                 Stage stage = (Stage) playerInfo.getScene().getWindow();
-                playVideo(stage, videoPath);
                 curPlayer.addScore(1);
                 updatePlayerBoard(players);
+                playVideo(stage, videoPath);
+                // Remove switchToNextPlayer() from here as it will be called after video ends
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -178,7 +198,7 @@ public class GameController {
 
     private void playVideo(Stage stage, String videoPath) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));
-        Scene onlyMediaScene = new Scene(fxmlLoader.load()); // Load the onlymedia.fxml file
+        Scene onlyMediaScene = new Scene(fxmlLoader.load());
         OnlyMedia controller = fxmlLoader.getController();
 
         // Get the size of current stage to pass to the controller
@@ -186,28 +206,71 @@ public class GameController {
 
         // Pass the stage and the previous scene to the controller
         controller.setPreviousScene(stage, stage.getScene());
+        
+        // Add a callback to handle turn transition after video ends
+        controller.setOnVideoFinished(() -> {
+            switchToNextPlayer();
+        });
 
-        // Close the current stage and show the new stage
-        // stage.close();
         stage.setTitle("JavaFX MediaPlayer!");
         stage.setScene(onlyMediaScene);
-        // stage.setMaximized(true); // Maximize the window
         stage.setResizable(true);
         stage.centerOnScreen();
         stage.show();
     }
 
     public void registerPlayer(String[] names) {
+        playerList = new ArrayList<>();
         for (String name : names) {
             Player player = new Player(name);
             players.put(name, player);
+            playerList.add(player);
             System.out.println("Player registered: " + player.getName());
         }
 
-        // String[] scores = new String[players.size()]; // Array of String objects, initially null
-        // Arrays.fill(scores, "0"); // Fills the array with 0
-
         updatePlayerBoard(players);
+        // Set initial player and show first turn
+        curPlayer = playerList.get(0);
+        showTurnTransition();
+    }
+
+    private void showTurnTransition() {
+        // Load the overlay FXML
+        try {
+            if (turnOverlay == null) {
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
+                StackPane overlay = loader.load();
+                turnOverlay = overlay;
+                turnText = (Text) overlay.lookup("#turnText");
+                stackPane.getChildren().add(overlay);
+            }
+
+            // Set the text for current player's turn
+            turnText.setText(curPlayer.getName() + "'s Turn");
+
+            // Create fade in transition
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), turnOverlay);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+
+            // Create fade out transition
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), turnOverlay);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setDelay(Duration.seconds(2));
+
+            // Play transitions in sequence
+            fadeIn.setOnFinished(e -> fadeOut.play());
+            fadeIn.play();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void switchToNextPlayer() {
+        currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
+        curPlayer = playerList.get(currentPlayerIndex);
+        showTurnTransition();
     }
 
     public void updatePlayerBoard(HashMap<String, Player> players) {
@@ -314,6 +377,18 @@ public class GameController {
         helpMenu.styleProperty().bind(Bindings.concat(
                 "-fx-font-size: ", borderPane.heightProperty().multiply(0.02), ";",
                 "-fx-text-fill: black;"));
+        
+        // Initialize turn overlay as invisible
+        try {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
+            StackPane overlay = loader.load();
+            turnOverlay = overlay;
+            turnText = (Text) overlay.lookup("#turnText");
+            turnOverlay.setOpacity(0);
+            stackPane.getChildren().add(overlay);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void bindImageView(ImageView imageView, double X, double Y, double width, double height) {
@@ -327,4 +402,3 @@ public class GameController {
         curPlayer = players.get(name);
     }
 }
-
