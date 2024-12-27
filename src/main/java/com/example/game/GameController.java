@@ -20,6 +20,7 @@ import com.example.misc.Pokemon;
 import com.example.misc.PokemonReader;
 import com.example.misc.Utils;
 import com.example.settings.SettingsController;
+import com.example.misc.SoundManager;
 
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -197,6 +198,9 @@ public class GameController {
     }
 
     private void playVideo(Stage stage, String videoPath) throws IOException {
+        // Stop BGM before playing video
+        SoundManager.getInstance().stopBGM();
+
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));
         Scene onlyMediaScene = new Scene(fxmlLoader.load());
         OnlyMedia controller = fxmlLoader.getController();
@@ -210,6 +214,7 @@ public class GameController {
         // Add a callback to handle turn transition after video ends
         controller.setOnVideoFinished(() -> {
             switchToNextPlayer();
+            SoundManager.getInstance().playRandomBGM();
         });
 
         stage.setTitle("JavaFX MediaPlayer!");

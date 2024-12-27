@@ -69,6 +69,12 @@ public class SoundManager {
         }
     }
 
+    public void stopBGM() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
+    }
+
     public void setVolume(double volume) {
         this.volume = volume;
         if (mediaPlayer != null) {
