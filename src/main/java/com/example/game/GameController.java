@@ -8,7 +8,7 @@ import javafx.scene.Node;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.Stack;
+
 import java.util.List;
 import javafx.animation.FadeTransition;
 import javafx.scene.text.Text;
@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 import com.example.App;
 import com.example.capture.OnlyMedia;
 import com.example.misc.Player;
+import com.example.misc.Pokeball;
 import com.example.misc.Pokemon;
 import com.example.misc.PokemonReader;
 import com.example.misc.Utils;
@@ -23,7 +24,6 @@ import com.example.settings.SettingsController;
 import com.example.misc.SoundManager;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.ArrayList;
 
 import javafx.fxml.FXML;
@@ -33,28 +33,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
 import javafx.util.Duration;
 import javafx.stage.Screen;
-import javafx.beans.binding.Bindings;
 
 
 public class GameController {
 
-    HashMap<String, Player> players = new HashMap<String, Player>();
+    // HashMap<String, Player> players = new HashMap<String, Player>();
+
+    List<Player> players = new ArrayList<Player>();
 
     HashMap<String, Pokemon> pokemons = new HashMap<String, Pokemon>();
 
@@ -64,8 +60,10 @@ public class GameController {
     
     Player curPlayer;
     
-    private List<Player> playerList;
     private int currentPlayerIndex = 0;
+    private Pokemon chosenPokemon;
+
+    boolean isPokemonHandled = false;
 
     @FXML
     private GridPane playerInfo;
@@ -133,197 +131,6 @@ public class GameController {
         }
     }
 
-    @FXML
-    private void newGame() throws IOException {
-        System.out.println("New Game");
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/menu/menu.fxml"));
-        Scene menuScene = new Scene(fxmlLoader.load()); // Load the onlymedia.fxml file
-
-        Stage stage = (Stage) playerInfo.getScene().getWindow();
-
-        stage.setTitle("Age of Pokemon");
-        stage.setScene(menuScene);
-        stage.setMaximized(true); // Maximize the window
-        stage.setResizable(true); // Enable resizing
-        stage.centerOnScreen();
-        stage.show();
-    }
-
-    @FXML
-    private void closeProgram() {
-        Utils.closeProgram();
-    }
-    
-    @FXML
-    private void openSettings() throws IOException {   
-        try {
-            // Load settings scene
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/settings/settings.fxml"));
-            Parent settingsRoot = loader.load();
-            Scene settingsScene = new Scene(settingsRoot);
-            Stage stage = (Stage) borderPane.getScene().getWindow();
-            
-            // Get the controller and set the previous scene
-            SettingsController settingsController = loader.getController();
-            settingsController.setPreviousScene(stage, stage.getScene());
-            
-            // Switch to settings scene
-            stage.setScene(settingsScene);
-            stage.centerOnScreen();
-        } catch (Exception e) {
-            System.err.println("Error opening settings: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void catchPokemon(MouseEvent event) {
-        Node source = (Node) event.getSource();
-        String pokemonName = (String) source.getId();
-
-        String path = "src\\main\\resources\\com\\example\\assets\\stocks\\%s.mp4";
-        String videoPath = Paths.get(String.format(path, pokemonName)).toUri().toString();
-
-        if (confirmCatch()) {
-            try {
-                Stage stage = (Stage) playerInfo.getScene().getWindow();
-                curPlayer.addScore(1);
-                Pokemon pokemon = pokemons.get(pokemonName);
-                pokemon.updateOwner(curPlayer);
-                ImageView image = pokemonImages.get(pokemonName);
-                image.setOpacity(0.5);
-                updatePlayerBoard(players);
-                // Create the Tooltip
-                Tooltip tooltip = new Tooltip(pokemon.toString());
-
-                // Set the show delay to 0 milliseconds (instant display)
-                tooltip.setShowDelay(javafx.util.Duration.ZERO);
-
-                // Set the Tooltip on the ImageView
-                Tooltip.install(image, tooltip);
-                playVideo(stage, videoPath);
-                // Remove switchToNextPlayer() from here as it will be called after video ends
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @FXML
-    private boolean confirmCatch() {
-        Alert alert = Utils.confirmBox("Catch a Pokemon", "Are you sure that you want to catch this pokemon?", "Press OK to catch the pokemon.");
-        Optional<ButtonType> result = alert.showAndWait();
-        return (result.get() == ButtonType.OK);
-    }
-
-    private void playVideo(Stage stage, String videoPath) throws IOException {
-        // Stop BGM before playing video
-        SoundManager.getInstance().stopBGM();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));
-        Scene onlyMediaScene = new Scene(fxmlLoader.load());
-        OnlyMedia controller = fxmlLoader.getController();
-
-        // Get the size of current stage to pass to the controller
-        controller.initializeMedia(videoPath, stage.getWidth(), stage.getHeight());
-
-        // Pass the stage and the previous scene to the controller
-        controller.setPreviousScene(stage, stage.getScene());
-        
-        // Add a callback to handle turn transition after video ends
-        controller.setOnVideoFinished(() -> {
-            nextTurn();
-            SoundManager.getInstance().playRandomBGM();
-        });
-
-        stage.setTitle("JavaFX MediaPlayer!");
-        stage.setScene(onlyMediaScene);
-        stage.setResizable(true);
-        stage.centerOnScreen();
-        stage.show();
-    }
-
-    public void registerPlayer(String[] names) {
-        playerList = new ArrayList<>();
-        for (String name : names) {
-            Player player = new Player(name);
-            players.put(name, player);
-            playerList.add(player);
-            System.out.println("Player registered: " + player.getName());
-        }
-
-        updatePlayerBoard(players);
-        // Set initial player and show first turn
-        curPlayer = playerList.get(0);
-        showTurnTransition();
-    }
-
-    private void showTurnTransition() {
-        // Load the overlay FXML
-        try {
-            if (turnOverlay == null) {
-                FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
-                StackPane overlay = loader.load();
-                turnOverlay = overlay;
-                turnText = (Text) overlay.lookup("#turnText");
-                stackPane.getChildren().add(overlay);
-            }
-
-            // Set the text for current player's turn
-            turnText.setText(curPlayer.getName() + "'s Turn");
-
-            // Create fade in transition
-            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), turnOverlay);
-            fadeIn.setFromValue(0);
-            fadeIn.setToValue(1);
-
-            // Create fade out transition
-            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), turnOverlay);
-            fadeOut.setFromValue(1);
-            fadeOut.setToValue(0);
-            fadeOut.setDelay(Duration.seconds(2));
-
-            // Play transitions in sequence
-            fadeIn.setOnFinished(e -> fadeOut.play());
-            fadeIn.play();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updatePlayerBoard(HashMap<String, Player> players) {
-        playerInfo.getChildren().clear();
-        Label playerHeader = new Label("Players");
-        Label scoreHeader = new Label("Scores");
-        playerInfo.add(playerHeader, 0, 0);
-        playerInfo.add(scoreHeader, 1, 0);
-
-        int i = 0;
-        for (Player player: players.values()) {
-            Label name = new Label(player.getName());
-            Label score = new Label(Integer.toString(player.getScore()));
-            playerInfo.add(name, 0, i+1);
-            playerInfo.add(score, 1, i+1);
-            i++;
-        }
-    }
-
-    public void nextTurn() {
-        System.out.println("Next Turn");
-
-        dicePaneController.resetDice();
-
-        // Get the list of keys (player names) in the map
-        List<String> keys = new ArrayList<>(players.keySet());
-        
-        // Find the current player's index
-        currentPlayerIndex = (currentPlayerIndex + 1) % playerList.size();
-
-        // Update the current player to the next player
-        setCurPlayer(keys.get(currentPlayerIndex));
-
-        showTurnTransition();
-    }
 
     @FXML
     private void initialize() {
@@ -342,21 +149,23 @@ public class GameController {
         pokemonImages.put("pikachu", pikachu);
         pokemonImages.put("talonflame", talonflame);
 
-        for (String name : pokemonImages.keySet()) {
-
-            ImageView image = pokemonImages.get(name);
+        for (Pokemon pokemon : pokemons.values()) {
+            ImageView image = pokemonImages.get(pokemon.getName());
 
             // Create the Tooltip
-            Tooltip tooltip = new Tooltip(pokemons.get(name).toString());
+            Tooltip tooltip = new Tooltip(pokemon.toString());
 
             // Set the show delay to 0 milliseconds (instant display)
             tooltip.setShowDelay(javafx.util.Duration.ZERO);
 
-            // Set the Tooltip on the ImageView
             Tooltip.install(image, tooltip);
         }
 
-        dicePaneController.setOnRollComplete(() -> nextTurn());
+        disableAllPokemons();
+
+        dicePaneController.setGameController(this);
+
+        dicePaneController.setOnRollComplete(() -> endTurn());
 
         // Get screen dimensions
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
@@ -429,6 +238,124 @@ public class GameController {
         }
     }
 
+
+    @FXML
+    private void newGame() throws IOException {
+        System.out.println("New Game");
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/menu/menu.fxml"));
+        Scene menuScene = new Scene(fxmlLoader.load()); // Load the onlymedia.fxml file
+
+        Stage stage = (Stage) playerInfo.getScene().getWindow();
+
+        stage.setTitle("Age of Pokemon");
+        stage.setScene(menuScene);
+        stage.setMaximized(true); // Maximize the window
+        stage.setResizable(true); // Enable resizing
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    @FXML
+    private void closeProgram() {
+        Utils.closeProgram();
+    }
+    
+    @FXML
+    private void openSettings() throws IOException {   
+        try {
+            // Load settings scene
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/settings/settings.fxml"));
+            Parent settingsRoot = loader.load();
+            Scene settingsScene = new Scene(settingsRoot);
+            Stage stage = (Stage) borderPane.getScene().getWindow();
+            
+            // Get the controller and set the previous scene
+            SettingsController settingsController = loader.getController();
+            settingsController.setPreviousScene(stage, stage.getScene());
+            
+            // Switch to settings scene
+            stage.setScene(settingsScene);
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            System.err.println("Error opening settings: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void choosePokemon(MouseEvent event) {
+        if (!isPokemonHandled) {
+            return;
+        }
+
+        Node source = (Node) event.getSource();
+        String pokemonName = (String) source.getId();
+
+        if (confirmChoose()) {
+            try {
+                Pokemon pokemon = pokemons.get(pokemonName);
+                chosenPokemon = pokemon;
+
+                System.out.println("Chose " + pokemon.getName());
+
+                disableAllPokemons();
+
+                // Enable the roll button
+                dicePaneController.disableButtons(false, false);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    private boolean confirmChoose() {
+        Alert alert = Utils.confirmBox("Choose a Pokemon", "Are you sure that you want to choose this pokemon?", "Press OK to choose the pokemon.");
+        Optional<ButtonType> result = alert.showAndWait();
+        return (result.get() == ButtonType.OK);
+    }
+
+    @FXML
+    public void catchPokemon(Pokeball roll) {
+        if (roll.compare(chosenPokemon.getRequirements())) {
+            System.out.println("Caught the pokemon");
+
+            if (chosenPokemon.getOwner() != null) {
+                chosenPokemon.getOwner().updateScore(-chosenPokemon.getScore());
+                chosenPokemon.getOwner().removePokemon(chosenPokemon);
+            }
+        
+            curPlayer.updateScore(chosenPokemon.getScore());
+            curPlayer.addPokemon(chosenPokemon);
+            chosenPokemon.updateOwner(curPlayer);
+            ImageView image = pokemonImages.get(chosenPokemon.getName());
+            image.setOpacity(0.5);
+            updatePlayerBoard(players);
+            // Create the Tooltip
+            Tooltip tooltip = new Tooltip(chosenPokemon.toString());
+
+            // Set the show delay to 0 milliseconds (instant display)
+            tooltip.setShowDelay(javafx.util.Duration.ZERO);
+
+            Tooltip.install(image, tooltip);
+
+            String path = "src\\main\\resources\\com\\example\\assets\\stocks\\%s.mp4";
+            String videoPath = Paths.get(String.format(path, chosenPokemon.getName())).toUri().toString();
+
+            try {
+                playVideo((Stage) playerInfo.getScene().getWindow(), videoPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            System.out.println("Failed to catch the pokemon");
+            System.out.println("Requirements: " + chosenPokemon.getRequirements().toString());
+            System.out.println("Roll: " + roll.toString());
+        }
+    }
+
     private void bindImageView(ImageView imageView, double X, double Y, double width, double height) {
         imageView.layoutXProperty().bind(stackPane.widthProperty().multiply(X / 800.0));
         imageView.layoutYProperty().bind(stackPane.heightProperty().multiply(Y / 400.0));
@@ -436,7 +363,140 @@ public class GameController {
         imageView.fitHeightProperty().bind(stackPane.heightProperty().multiply(height));
     }
 
-    public void setCurPlayer(String name) {
-        curPlayer = players.get(name);
+    private void playVideo(Stage stage, String videoPath) throws IOException {
+        // Stop BGM before playing video
+        SoundManager.getInstance().stopBGM();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));
+        Scene onlyMediaScene = new Scene(fxmlLoader.load());
+        OnlyMedia controller = fxmlLoader.getController();
+
+        // Get the size of current stage to pass to the controller
+        controller.initializeMedia(videoPath, stage.getWidth(), stage.getHeight());
+
+        // Pass the stage and the previous scene to the controller
+        controller.setPreviousScene(stage, stage.getScene());
+        
+        // Add a callback to handle turn transition after video ends
+        controller.setOnVideoFinished(() -> {
+            SoundManager.getInstance().playRandomBGM();
+        });
+
+        stage.setTitle("JavaFX MediaPlayer!");
+        stage.setScene(onlyMediaScene);
+        stage.setResizable(true);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    public void registerPlayer(String[] names) {
+        for (String name : names) {
+            Player player = new Player(name);
+            players.add(player);
+            System.out.println("Player registered: " + player.getName());
+        }
+
+        updatePlayerBoard(players);
+        // Set initial player and show first turn
+        setCurPlayer(players.get(0));
+        showTurnTransition();
+    }
+
+    private void showTurnTransition() {
+        // Load the overlay FXML
+        try {
+            if (turnOverlay == null) {
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
+                StackPane overlay = loader.load();
+                turnOverlay = overlay;
+                turnText = (Text) overlay.lookup("#turnText");
+                stackPane.getChildren().add(overlay);
+            }
+
+            // Set the text for current player's turn
+            turnText.setText(curPlayer.getName() + "'s Turn");
+
+            // Create fade in transition
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), turnOverlay);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+
+            // Create fade out transition
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), turnOverlay);
+            fadeOut.setFromValue(1);
+            fadeOut.setToValue(0);
+            fadeOut.setDelay(Duration.seconds(2));
+
+            // Play transitions in sequence
+            fadeIn.setOnFinished(e -> fadeOut.play());
+            fadeIn.play();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updatePlayerBoard(List<Player> players) {
+        playerInfo.getChildren().clear();
+        Label playerHeader = new Label("Players");
+        Label scoreHeader = new Label("Scores");
+        playerInfo.add(playerHeader, 0, 0);
+        playerInfo.add(scoreHeader, 1, 0);
+
+        int i = 0;
+        for (Player player: players) {
+            Label name = new Label(player.getName());
+            Label score = new Label(Integer.toString(player.getScore()));
+            playerInfo.add(name, 0, i+1);
+            playerInfo.add(score, 1, i+1);
+            i++;
+        }
+    }
+
+    public void endTurn () {
+        Pokeball roll = new Pokeball(dicePaneController.getResult());
+
+        catchPokemon(roll);
+
+        nextTurn();
+    }
+
+    public void nextTurn() {
+
+        System.out.println("Next Turn");
+
+        dicePaneController.resetDice();
+        
+        // Find the current player's index
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+
+        // Update the current player to the next player
+        setCurPlayer(players.get(currentPlayerIndex));
+
+        showTurnTransition();
+    }
+
+    public void setCurPlayer(Player player) {
+        curPlayer = player;
+    }
+
+    public void enableAllPokemons() {
+        isPokemonHandled = true;
+
+        for (Pokemon pokemon : pokemons.values()) {
+            ImageView image = pokemonImages.get(pokemon.getName());
+
+            GameUtils.enablePokemon(image);
+        }
+    }
+
+    @FXML
+    public void disableAllPokemons() {
+        isPokemonHandled = false;
+
+        for (Pokemon pokemon : pokemons.values()) {
+            ImageView image = pokemonImages.get(pokemon.getName());
+
+            GameUtils.disablePokemon(image);
+        }
     }
 }

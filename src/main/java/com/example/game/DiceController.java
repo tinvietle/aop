@@ -38,6 +38,9 @@ public class DiceController {
     private Button rollButton, endButton;
 
     @FXML
+    public GameController gameController;
+
+    @FXML
     void initialize() {
 
         // Bind the width and height of the dice images to the parent pane
@@ -120,7 +123,7 @@ public class DiceController {
         // Roll remaining dice (totalDice - numKeptDice - 1)
         // if first roll, roll all dice
         int remainingDice = firstRoll ? totalDice : totalDice - numKeptDice;
-        firstRoll = false;
+
         CountDownLatch latch = new CountDownLatch(remainingDice);
 
         for (int i = numKeptDice; i < 7; i++) {
@@ -150,6 +153,12 @@ public class DiceController {
                         diceImages.get(numKeptDice).setOpacity(0.5);
                     }
                     totalDice--; // Reduce total dice available
+                    
+                    if (firstRoll) {
+                        firstRoll = false;
+                        gameController.enableAllPokemons();
+                        disableButtons(true, true);
+                    }
                 });
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -252,7 +261,15 @@ public class DiceController {
         }
 
         // Enable the roll button
-        rollButton.setDisable(false);
-        endButton.setDisable(false);
+        disableButtons(false, false);
+    }
+
+    public void disableButtons(boolean roll, boolean end){
+        rollButton.setDisable(roll);
+        endButton.setDisable(end);
+    }
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
     }
 }

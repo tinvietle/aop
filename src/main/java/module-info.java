@@ -23,4 +23,5 @@ module com.example {
     exports com.example.misc;
     exports com.example.register;
     exports com.example.result;
+    exports com.example.settings;
 }

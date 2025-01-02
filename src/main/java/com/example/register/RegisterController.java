@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 
 import com.example.App;
-import com.example.game.DiceController;
 import com.example.game.GameController;
 
 import javafx.animation.TranslateTransition;
@@ -162,7 +161,6 @@ public class RegisterController {
             slideInNew.setOnFinished(event -> {
                 container.getChildren().remove(registerRootPane);
                 controller.registerPlayer(playerNames);
-                controller.setCurPlayer(playerNames[0]);
             });
 
         } catch (IOException e) {

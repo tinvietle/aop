@@ -22,11 +22,15 @@ public class Player {
         return score;
     }
 
-    public void addScore(int points) {
+    public void updateScore(int points) {
         score += points;
     }
 
     public void addPokemon(Pokemon pokemon) {
         capturedPokemons.add(pokemon);
+    }
+
+    public void removePokemon(Pokemon pokemon) {
+        capturedPokemons.remove(pokemon);
     }
 }
