@@ -203,6 +203,10 @@ public class DiceController {
 
     @FXML
     void endTurn(ActionEvent event) {
+        if (firstRoll) {
+            return;
+        }
+
         // Disable the roll button and end button
         rollButton.setDisable(true);
         endButton.setDisable(true);

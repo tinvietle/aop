@@ -213,6 +213,7 @@ public class GameController {
         bindImageView(machamp, 458.0, 107.0, 0.08, 0.12);
         bindImageView(manectric, 668.0, 309.0, 0.05, 0.05);
         bindImageView(pangoro, 425.0, 199.0, 0.07, 0.08);
+        bindImageView(pikachu, 238.0, 350.0, 0.07, 0.08);
 
         // Bind text of each Menu to the BorderPane
         fileMenu.styleProperty().bind(Bindings.concat(
