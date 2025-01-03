@@ -5,19 +5,24 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 
 <StackPane fx:id="registerRootPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.register.RegisterController">
-    <VBox alignment="CENTER" prefHeight="600" prefWidth="400" spacing="20" style="-fx-background-color: rgba(0, 0, 0, 0.5);">
+    <VBox alignment="TOP_CENTER" prefHeight="600" prefWidth="400" spacing="20" style="-fx-background-color: rgba(0, 0, 0, 0.5);">
         <Label style="-fx-font-size: 24; -fx-text-fill: white;" text="Register Players" />
         
-        <Label style="-fx-font-size: 16; -fx-text-fill: white;" text="Number of Players:" />
-        <Spinner fx:id="playerCountSpinner" editable="true" initialValue="2" max="10" min="2" prefWidth="200" style="-fx-font-size: 14;" />
+        <VBox alignment="CENTER" spacing="10">
+            <Label style="-fx-font-size: 16; -fx-text-fill: white;" text="Number of Players:" />
+            <Spinner fx:id="playerCountSpinner" editable="true" initialValue="2" max="10" min="2" prefWidth="200" style="-fx-font-size: 14;" />
+        </VBox>
         
-        <VBox fx:id="playerNamesContainer" maxHeight="300" maxWidth="350" spacing="10" style="-fx-background-color: rgba(255, 255, 255, 0.8); -fx-padding: 20; -fx-background-radius: 10;">
+        <VBox fx:id="playerNamesContainer" alignment="TOP_CENTER" maxHeight="300" maxWidth="350" spacing="10" style="-fx-background-color: rgba(255, 255, 255, 0.8); -fx-padding: 20; -fx-background-radius: 10;">
             <!-- Player name fields will be added here dynamically -->
         </VBox>
         
-        <Button fx:id="startGameButton" prefWidth="200" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16; -fx-cursor: hand;" text="Start Game" />
-        <Button fx:id="backButton" prefWidth="200" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 16; -fx-cursor: hand;" text="Back" />
+        <VBox alignment="CENTER" spacing="10">
+            <Button fx:id="startGameButton" prefWidth="200" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 16; -fx-cursor: hand;" text="Start Game" />
+            <Button fx:id="backButton" prefWidth="200" style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 16; -fx-cursor: hand;" text="Back" />
+        </VBox>
     </VBox>
 </StackPane>
