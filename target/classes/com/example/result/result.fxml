@@ -18,7 +18,7 @@
     </VBox>
     
     <VBox fx:id="leaderboardContainer" alignment="CENTER" spacing="20" prefWidth="500" styleClass="content-box">
-        <Label text="Leaderboard" style="-fx-font-size: 80px; -fx-font-weight: bold; -fx-font-family: 'Pocket Monk';"/>
+        <Label text="Leaderboard" style="-fx-font-size: 70px; -fx-font-weight: bold; -fx-font-family: 'Pocket Monk';"/>
         <ListView fx:id="leaderboardList" prefHeight="600" style="-fx-font-size: 24px;"/>
         <Button text="New Game" fx:id="newGameButton" styleClass="action-button" maxWidth="Infinity"/>
         <Button text="Exit" fx:id="exitButton" styleClass="action-button" maxWidth="Infinity"/>
