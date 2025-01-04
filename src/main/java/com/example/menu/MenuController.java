@@ -2,6 +2,7 @@ package com.example.menu;
 
 
 import com.example.App;
+import com.example.misc.SoundManager;
 import com.example.misc.Utils;
 import com.example.settings.SettingsController;
 
@@ -40,6 +41,12 @@ public class MenuController {
 
     @FXML
     public void initialize() {
+        // Stop any currently playing background music
+        SoundManager.getInstance().stopBGM();
+        
+        // Play a random BGM track
+        SoundManager.getInstance().playRandomBGM();
+
         // Initialize the background video player
         VideoPlayer.playBackgroundVideo(backgroundVideo);
 

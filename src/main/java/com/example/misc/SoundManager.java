@@ -69,6 +69,29 @@ public class SoundManager {
         }
     }
 
+    public void playBGM(String bgmPath) {
+        try {
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                mediaPlayer.dispose();
+            }
+
+            Media media = new Media(getClass().getResource(bgmPath).toString());
+            mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setVolume(volume);
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+
+            // Add error handling for media player
+            mediaPlayer.setOnError(() -> {
+                System.err.println("Media error: " + mediaPlayer.getError().getMessage());
+            });
+
+            mediaPlayer.play();
+        } catch (Exception e) {
+            System.err.println("Error playing BGM: " + e.getMessage());
+        }
+    }
+
     public void stopBGM() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();

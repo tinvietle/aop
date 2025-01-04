@@ -1,109 +1,106 @@
 package com.example.result;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.List;
+
+import com.example.App;
+import com.example.misc.Player;
+import com.example.misc.SoundManager;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
+import javafx.scene.layout.VBox;
 
-public class ResultDisplay implements Initializable {
-
+public class ResultDisplay {
     @FXML
-    private ImageView trophyIcon;
-
-    @FXML
-    private ImageView winnerAvatar;
-
+    private ImageView trophyImage;
     @FXML
     private Label winnerName;
-
     @FXML
     private Label winnerScore;
-
     @FXML
     private ListView<String> leaderboardList;
+    @FXML
+    private VBox leaderboardContainer;
+    @FXML
+    private Button newGameButton;
+    @FXML
+    private Button exitButton;
 
     @FXML
-    private Button playAgainButton;
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Initialize method called");
-        
-        // Verify FXML injection
-        System.out.println("winnerName label: " + (winnerName != null));
-        System.out.println("leaderboardList: " + (leaderboardList != null));
-        System.out.println("playAgainButton: " + (playAgainButton != null));
-
-        // Set custom cell factory for leaderboard using anonymous class
-        leaderboardList.setCellFactory(param -> new ListCell<String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    setText(item);
-                    setTextFill(Color.WHITE);
-                    setFont(Font.font("System", FontWeight.BOLD, 14));
-                    setStyle("-fx-background-color: transparent; -fx-padding: 5 10 5 10;");
-                }
-            }
-        });
-
-        // Example data
-        HashMap<String, Integer> leaderboardData = new HashMap<>();
-        leaderboardData.put("Alice", 1500);
-        leaderboardData.put("Bob", 1200);
-        leaderboardData.put("Charlie", 1000);
-        leaderboardData.put("Diana", 800);
-
+    public void initialize() {
         try {
-            // Sort leaderboard data by score in descending order
-            leaderboardData.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .forEachOrdered(entry -> {
-                    leaderboardList.getItems().add(entry.getKey() + ": " + entry.getValue());
-                });
-
-            // Set winner details
-            Map.Entry<String, Integer> winner = leaderboardData.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .orElseThrow(() -> new IllegalStateException("Leaderboard is empty"));
-            winnerName.setText(winner.getKey());
-            winnerScore.setText("Score: " + winner.getValue());
-
-            // Set event handler for Play Again button
-            playAgainButton.setOnAction(event -> {
-                try {
-                    Parent root = FXMLLoader.load(getClass().getResource("/com/example/menu.fxml"));
-                    Stage stage = (Stage) playAgainButton.getScene().getWindow();
-                    stage.setScene(new Scene(root));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+            Image trophyImg = new Image(getClass().getResourceAsStream("/com/example/assets/trophy.png"));
+            if (trophyImg.isError()) {
+                System.err.println("Error loading trophy image: " + trophyImg.getException());
+                // Set a default image or handle the error appropriately
+            }
+            trophyImage.setImage(trophyImg);
         } catch (Exception e) {
-            System.err.println("Error in initialize: " + e.getMessage());
+            System.err.println("Could not load trophy image: " + e.getMessage());
+        }
+
+        // Stop current BGM and play new track
+        SoundManager.getInstance().stopBGM();
+        SoundManager.getInstance().playBGM("/com/example/assets/bgm/kiseki.mp3");
+
+        // Set button actions
+        newGameButton.setOnAction(event -> handleNewGame());
+        exitButton.setOnAction(event -> handleExit());
+    }
+
+    public void displayResults(List<Player> players) {
+        if (players.size() < 2 || players.size() > 6) {
+            throw new IllegalArgumentException("Player count must be between 2 and 6");
+        }
+
+        // Sort players by score in descending order
+        players.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
+
+        // Display winner
+        Player winner = players.get(0);
+        winnerName.setText("Player: " + winner.getName());
+        winnerScore.setText("Score: " + winner.getScore());
+
+        // Calculate optimal height per player
+        double baseHeight = 100; // base height per player
+        double totalHeight = players.size() * baseHeight;
+        leaderboardList.setPrefHeight(totalHeight);
+        leaderboardList.getStyleClass().add("leaderboard-list");
+
+        // Update leaderboard
+        leaderboardList.getItems().clear();
+        for (int i = 0; i < players.size(); i++) {
+            Player player = players.get(i);
+            String position;
+            switch (i) {
+                case 0: position = "🥇"; break;
+                case 1: position = "🥈"; break;
+                case 2: position = "🥉"; break;
+                default: position = (i + 1) + "th";
+            }
+            leaderboardList.getItems().add(
+                String.format("%s %s - %d points", position, player.getName(), player.getScore())
+            );
+        }
+    }
+
+    private void handleNewGame() {
+        try {
+            Parent menuRoot = App.loadFXML("menu/menu");
+            leaderboardContainer.getScene().setRoot(menuRoot);
+        } catch (IOException e) {
+            System.err.println("Error loading menu scene: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void handleExit() {
+        System.exit(0);
     }
 }
