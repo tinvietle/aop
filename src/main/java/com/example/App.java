@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -23,6 +24,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         try {
+            Font.loadFont(getClass().getResourceAsStream("/com/example/assets/font/PocketMonk.otf"), 14);
             SoundManager.getInstance().playRandomBGM();
             
             Parent root = loadFXML("menu/menu");

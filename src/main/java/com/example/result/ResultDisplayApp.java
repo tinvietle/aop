@@ -17,11 +17,15 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class ResultDisplayApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
+        // Load Pocket Monk font:
+        Font.loadFont(getClass().getResourceAsStream("/com/example/assets/font/PocketMonk.otf"), 14);
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/result/result.fxml"));
         Parent root = loader.load();
         

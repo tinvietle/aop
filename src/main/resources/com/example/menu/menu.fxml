@@ -23,7 +23,7 @@
             <top>
                 <Label fx:id="titleText" text="Age Of Pokemon" BorderPane.alignment="CENTER">
                     <font>
-                        <Font name="Arial Bold" size="36" />
+                        <Font name="Pocket Monk" size="80" />
                     </font>
                <padding>
                   <Insets top="20.0" />

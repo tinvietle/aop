@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaView;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -41,6 +42,9 @@ public class MenuController {
 
     @FXML
     public void initialize() {
+        // Load Pocket Monk font
+        Font.loadFont(getClass().getResourceAsStream("/com/example/assets/font/PocketMonk.otf"), 14);
+
         // Stop any currently playing background music
         SoundManager.getInstance().stopBGM();
         
@@ -68,19 +72,20 @@ public class MenuController {
 
         // Bind font size to scene width, and add other attributes: bold, black
         titleText.styleProperty().bind(Bindings.concat(
-                "-fx-font-size: ", rootPane.widthProperty().multiply(0.05), ";",
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.1), ";",
                 "-fx-font-weight: bold; ",
-                "-fx-text-fill: black;"));
+                "-fx-text-fill: black;",
+                "-fx-font-family: 'Pocket Monk';"));
 
         // Bind button font size to scene width, and add other attributes: bold, black
         startButton.styleProperty().bind(Bindings.concat(
-                "-fx-font-size: ", rootPane.widthProperty().multiply(0.01), ";",
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";",
                 "-fx-text-fill: black;"));
         settingsButton.styleProperty().bind(Bindings.concat(
-                "-fx-font-size: ", rootPane.widthProperty().multiply(0.01), ";",
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";",
                 "-fx-text-fill: black;"));
         exitButton.styleProperty().bind(Bindings.concat(
-                "-fx-font-size: ", rootPane.widthProperty().multiply(0.01), ";",
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";",
                 "-fx-text-fill: black;"));
 
         // Set up button event handlers
