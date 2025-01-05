@@ -3,7 +3,9 @@ package com.example.capture;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -20,6 +22,9 @@ public class OnlyMedia {
     
     @FXML
     private Label messageLabel;
+
+    @FXML
+    private Button skipButton;
 
     private Media media;
     private MediaPlayer mediaPlayer;
@@ -168,5 +173,11 @@ public class OnlyMedia {
     public void setPreviousScene(Stage primaryStage, Scene previousScene) {
         this.primaryStage = primaryStage;
         this.previousScene = previousScene;
+    }
+
+    @FXML
+    public void onSkip(MouseEvent event) {
+        stopMedia();
+        handleVideoEnd();
     }
 }
