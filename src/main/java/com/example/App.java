@@ -41,7 +41,7 @@ public class App extends Application {
             // Add listeners to maintain aspect ratio during resizing
             stage.widthProperty().addListener((obs, oldVal, newVal) -> {
                 double newWidth = newVal.doubleValue();
-                double newHeight = newWidth / (16.0 / 9);
+                double newHeight = newWidth / (16.0 / 10);
 
                 if (newHeight >= stage.getMinHeight()) {
                     stage.setHeight(newHeight);
@@ -52,7 +52,7 @@ public class App extends Application {
 
             stage.heightProperty().addListener((obs, oldVal, newVal) -> {
                 double newHeight = newVal.doubleValue();
-                double newWidth = newHeight * (16.0 / 9);
+                double newWidth = newHeight * (16.0 / 10);
 
                 if (newWidth >= stage.getMinWidth()) {
                     stage.setWidth(newWidth);
