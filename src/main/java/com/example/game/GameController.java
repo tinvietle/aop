@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 
 import com.example.App;
 import com.example.capture.OnlyMedia;
+import com.example.help.HelpController;
 import com.example.misc.Player;
 import com.example.misc.Pokeball;
 import com.example.misc.Pokemon;
@@ -272,6 +273,28 @@ public class GameController {
             
             // Get the controller and set the previous scene
             SettingsController settingsController = loader.getController();
+            settingsController.setPreviousScene(stage, stage.getScene());
+            
+            // Switch to settings scene
+            stage.setScene(settingsScene);
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            System.err.println("Error opening settings: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void openHelpScene() throws IOException {   
+        try {
+            // Load settings scene
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/help/help.fxml"));
+            Parent settingsRoot = loader.load();
+            Scene settingsScene = new Scene(settingsRoot);
+            Stage stage = (Stage) borderPane.getScene().getWindow();
+            
+            // Get the controller and set the previous scene
+            HelpController settingsController = loader.getController();
             settingsController.setPreviousScene(stage, stage.getScene());
             
             // Switch to settings scene
