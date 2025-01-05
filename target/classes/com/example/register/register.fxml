@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
 
 <StackPane fx:id="registerRootPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.register.RegisterController">
     <VBox alignment="TOP_CENTER" prefHeight="600" prefWidth="400" spacing="20" style="-fx-background-color: rgba(0, 0, 0, 0.5);">
-        <Label style="-fx-font-size: 24; -fx-text-fill: white;" text="Register Players" />
+        <Label style="-fx-font-size: 24; -fx-text-fill: white;" text="Register Players">
+         <VBox.margin>
+            <Insets top="80.0" />
+         </VBox.margin></Label>
         
         <VBox alignment="CENTER" spacing="10">
             <Label style="-fx-font-size: 16; -fx-text-fill: white;" text="Number of Players:" />

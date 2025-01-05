@@ -33,7 +33,7 @@
             <Image url="@../assets/helpScene/button.png" />
          </image>
       </ImageView>
-      <Text fx:id="backButton" fill="WHITE" layoutX="342.0" layoutY="485.0" onMouseClicked="#backtoGame" strokeType="OUTSIDE" strokeWidth="0.0" text="Back to game">
+      <Text fx:id="backButton" fill="WHITE" layoutX="342.0" layoutY="485.0" onMouseClicked="#backtoGame" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" text="Back to game">
          <font>
             <Font name="Pocket Monk" size="22.0" />
          </font></Text>
