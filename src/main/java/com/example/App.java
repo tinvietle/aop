@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -32,6 +33,7 @@ public class App extends Application {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Age Of Pokemon");
+            stage.getIcons().add(new Image(getClass().getResource("/com/example/assets/icon.png").toExternalForm())); // Set the application icon
             stage.setMaximized(true); 
             stage.setResizable(true); 
             stage.setOnCloseRequest(e -> {
