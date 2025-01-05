@@ -6,15 +6,19 @@ import java.util.List;
 import com.example.App;
 import com.example.misc.Player;
 import com.example.misc.SoundManager;
+import com.example.misc.Utils;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class ResultDisplay {
     @FXML
@@ -92,8 +96,18 @@ public class ResultDisplay {
 
     private void handleNewGame() {
         try {
-            Parent menuRoot = App.loadFXML("menu/menu");
-            leaderboardContainer.getScene().setRoot(menuRoot);
+            System.out.println("New Game");
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/menu/menu.fxml"));
+            Scene menuScene = new Scene(fxmlLoader.load()); 
+
+            Stage stage = (Stage) newGameButton.getScene().getWindow();
+
+            stage.setTitle("Age of Pokemon");
+            stage.setScene(menuScene);
+            stage.setMaximized(true); // Maximize the window
+            stage.setResizable(true); // Enable resizing
+            stage.centerOnScreen();
+            stage.show();
         } catch (IOException e) {
             System.err.println("Error loading menu scene: " + e.getMessage());
             e.printStackTrace();
@@ -101,6 +115,6 @@ public class ResultDisplay {
     }
 
     private void handleExit() {
-        System.exit(0);
+        Utils.closeProgram();
     }
 }
