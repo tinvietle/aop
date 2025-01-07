@@ -43,11 +43,65 @@
                 </Label>
             </top>
             <center>
-                <VBox alignment="CENTER" spacing="15">
+                <VBox alignment="CENTER" spacing="20">
                     <children>
-                        <Button fx:id="startButton" prefHeight="50.0" prefWidth="500.0" style="-fx-cursor: hand;" text="Start Game" />
-                        <Button fx:id="settingsButton" prefHeight="50.0" prefWidth="500.0" style="-fx-cursor: hand;" text="Settings" />
-                        <Button fx:id="exitButton" prefHeight="50.0" prefWidth="500.0" style="-fx-cursor: hand;" text="Exit" />
+                        <Button fx:id="startButton" prefHeight="60.0" prefWidth="500.0" 
+                                style="-fx-background-color: linear-gradient(to bottom, #2A2A2A, #1A1A1A);
+                                       -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);
+                                       -fx-font-size: 24;
+                                       -fx-font-weight: bold;
+                                       -fx-cursor: hand;
+                                       -fx-background-radius: 15;
+                                       -fx-border-color: #3A3A3A;
+                                       -fx-border-width: 2;
+                                       -fx-border-radius: 15;" 
+                                text="Start Game">
+                            <effect>
+                                <Glow level="0.3">
+                                    <input>
+                                        <DropShadow color="#ffd700" spread="0.2" radius="10" />
+                                    </input>
+                                </Glow>
+                            </effect>
+                        </Button>
+                        <Button fx:id="settingsButton" prefHeight="60.0" prefWidth="500.0"
+                                style="-fx-background-color: linear-gradient(to bottom, #2A2A2A, #1A1A1A);
+                                       -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);
+                                       -fx-font-size: 24;
+                                       -fx-font-weight: bold;
+                                       -fx-cursor: hand;
+                                       -fx-background-radius: 15;
+                                       -fx-border-color: #3A3A3A;
+                                       -fx-border-width: 2;
+                                       -fx-border-radius: 15;"
+                                text="Settings">
+                            <effect>
+                                <Glow level="0.3">
+                                    <input>
+                                        <DropShadow color="#ffd700" spread="0.2" radius="10" />
+                                    </input>
+                                </Glow>
+                            </effect>
+                        </Button>
+                        <Button fx:id="exitButton" prefHeight="60.0" prefWidth="500.0"
+                                style="-fx-background-color: linear-gradient(to bottom, #2A2A2A, #1A1A1A);
+                                       -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);
+                                       -fx-font-size: 24;
+                                       -fx-font-weight: bold;
+                                       -fx-cursor: hand;
+                                       -fx-background-radius: 15;
+                                       -fx-border-color: #3A3A3A;
+                                       -fx-border-width: 2;
+                                       -fx-border-radius: 15;"
+                                text="Exit">
+                            <effect>
+                                <Glow level="0.3">
+                                    <input>
+                                        <DropShadow color="#ffd700" spread="0.2" radius="10" />
+                                    </input>
+                                </Glow>
+                            </effect>
+                        </Button>
                     </children>
                 </VBox>
             </center>

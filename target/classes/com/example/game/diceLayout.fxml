@@ -46,7 +46,7 @@
       </ImageView>
       <Button fx:id="rollButton" layoutX="26.0" layoutY="23.0" mnemonicParsing="false" onAction="#rollHandler" prefHeight="30.0" prefWidth="60.0" text="Roll" style="-fx-background-color: #FFFFFF; -fx-font-family: 'Pocket Monk'; -fx-font-size: 36px; -fx-text-fill: #87CEEB; -fx-border-color: #87CEEB; -fx-border-width: 2;">
          <font>
-            <Font size="36.0" />
+            <Font size="36" />
          </font>
       </Button>
    </children>
