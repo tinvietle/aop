@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import java.util.List;
 import javafx.animation.FadeTransition;
+import javafx.animation.PauseTransition;
 import javafx.scene.text.Text;
 
 import com.example.App;
@@ -43,6 +44,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.beans.binding.Bindings;
+import javafx.event.ActionEvent;
 import javafx.util.Duration;
 import javafx.stage.Screen;
 
@@ -122,6 +124,10 @@ public class GameController {
     private StackPane turnOverlay;
     @FXML
     private Text turnText;
+    @FXML
+    private StackPane welcomeOverlay;
+    @FXML
+    private Text welcomeText;
     
 
     public GameController() {
@@ -238,8 +244,16 @@ public class GameController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        showDialog(
+            "Welcome to Age of Pokemon!", 
+            400,  // fixed width in pixels
+            100,  // fixed height in pixels
+            1,    // center horizontally
+            0,    // center vertically
+            3.0   // duration in seconds
+        );
     }
-
 
     @FXML
     private void newGame() throws IOException {
@@ -521,6 +535,38 @@ public class GameController {
             ImageView image = pokemonImages.get(pokemon.getName());
 
             GameUtils.disablePokemon(image);
+        }
+    }
+
+    private void showDialog(String text, double width, double height, double x, double y, double duration) {
+        try {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/Dialog.fxml"));
+            StackPane dialog = loader.load();
+            DialogController dialogController = loader.getController();
+            
+            // Calculate center position if x and y are 0
+            if (x == 0 && y == 0) {
+                double screenWidth = Screen.getPrimary().getBounds().getWidth();
+                double screenHeight = Screen.getPrimary().getBounds().getHeight();
+                x = (screenWidth - width) / 2;
+                y = (screenHeight - height) / 2;
+            }
+            
+            dialogController.customizeDialog(text, width, height, x, y);
+            stackPane.getChildren().add(dialog);
+            
+            // Create fade in animation
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(1), dialog);
+            fadeIn.setFromValue(0);
+            fadeIn.setToValue(1);
+            fadeIn.play();
+
+            // Automatic fade out after specified duration
+            PauseTransition delay = new PauseTransition(Duration.seconds(duration));
+            delay.setOnFinished(event -> dialogController.fadeOut());
+            delay.play();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
