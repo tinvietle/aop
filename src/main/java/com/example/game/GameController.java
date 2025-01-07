@@ -44,7 +44,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
 import javafx.beans.binding.Bindings;
-import javafx.event.ActionEvent;
 import javafx.util.Duration;
 import javafx.stage.Screen;
 
@@ -245,14 +244,14 @@ public class GameController {
             e.printStackTrace();
         }
         
-        showDialog(
-            "Welcome to Age of Pokemon!", 
-            400,  // fixed width in pixels
-            100,  // fixed height in pixels
-            1,    // center horizontally
-            0,    // center vertically
-            3.0   // duration in seconds
-        );
+        // showDialog(
+        //     "Welcome to Age of Pokemon!", 
+        //     400,  // fixed width in pixels
+        //     100,  // fixed height in pixels
+        //     1,    // center horizontally
+        //     0,    // center vertically
+        //     3.0   // duration in seconds
+        // );
     }
 
     @FXML
@@ -337,6 +336,8 @@ public class GameController {
                 System.out.println("Chose " + pokemon.getName());
 
                 disableAllPokemons();
+
+                showDialog("Continue rolling to catch the chosen pokemon.", 400, 100, 1, 0, 3.0);
 
                 // Enable the roll button
                 dicePaneController.disableButtons(false, false);
@@ -468,6 +469,10 @@ public class GameController {
             // Play transitions in sequence
             fadeIn.setOnFinished(e -> fadeOut.play());
             fadeIn.play();
+
+            fadeOut.setOnFinished(e -> {
+                showDialog("Roll one time.", 400, 100, 1, 0, 3.0);
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -538,11 +543,14 @@ public class GameController {
         }
     }
 
-    private void showDialog(String text, double width, double height, double x, double y, double duration) {
+    public void showDialog(String text, double width, double height, double x, double y, double duration) {
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/Dialog.fxml"));
             StackPane dialog = loader.load();
             DialogController dialogController = loader.getController();
+
+            // Set initial opacity to 0 to prevent flashing
+            dialog.setOpacity(0);
             
             // Calculate center position if x and y are 0
             if (x == 0 && y == 0) {
