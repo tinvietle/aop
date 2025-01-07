@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -32,6 +33,7 @@ public class App extends Application {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Age Of Pokemon");
+            stage.getIcons().add(new Image(getClass().getResource("/com/example/assets/icon.png").toExternalForm())); // Set the application icon
             stage.setMaximized(true); 
             stage.setResizable(true); 
             stage.setOnCloseRequest(e -> {
@@ -40,28 +42,28 @@ public class App extends Application {
             });
             stage.show();
 
-            // Add listeners to maintain aspect ratio during resizing
-            stage.widthProperty().addListener((obs, oldVal, newVal) -> {
-                double newWidth = newVal.doubleValue();
-                double newHeight = newWidth / (16.0 / 10);
+            // // Add listeners to maintain aspect ratio during resizing
+            // stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+            //     double newWidth = newVal.doubleValue();
+            //     double newHeight = newWidth / (16.0 / 10);
 
-                if (newHeight >= stage.getMinHeight()) {
-                    stage.setHeight(newHeight);
-                } else {
-                    stage.setWidth(stage.getMinHeight());
-                }
-            });
+            //     if (newHeight >= stage.getMinHeight()) {
+            //         stage.setHeight(newHeight);
+            //     } else {
+            //         stage.setWidth(stage.getMinHeight());
+            //     }
+            // });
 
-            stage.heightProperty().addListener((obs, oldVal, newVal) -> {
-                double newHeight = newVal.doubleValue();
-                double newWidth = newHeight * (16.0 / 10);
+            // stage.heightProperty().addListener((obs, oldVal, newVal) -> {
+            //     double newHeight = newVal.doubleValue();
+            //     double newWidth = newHeight * (16.0 / 10);
 
-                if (newWidth >= stage.getMinWidth()) {
-                    stage.setWidth(newWidth);
-                } else {
-                    stage.setHeight(stage.getMinWidth());
-                }
-            });
+            //     if (newWidth >= stage.getMinWidth()) {
+            //         stage.setWidth(newWidth);
+            //     } else {
+            //         stage.setHeight(stage.getMinWidth());
+            //     }
+            // });
             
         } catch (IOException | NullPointerException e) {
             // Print error

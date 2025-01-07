@@ -1,11 +1,11 @@
 package com.example.capture;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -176,7 +176,7 @@ public class OnlyMedia {
     }
 
     @FXML
-    public void onSkip(MouseEvent event) {
+    public void onSkip(ActionEvent event) {
         stopMedia();
         handleVideoEnd();
     }
