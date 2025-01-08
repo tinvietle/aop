@@ -76,6 +76,13 @@ public class Pokemon {
                     "Score: " + score + '\n' +
                     "Group Score: " + groupScore + '\n';
         }
+        if (owned) {
+            return  "Name: " + name + '\n' +
+                    "Score: " + score + '\n' +
+                    "Requirements: " + requirements.toString() + '\n' +
+                    "Description: " + description + '\n' +
+                    "Owned by: " + owner.getName() + '\n';
+        }
         return  "Name: " + name + '\n' +
                 "Score: " + score + '\n' +
                 "Requirements: " + requirements.toString() + '\n' +

@@ -262,7 +262,7 @@ public class GameController {
         Pokemon attemptedPokemon = pokemons.get(pokemonName);
         if (confirmChoose()) {
             if (attemptedPokemon.getGroupOwner() != null) {
-                GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "This Pokemon is part of a group that is already owned by Player " + attemptedPokemon.getGroupOwner().getName());
+                GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "This Pokemon is part of a group already owned by Player " + attemptedPokemon.getGroupOwner().getName());
                 return;
             }
             if (attemptedPokemon.getOwner() == curPlayer) {
