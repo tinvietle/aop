@@ -41,4 +41,8 @@ public class DialogController {
         fadeOut.setOnFinished(e -> welcomeOverlay.setVisible(false));
         fadeOut.play();
     }
+
+    public void setVisibility(boolean visible) {
+        welcomeOverlay.setVisible(visible);
+    }
 }

@@ -4,13 +4,16 @@ import com.example.App;
 import com.example.capture.OnlyMedia;
 import com.example.help.HelpController;
 import com.example.misc.*;
+import com.example.result.ResultDisplay;
 import com.example.settings.SettingsController;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -215,8 +218,8 @@ public class GameController {
 
     @FXML
     private void userInstruction() {
-        instructionButton.setText(isInstruction ? "Hide Instruction" : "Show Instruction");
         isInstruction = !isInstruction;
+        instructionButton.setText(isInstruction ? "Hide Instruction" : "Show Instruction");
     }
 
     @FXML
@@ -267,6 +270,9 @@ public class GameController {
 
             try {
                 playVideo((Stage) playerInfo.getScene().getWindow(), videoPath);
+                if (checkEndGame()) {
+                    endGame();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -289,7 +295,6 @@ public class GameController {
             }
         }
     }
-
 
     private void bindImageView(ImageView imageView, double X, double Y, double width, double height) {
         imageView.layoutXProperty().bind(stackPane.widthProperty().multiply(X / 800.0));
@@ -340,10 +345,26 @@ public class GameController {
     private void showTurnTransition() {
         dicePaneController.disableButtons(true, true);
 
+        if (turnOverlay == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
+                StackPane overlay = loader.load();
+                turnOverlay = overlay;
+                turnText = (Text) overlay.lookup("#turnText");
+                stackPane.getChildren().add(overlay);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         turnText.setText(curPlayer.getName() + "'s Turn");
         GameUtils.fadeTransition(turnOverlay, FADE_DURATION, 2000, () -> {
             showInstruction("Click on the Roll button at the bottom left corner to roll one time.", 400, 100, 1, 0, 3000);
-            GameUtils.delay(3000, () -> dicePaneController.disableButtons(false, false));
+            if (isInstruction) {
+                GameUtils.delay(3000, () -> dicePaneController.disableButtons(false, false));
+            } else {
+                dicePaneController.disableButtons(false, false);
+            }
         });
     }
 
@@ -381,9 +402,9 @@ public class GameController {
         curPlayer = player;
     }
 
-    public void showInstruction(String text, double width, double height, double x, double y, long outDelay) {
+    public boolean showInstruction(String text, double width, double height, double x, double y, long outDelay) {
         try {
-            if (!isInstruction) return;
+            if (!isInstruction) return false;
 
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/Dialog.fxml"));
             StackPane dialog = loader.load();
@@ -404,10 +425,42 @@ public class GameController {
             stackPane.getChildren().add(dialog);
             
             GameUtils.fadeTransition((Node) dialog, FADE_DURATION, outDelay, () -> {
-                welcomeOverlay.setVisible(false);
+                stackPane.getChildren().remove(dialog);
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return true;
+    }
+
+    private boolean checkEndGame() {
+        for (Pokemon pokemon : pokemonLists) {
+            if (pokemon.getOwner() == null) return true;
+        }
+        return true;
+    }
+
+    private void endGame() throws IOException {
+        GameUtils.loadScene("/com/example/result/result.fxml", "Results", (Stage) borderPane.getScene().getWindow(), loader -> {
+            Parent root;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        
+            // Set background image programmatically
+            String imagePath = Paths.get("src\\main\\resources\\com\\example\\assets\\result.jpg").toUri().toString();
+            Image backgroundImage = new Image(imagePath);
+            BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+            if (root instanceof HBox) {
+                ((HBox) root).setBackground(new Background(background));
+            }
+            
+            // For testing purposes
+            ResultDisplay controller = loader.getController();
+            controller.displayResults(players);
+            });
     }
 }

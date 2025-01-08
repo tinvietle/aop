@@ -156,10 +156,14 @@ public class DiceController {
                     if (firstRoll) {
                         firstRoll = false;
                         // disableButtons(true, true);
-                        gameController.showInstruction("You have rolled the dice once. Please select the pokemons you want to keep before continuing.", 400, 100, 1, 0, 3000);
-                        GameUtils.delay(3000, () -> {
-                            gameController.disableAllPokemons(false);;
-                        });
+                        boolean isInstruction = gameController.showInstruction("You have rolled the dice once. Please select the pokemons you want to keep before continuing.", 400, 100, 1, 0, 3000);
+                        if (!isInstruction) {
+                            gameController.disableAllPokemons(false);
+                        } else {
+                            GameUtils.delay(3000, () -> {
+                                gameController.disableAllPokemons(false);;
+                            });
+                        }
                     } else {
                         disableButtons(false, false);
                     }
