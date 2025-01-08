@@ -105,7 +105,7 @@ public class DiceController {
 
     @FXML
     void rollHandler(ActionEvent event) {
-        rollButton.setDisable(true);
+        disableButtons(true, true);
         List<ImageView> diceImages = List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7);
 
         // Update kept dice faces at the start
@@ -146,7 +146,6 @@ public class DiceController {
             try {
                 latch.await();
                 Platform.runLater(() -> {
-                    rollButton.setDisable(false);
                     if (totalDice - numKeptDice <= 1) {
                         rollButton.setDisable(true);
                         // Set the opacity of the dice to 0.5
@@ -156,9 +155,13 @@ public class DiceController {
                     
                     if (firstRoll) {
                         firstRoll = false;
-                        gameController.enableAllPokemons();
-                        disableButtons(true, true);
-                        gameController.showInstruction("You have rolled the dice once. Please select the pokemons you want to keep before continuing.", 400, 100, 1, 0, 3);
+                        // disableButtons(true, true);
+                        gameController.showInstruction("You have rolled the dice once. Please select the pokemons you want to keep before continuing.", 400, 100, 1, 0, 3000);
+                        GameUtils.delay(3000, () -> {
+                            gameController.disableAllPokemons(false);;
+                        });
+                    } else {
+                        disableButtons(false, false);
                     }
                 });
             } catch (InterruptedException e) {
