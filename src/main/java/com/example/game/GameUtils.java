@@ -47,8 +47,16 @@ public class GameUtils {
             beforeShow.accept(loader);
         }
 
+        Scene scene = new Scene(root);
+        
+        // Add CSS if it exists (same path as FXML but with .css extension)
+        String cssPath = fxmlPath.substring(0, fxmlPath.lastIndexOf('.')) + ".css";
+        if (App.class.getResource(cssPath) != null) {
+            scene.getStylesheets().add(App.class.getResource(cssPath).toExternalForm());
+        }
+
         stage.setTitle(title);
-        stage.setScene(new Scene(root));
+        stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
 

@@ -1,29 +1,54 @@
 package com.example.game;
 
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
 import com.example.App;
 import com.example.capture.OnlyMedia;
 import com.example.help.HelpController;
-import com.example.misc.*;
+import com.example.misc.Player;
+import com.example.misc.Pokeball;
+import com.example.misc.Pokemon;
+import com.example.misc.PokemonReader;
+import com.example.misc.SoundManager;
+import com.example.misc.Utils;
 import com.example.result.ResultDisplay;
 import com.example.settings.SettingsController;
+
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.*;
 
 
 public class GameController {
@@ -257,12 +282,9 @@ public class GameController {
             ImageView image = pokemonImages.get(chosenPokemon.getName());
             image.setOpacity(0.5);
             updatePlayerBoard(players);
-            // Create the Tooltip
+
             Tooltip tooltip = new Tooltip(chosenPokemon.toString());
-
-            // Set the show delay to 0 milliseconds (instant display)
             tooltip.setShowDelay(javafx.util.Duration.ZERO);
-
             Tooltip.install(image, tooltip);
 
             String path = "src\\main\\resources\\com\\example\\assets\\stocks\\%s.mp4";
@@ -272,12 +294,13 @@ public class GameController {
                 playVideo((Stage) playerInfo.getScene().getWindow(), videoPath);
             } catch (IOException e) {
                 e.printStackTrace();
+                nextTurn(); // Ensure turn proceeds even if video fails
             }
-        }
-        else {
+        } else {
             System.out.println("Failed to catch the pokemon");
             System.out.println("Requirements: " + chosenPokemon.getRequirements().toString());
             System.out.println("Roll: " + roll.toString());
+            nextTurn();
         }
     }
 
@@ -316,15 +339,18 @@ public class GameController {
         
         // Add a callback to handle turn transition after video ends
         controller.setOnVideoFinished(() -> {
-            System.out.println("Video ended");
-            SoundManager.getInstance().playRandomBGM();
-            if (checkEndGame()) {
-                try {
-                    endGame();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            javafx.application.Platform.runLater(() -> {
+                SoundManager.getInstance().playRandomBGM();
+                if (checkEndGame()) {
+                    try {
+                        endGame();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    nextTurn();
                 }
-            }
+            });
         });
 
         stage.setTitle("JavaFX MediaPlayer!");
@@ -393,7 +419,6 @@ public class GameController {
     public void endTurn() {
         Pokeball roll = new Pokeball(dicePaneController.getResult());
         catchPokemon(roll);
-        nextTurn();
     }
 
     public void nextTurn() {
@@ -450,10 +475,9 @@ public class GameController {
     }
 
     private void endGame() throws IOException {
-        Stage stage = (Stage) borderPane.getScene().getWindow();
+        Stage stage = (Stage) borderPane.getScene().getWindow(); 
         GameUtils.loadScene("/com/example/result/result.fxml", "Results", stage, loader -> {
-            Parent root = loader.getRoot();
-        
+            Parent root = loader.getRoot(); // Reuse the already loaded root
             // Set background image programmatically
             String imagePath = Paths.get("src\\main\\resources\\com\\example\\assets\\result.jpg").toUri().toString();
             Image backgroundImage = new Image(imagePath);
