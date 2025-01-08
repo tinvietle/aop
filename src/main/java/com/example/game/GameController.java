@@ -34,6 +34,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -66,6 +67,7 @@ public class GameController {
     private Pokemon chosenPokemon;
 
     boolean isPokemonHandled = false;
+    boolean isInstruction = true;
 
     @FXML
     private GridPane playerInfo;
@@ -117,6 +119,8 @@ public class GameController {
     private Menu editMenu;
     @FXML
     private Menu helpMenu;
+    @FXML
+    private MenuItem instructionButton;
     @FXML
     private Accordion accordionView;
     @FXML
@@ -243,15 +247,6 @@ public class GameController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        // showDialog(
-        //     "Welcome to Age of Pokemon!", 
-        //     400,  // fixed width in pixels
-        //     100,  // fixed height in pixels
-        //     1,    // center horizontally
-        //     0,    // center vertically
-        //     3.0   // duration in seconds
-        // );
     }
 
     @FXML
@@ -298,6 +293,17 @@ public class GameController {
     }
 
     @FXML
+    private void userInstruction () {
+        if (isInstruction) {
+            isInstruction = false;
+            instructionButton.setText("Show Instruction");
+        } else {
+            isInstruction = true;
+            instructionButton.setText("Hide Instruction");
+        }
+    }
+
+    @FXML
     private void openHelpScene() throws IOException {   
         try {
             // Load settings scene
@@ -337,7 +343,7 @@ public class GameController {
 
                 disableAllPokemons();
 
-                showDialog("Continue rolling to catch the chosen pokemon.", 400, 100, 1, 0, 3.0);
+                showInstruction("Continue rolling to catch the chosen pokemon.", 400, 100, 1, 0, 3.0);
 
                 // Enable the roll button
                 dicePaneController.disableButtons(false, false);
@@ -471,7 +477,7 @@ public class GameController {
             fadeIn.play();
 
             fadeOut.setOnFinished(e -> {
-                showDialog("Roll one time.", 400, 100, 1, 0, 3.0);
+                showInstruction("Click on the Roll button at the bottom left corner to roll one time.", 400, 100, 1, 0, 3.0);
             });
         } catch (IOException e) {
             e.printStackTrace();
@@ -543,8 +549,10 @@ public class GameController {
         }
     }
 
-    public void showDialog(String text, double width, double height, double x, double y, double duration) {
+    public void showInstruction(String text, double width, double height, double x, double y, double duration) {
         try {
+            if (!isInstruction) return;
+
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/Dialog.fxml"));
             StackPane dialog = loader.load();
             DialogController dialogController = loader.getController();

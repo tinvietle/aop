@@ -158,7 +158,7 @@ public class DiceController {
                         firstRoll = false;
                         gameController.enableAllPokemons();
                         disableButtons(true, true);
-                        gameController.showDialog("You have rolled the dice. Please select the pokemons you want to keep.", 400, 100, 1, 0, 3);
+                        gameController.showInstruction("You have rolled the dice once. Please select the pokemons you want to keep before continuing.", 400, 100, 1, 0, 3);
                     }
                 });
             } catch (InterruptedException e) {
