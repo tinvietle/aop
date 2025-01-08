@@ -156,7 +156,7 @@ public class DiceController {
                     if (firstRoll) {
                         firstRoll = false;
                         // disableButtons(true, true);
-                        boolean isInstruction = gameController.showInstruction("You have rolled the dice once. Please select the pokemons you want to keep before continuing.", 400, 100, 1, 0, 3000);
+                        boolean isInstruction = gameController.showInstruction("You have rolled the dice once. Please select the pokemons you want to catch before continuing.", 400, 100, 1, 0, 3000);
                         if (!isInstruction) {
                             gameController.disableAllPokemons(false);
                         } else {
