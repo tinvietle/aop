@@ -14,6 +14,8 @@ import com.example.misc.Player;
 import com.example.misc.Pokeball;
 import com.example.misc.Pokemon;
 import com.example.misc.PokemonReader;
+import com.example.misc.Group;
+import com.example.misc.GroupReader;
 import com.example.misc.SoundManager;
 import com.example.misc.Utils;
 import com.example.result.ResultDisplay;
@@ -59,7 +61,7 @@ public class GameController {
     private List<Player> players = new ArrayList<>();
     private HashMap<String, Pokemon> pokemons = new HashMap<>();
     private HashMap<String, ImageView> pokemonImages = new HashMap<>();
-    private ArrayList<Pokemon> pokemonLists;
+    private HashMap<String, Group> groups = new HashMap<>();
 
     // Game State
     private Player curPlayer;
@@ -90,10 +92,17 @@ public class GameController {
     // Constructor
     public GameController() {
         PokemonReader reader = new PokemonReader();
-        pokemonLists = reader.readPokemons();
-        pokemonLists.forEach(pokemon -> pokemons.put(pokemon.getName(), pokemon));
-    }
+        reader.readPokemons().forEach(pokemon -> pokemons.put(pokemon.getName(), pokemon));
 
+        GroupReader groupReader = new GroupReader();
+        groupReader.readGroups().forEach(group -> {
+            group.mapToPokemons(pokemons);
+            groups.put(group.getName(), group);
+            for (Pokemon pokemon : group.getPokemons()) {
+                pokemon.setGroupScore(group.getScore());
+            }
+        });
+    }
 
     @FXML
     private void initialize() {
@@ -122,9 +131,7 @@ public class GameController {
 
         pokemons.values().forEach(pokemon -> {
             ImageView image = pokemonImages.get(pokemon.getName());
-            Tooltip tooltip = new Tooltip(pokemon.toString());
-            tooltip.setShowDelay(javafx.util.Duration.ZERO);
-            Tooltip.install(image, tooltip);
+            GameUtils.updateToolTip(pokemon, image);
         });
 
         disableAllPokemons(true);
@@ -252,7 +259,16 @@ public class GameController {
         if (!isPokemonActive) return;
 
         String pokemonName = ((Node) event.getSource()).getId();
+        Pokemon attemptedPokemon = pokemons.get(pokemonName);
         if (confirmChoose()) {
+            if (attemptedPokemon.getGroupOwner() != null) {
+                GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "This Pokemon is part of a group that is already owned by Player " + attemptedPokemon.getGroupOwner().getName());
+                return;
+            }
+            if (attemptedPokemon.getOwner() == curPlayer) {
+                GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "You already own this Pokemon.");
+                return;
+            }
             chosenPokemon = pokemons.get(pokemonName);
             disableAllPokemons(true);
             showInstruction("Continue rolling to catch the chosen Pokemon.", 400, 100, 1, 0, 3000);
@@ -278,15 +294,22 @@ public class GameController {
         
             curPlayer.updateScore(chosenPokemon.getScore());
             curPlayer.addPokemon(chosenPokemon);
-            chosenPokemon.updateOwner(curPlayer);
-            ImageView image = pokemonImages.get(chosenPokemon.getName());
-            image.setOpacity(0.5);
+            chosenPokemon.setOwner(curPlayer);
+            Group group = groups.get(chosenPokemon.getGroup());
+            if (group.checkOwned(curPlayer)) {
+                curPlayer.updateScore(group.getScore());
+                for (Pokemon pokemon : group.getPokemons()) {
+                    System.out.println(curPlayer.getName() + " owns " + pokemon.getName());
+                    pokemon.setGroupOwner(curPlayer);
+                    ImageView image = pokemonImages.get(pokemon.getName());
+                    image.setOpacity(0.5);
+                    GameUtils.updateToolTip(pokemon, image);
+                }
+            } else {
+                ImageView image = pokemonImages.get(chosenPokemon.getName());
+                GameUtils.updateToolTip(chosenPokemon, image);
+            }
             updatePlayerBoard(players);
-
-            Tooltip tooltip = new Tooltip(chosenPokemon.toString());
-            tooltip.setShowDelay(javafx.util.Duration.ZERO);
-            Tooltip.install(image, tooltip);
-
             String path = "src\\main\\resources\\com\\example\\assets\\stocks\\%s.mp4";
             String videoPath = Paths.get(String.format(path, chosenPokemon.getName())).toUri().toString();
 
@@ -297,6 +320,7 @@ public class GameController {
                 nextTurn(); // Ensure turn proceeds even if video fails
             }
         } else {
+            GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You failed to catch the Pokemon. Better luck next time!");
             System.out.println("Failed to catch the pokemon");
             System.out.println("Requirements: " + chosenPokemon.getRequirements().toString());
             System.out.println("Roll: " + roll.toString());
@@ -464,10 +488,10 @@ public class GameController {
     }
 
     private boolean checkEndGame() {
-        for (Pokemon pokemon : pokemonLists) {
+        for (Pokemon pokemon : pokemons.values()) {
             if (pokemon.getOwner() == null) {
                 System.out.println("Game not ended yet");
-                return true;
+                return false;
             }
         }
         System.out.println("Game ended");

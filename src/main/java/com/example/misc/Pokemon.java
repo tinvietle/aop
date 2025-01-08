@@ -11,21 +11,20 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public class Pokemon {
     @JsonProperty("name")
     String name;
-
     @JsonProperty("score")
     int score;
-
+    @JsonProperty("group")
+    String group;
     @JsonProperty("requirements")
     Map<String, List<Integer>> requirementsMap;
-
     @JsonProperty("description")
     String description;
 
     boolean owned;
     Player owner;
-    String group;
-
+    Player groupOwner;
     Pokeball requirements;
+    int groupScore;
 
     public Pokemon() {}
 
@@ -33,14 +32,19 @@ public class Pokemon {
     public Pokemon(
         @JsonProperty("name") String name,
         @JsonProperty("score") int score,
+        @JsonProperty("group") String group,
         @JsonProperty("requirements") Map<String, List<Integer>> requirementsMap,
         @JsonProperty("description") String description
     ) {
         this.name = name;
         this.score = score;
+        this.group = group;
         this.description = description;
         this.requirementsMap = requirementsMap;
         this.requirements = mapToPokeball(requirementsMap); // Convert the map to a Pokeball object
+        this.owned = false;
+        this.owner = null;
+        this.groupOwner = null;
     }
 
     private Pokeball mapToPokeball(Map<String, List<Integer>> requirementsMap) {
@@ -66,6 +70,12 @@ public class Pokemon {
 
     @Override
     public String toString() {
+        if (groupOwner != null) {
+            return  "Group " + this.group + " is already owned by Player " + groupOwner.getName() + '\n' + 
+                    "Name: " + name + "\n" + 
+                    "Score: " + score + '\n' +
+                    "Group Score: " + groupScore + '\n';
+        }
         return  "Name: " + name + '\n' +
                 "Score: " + score + '\n' +
                 "Requirements: " + requirements.toString() + '\n' +
@@ -105,15 +115,23 @@ public class Pokemon {
         this.owned = owned;
     }
 
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
-
     public void setGroup(String group) {
         this.group = group;
     }
 
-    public void updateOwner(Player owner) {
+    public void setGroupScore(int groupScore) {
+        this.groupScore = groupScore;
+    }
+
+    public void setGroupOwner(Player groupOwner) {
+        this.groupOwner = groupOwner;
+    }
+
+    public Player getGroupOwner() {
+        return groupOwner;
+    }
+
+    public void setOwner(Player owner) {
         this.owner = owner;
         if (!this.owned) {
             this.owned = true;
