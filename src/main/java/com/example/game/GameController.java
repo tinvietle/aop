@@ -270,9 +270,6 @@ public class GameController {
 
             try {
                 playVideo((Stage) playerInfo.getScene().getWindow(), videoPath);
-                if (checkEndGame()) {
-                    endGame();
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -319,7 +316,15 @@ public class GameController {
         
         // Add a callback to handle turn transition after video ends
         controller.setOnVideoFinished(() -> {
+            System.out.println("Video ended");
             SoundManager.getInstance().playRandomBGM();
+            if (checkEndGame()) {
+                try {
+                    endGame();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         });
 
         stage.setTitle("JavaFX MediaPlayer!");
@@ -435,20 +440,19 @@ public class GameController {
 
     private boolean checkEndGame() {
         for (Pokemon pokemon : pokemonLists) {
-            if (pokemon.getOwner() == null) return true;
+            if (pokemon.getOwner() == null) {
+                System.out.println("Game not ended yet");
+                return true;
+            }
         }
+        System.out.println("Game ended");
         return true;
     }
 
     private void endGame() throws IOException {
-        GameUtils.loadScene("/com/example/result/result.fxml", "Results", (Stage) borderPane.getScene().getWindow(), loader -> {
-            Parent root;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
+        Stage stage = (Stage) borderPane.getScene().getWindow();
+        GameUtils.loadScene("/com/example/result/result.fxml", "Results", stage, loader -> {
+            Parent root = loader.getRoot();
         
             // Set background image programmatically
             String imagePath = Paths.get("src\\main\\resources\\com\\example\\assets\\result.jpg").toUri().toString();

@@ -28,7 +28,7 @@ public class Pokeball {
     }
 
     public Pokeball(String rollString) {
-        this.red = new ArrayList<>();
+        this.red = new ArrayList<>(Arrays.asList(0));;
         this.great = 0;
         this.ultra = 0;
         this.master = 0;
