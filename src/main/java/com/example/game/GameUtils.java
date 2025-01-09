@@ -98,7 +98,7 @@ public class GameUtils {
         
         // Set tooltip pref width and height binding borderPane size
         tooltip.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.28));
-        tooltip.prefHeightProperty().bind(borderPane.heightProperty().multiply(0.24));
+        tooltip.prefHeightProperty().bind(borderPane.heightProperty().multiply(0.26));
 
         // Bind tooltip padding to borderPane
         borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {

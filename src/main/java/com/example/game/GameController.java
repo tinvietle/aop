@@ -174,18 +174,18 @@ public class GameController {
         accordionView.prefHeightProperty().bind(borderPane.heightProperty().multiply(200 / 500.0));
 
         // Bind all ImageView sizes to the stackPane size
-        bindImageView(talonflame, 554.0, 190.0, 0.2, 0.2);   // Example ratios
-        bindImageView(cloyster, 664.0, 306.0, 0.09, 0.1);
+        bindImageView(talonflame, 490.0, 165.0, 0.2, 0.2);   // Example ratios
+        bindImageView(cloyster, 249.0, 310.0, 0.09, 0.1);
         bindImageView(galvantula, 300.0, 253.0, 0.09, 0.1);
-        bindImageView(gengar, 608.0, 33.0, 0.09, 0.1);
-        bindImageView(gyarados, 515.0, 108.0, 0.15, 0.15);
-        bindImageView(hawlucha, 530.0, 300.0, 0.09, 0.1);
+        bindImageView(gengar, 220.0, 33.0, 0.09, 0.1);
+        bindImageView(gyarados, 500, 108.0, 0.15, 0.15);
+        bindImageView(hawlucha, 480.0, 300.0, 0.09, 0.1);
         bindImageView(helioptile, 418.0, 253.0, 0.07, 0.07);
-        bindImageView(jellicent, 440.0, 29.0, 0.09, 0.09);
+        bindImageView(jellicent, 500.0, 29.0, 0.09, 0.09);
         bindImageView(klingklang, 225, 200, 0.09, 0.1);
-        bindImageView(ludicolo, 670.0,135.0, 0.09, 0.1);
-        bindImageView(machamp, 300.0, 33.0, 0.15, 0.15);
-        bindImageView(manectric, 451.0, 335.0, 0.09, 0.1);
+        bindImageView(ludicolo, 210.0,100.0, 0.09, 0.1);
+        bindImageView(machamp, 350.0, 33.0, 0.15, 0.15);
+        bindImageView(manectric, 420.0, 335.0, 0.09, 0.1);
         bindImageView(pangoro, 380.0, 130.0, 0.13, 0.13);
         bindImageView(pikachu, 145.0, 253.0, 0.07, 0.07);
 
