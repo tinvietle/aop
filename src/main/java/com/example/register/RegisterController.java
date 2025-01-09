@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 
 import com.example.App;
 import com.example.game.GameController;
+import com.example.misc.SoundManager;
 
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -79,6 +80,7 @@ public class RegisterController {
     }
 
     private void handleBack() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             // Load the menu screen first
             Parent menuRoot = App.loadFXML("menu/menu");
@@ -116,6 +118,7 @@ public class RegisterController {
     }
 
     private void handleStartGame() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         // Validate player names
         int playerCount = playerCountSpinner.getValue();
         String[] playerNames = new String[playerCount];

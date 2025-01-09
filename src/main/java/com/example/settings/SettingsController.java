@@ -23,6 +23,9 @@ public class SettingsController {
     private Slider volumeSlider;
 
     @FXML
+    private Slider sfxVolumeSlider;
+
+    @FXML
     private StackPane settingsRootPane;
 
     private Stage primaryStage;
@@ -66,6 +69,12 @@ public class SettingsController {
             volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> 
                 SoundManager.getInstance().setVolume(newVal.doubleValue())
             );
+
+            // Initialize SFX volume slider
+            sfxVolumeSlider.setValue(SoundManager.getInstance().getSFXVolume());
+            sfxVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) ->
+                SoundManager.getInstance().setSFXVolume(newVal.doubleValue())
+            );
         } catch (Exception e) {
             System.err.println("Error initializing settings: " + e.getMessage());
             e.printStackTrace();
@@ -74,6 +83,7 @@ public class SettingsController {
 
     @FXML
     private void backToMenu() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         if (primaryStage != null && previousScene != null) {
             primaryStage.setScene(previousScene);
             primaryStage.centerOnScreen();

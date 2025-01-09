@@ -23,6 +23,13 @@
                         style="-fx-control-inner-background: white;"/>
             </VBox>
 
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="SFX Volume" style="-fx-text-fill: white;"/>
+                <Slider fx:id="sfxVolumeSlider" min="0" max="1" value="0.25"
+                        showTickLabels="true" showTickMarks="true" prefWidth="300"
+                        style="-fx-control-inner-background: white;"/>
+            </VBox>
+
             <Button onAction="#backToMenu" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;" text="Back" />
         </VBox>
     </VBox>

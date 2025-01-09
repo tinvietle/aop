@@ -95,6 +95,7 @@ public class MenuController {
     }
 
     private void handleStartGame() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             // Load the next screen first
             Parent registerRoot = App.loadFXML("register/register");
@@ -133,6 +134,7 @@ public class MenuController {
     }
 
     private void handleSettings() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/settings/settings.fxml"));
             Parent settingsRoot = loader.load();
@@ -154,6 +156,7 @@ public class MenuController {
     }
 
     private void handleExit() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         System.out.println("Exiting application");
         Utils.closeProgram();
     }
