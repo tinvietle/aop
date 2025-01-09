@@ -13,6 +13,7 @@ import java.util.List;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import com.example.App;
 import com.example.capture.OnlyMedia;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -37,12 +39,14 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Polygon;
 import javafx.beans.binding.Bindings;
 import javafx.util.Duration;
 import javafx.stage.Screen;
@@ -159,10 +163,38 @@ public class GameController {
             ImageView image = pokemonImages.get(pokemon.getName());
 
             // Create the Tooltip
-            Tooltip tooltip = new Tooltip(pokemon.toString());
+            // Tooltip tooltip = new Tooltip(pokemon.toString());
+            TextFlow styledContent = pokemon.getStyledTooltipContent(borderPane);
+            Tooltip tooltip = new Tooltip();
+            
+            tooltip.setGraphic(styledContent);
+            tooltip.getStyleClass().add("tooltip");
+            
+            // Listen for when the BorderPane is added to a Scene
+            borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    String css = this.getClass().getResource("/com/example/game/style.css").toExternalForm();
+                    newScene.getStylesheets().add(css);
+                }
+            });
+
+            // Set tooltip pref width and height binding borderPane size
+            tooltip.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.28));
+            tooltip.prefHeightProperty().bind(borderPane.heightProperty().multiply(0.24));
+
+            // Bind tooltip padding to borderPane
+            borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
+                double paddingHorizontal = newWidth.doubleValue() * 0.0002; // Adjust multiplier as needed
+                String dynamicPadding = String.format("-fx-padding: %.2fem;",
+                    paddingHorizontal);
+                tooltip.setStyle(dynamicPadding);
+            });
 
             // Set the show delay to 0 milliseconds (instant display)
             tooltip.setShowDelay(javafx.util.Duration.ZERO);
+
+            // Set the show duration to INDEFINITE
+            tooltip.setShowDuration(Duration.INDEFINITE);
 
             Tooltip.install(image, tooltip);
         }
@@ -204,22 +236,22 @@ public class GameController {
         // Bind the accordionView's dimensions to the BorderPane
         accordionView.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.2));
         accordionView.prefHeightProperty().bind(borderPane.heightProperty().multiply(200 / 500.0));
-        
+
         // Bind all ImageView sizes to the stackPane size
-        bindImageView(talonflame, 645.0, 39.0, 0.09, 0.1);   // Example ratios
-        bindImageView(cloyster, 562.0, 323.0, 0.08, 0.07);
-        bindImageView(galvantula, 219.0, 158.0, 0.15, 0.09);
-        bindImageView(gengar, 105.0, 245.0, 0.07, 0.07);
-        bindImageView(gyarados, 654.0, 140.0, 0.08, 0.1);
-        bindImageView(hawlucha, 297.0, 25.0, 0.05, 0.05);
-        bindImageView(helioptile, 301.0, 245.0, 0.06, 0.05);
-        bindImageView(jellicent, 567.0, 205.0, 0.07, 0.08);
-        bindImageView(klingklang, 359.0, 64.0, 0.08, 0.05);
-        bindImageView(ludicolo, 427.0,313.0, 0.09, 0.1);
-        bindImageView(machamp, 458.0, 107.0, 0.08, 0.12);
-        bindImageView(manectric, 668.0, 309.0, 0.05, 0.05);
-        bindImageView(pangoro, 425.0, 199.0, 0.07, 0.08);
-        bindImageView(pikachu, 238.0, 350.0, 0.07, 0.08);
+        bindImageView(talonflame, 554.0, 190.0, 0.2, 0.2);   // Example ratios
+        bindImageView(cloyster, 664.0, 306.0, 0.09, 0.1);
+        bindImageView(galvantula, 300.0, 253.0, 0.09, 0.1);
+        bindImageView(gengar, 608.0, 33.0, 0.09, 0.1);
+        bindImageView(gyarados, 515.0, 108.0, 0.15, 0.15);
+        bindImageView(hawlucha, 530.0, 300.0, 0.09, 0.1);
+        bindImageView(helioptile, 418.0, 253.0, 0.07, 0.07);
+        bindImageView(jellicent, 440.0, 29.0, 0.09, 0.09);
+        bindImageView(klingklang, 225, 200, 0.09, 0.1);
+        bindImageView(ludicolo, 670.0,135.0, 0.09, 0.1);
+        bindImageView(machamp, 300.0, 33.0, 0.15, 0.15);
+        bindImageView(manectric, 451.0, 335.0, 0.09, 0.1);
+        bindImageView(pangoro, 380.0, 130.0, 0.13, 0.13);
+        bindImageView(pikachu, 145.0, 253.0, 0.07, 0.07);
 
         // Bind text of each Menu to the BorderPane
         fileMenu.styleProperty().bind(Bindings.concat(
@@ -372,10 +404,38 @@ public class GameController {
             image.setOpacity(0.5);
             updatePlayerBoard(players);
             // Create the Tooltip
-            Tooltip tooltip = new Tooltip(chosenPokemon.toString());
+            TextFlow styledContent = chosenPokemon.getStyledTooltipContent(borderPane);
+            Tooltip tooltip = new Tooltip();
+            
+            tooltip.setGraphic(styledContent);
+            tooltip.getStyleClass().add("tooltip");
+            
+            // Listen for when the BorderPane is added to a Scene
+            borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+                if (newScene != null) {
+                    String css = this.getClass().getResource("/com/example/game/style.css").toExternalForm();
+                    newScene.getStylesheets().add(css);
+                }
+            });
+
+            // Set tooltip pref width and height binding borderPane size
+            tooltip.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.29));
+            tooltip.prefHeightProperty().bind(borderPane.heightProperty().multiply(0.23));
+
+            // Bind tooltip padding to borderPane
+            borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
+                double paddingHorizontal = newWidth.doubleValue() * 0.001; // Adjust multiplier as needed
+                double paddingVertical = borderPane.getHeight() * 0.001; // Adjust multiplier as needed
+                String dynamicPadding = String.format("-fx-padding: %.2fem %.2fem %.2fem %.2fem;",
+                    paddingVertical, paddingHorizontal, paddingVertical, paddingHorizontal);
+                tooltip.setStyle(dynamicPadding);
+            });
 
             // Set the show delay to 0 milliseconds (instant display)
             tooltip.setShowDelay(javafx.util.Duration.ZERO);
+
+            // Set the show duration to INDEFINITE
+            tooltip.setShowDuration(Duration.INDEFINITE);
 
             Tooltip.install(image, tooltip);
 

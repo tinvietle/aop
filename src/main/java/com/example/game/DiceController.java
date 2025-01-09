@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -85,6 +86,11 @@ public class DiceController {
         dice7.layoutXProperty().bind(Pane.widthProperty().multiply(714.0 / 800.0));
         dice7.layoutYProperty().bind(Pane.heightProperty().multiply(13.0 / 76.0));
         
+        // Bind button font size to the parent pane
+        rollButton.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", rollButton.heightProperty().multiply(0.5), ";")); // Ensure text color is set
+        endButton.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", endButton.heightProperty().multiply(0.5), ";")); // Ensure text color is set
 
 
         try {

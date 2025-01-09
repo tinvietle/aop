@@ -1,0 +1,47 @@
+.circular-button {
+    -fx-background-color: #ffffff;
+    -fx-font-family: 'Pocket Monk';
+    -fx-font-size: 20px;
+    -fx-text-fill: #77bdd8;
+    -fx-border-color: #87CEEB;
+    /* -fx-border-width: 2; */
+    -fx-border-radius: 50;
+    -fx-background-radius: 50;
+}
+
+.circular-button:hover {
+    -fx-background-color: #e2eced;
+    -fx-text-fill: #65b0ce;
+}
+
+.circular-button:pressed {
+    -fx-background-color: #65b0ce;
+    -fx-text-fill: #e2eced;
+}
+
+.tooltip {
+    -fx-background-color: rgba(0, 157, 255, 0.5); /* Blue color with 50% transparency */
+    -fx-border-color: white;
+    /* -fx-padding: 0.1em 0.1em 0.1em 0.1em;  */
+    -fx-shape: "M7,0 L95,0 L100,10 L100,90 L90,100 L2,100 L0,95 L0,5 Z"; /* Custom SVG path */
+    -fx-background-radius: 0; /* Reset to avoid conflicts */
+    -fx-border-radius: 0; /* Reset to avoid conflicts */
+    -fx-border-width: 2; /* Adjust border width */
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.639), 10, 0.5, 0, 0); /* Add glow effect */
+}
+
+.text-flow{
+    -fx-border-color: white;
+    /* -fx-padding: 2em 2em 2em 2em; */
+    -fx-shape: "M7,0 L95,0 L100,10 L100,90 L90,100 L2,100 L0,95 L0,5 Z"; /* Custom SVG path */
+    -fx-border-width: 2;
+}
+
+.text-name{
+    -fx-font-weight: bold;
+    -fx-fill: white;
+}
+
+.text-info{
+    -fx-fill: white;
+}
