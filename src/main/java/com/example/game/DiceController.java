@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,6 +28,7 @@ public class DiceController {
     private int numKeptDice = 0;
     private int totalDice = 7;
     private boolean firstRoll = true;
+    private int remainingDice = 0;
     private StringBuilder result = new StringBuilder();  
     private Runnable onRollComplete; // Callback for roll completion
 
@@ -114,6 +116,45 @@ public class DiceController {
         disableButtons(true, true);
         List<ImageView> diceImages = List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7);
 
+        // Count numKeptDice and update the keepDice list
+        numKeptDice = 0;
+        keepDice.clear();
+        for (ImageView diceImage : diceImages) {
+            if (diceImage.getOpacity() == 0.5 && diceImage.getImage() != null) {
+                numKeptDice++;
+            }
+        }
+
+        remainingDice = firstRoll ? totalDice : totalDice - numKeptDice;
+
+        if (remainingDice < 0) {
+            disableButtons(true, false);
+            return;
+        } 
+        else if (remainingDice == 0){
+            System.out.println("Triggering end by remaining dice");
+            System.out.println("Total dice: " + totalDice);
+            System.out.println("Num kept dice: " + numKeptDice);
+            System.out.println("Remaining dice: " + remainingDice);
+            // Retrieve all not null dice and set the opacity to 0.5
+            for (ImageView diceImage : diceImages) {
+                if (diceImage.getOpacity() != 0.0) {
+                    diceImage.setOpacity(0.5);
+                    keepDice.add(diceImage);
+                }
+            }
+            disableButtons(true, false);
+            return;
+        }
+        else {
+            for (ImageView diceImage : diceImages) {
+                // Normal case, add the dice to keepDice list if it opacity is 0.5
+                if (diceImage.getOpacity() == 0.5 && diceImage.getImage() != null) {
+                    keepDice.add(diceImage);
+                }
+            }
+        }
+
         // Update kept dice faces at the start
         for (int i = 0; i < numKeptDice; i++) {
             // Get the image of keep dices and update that images to dices number 1 -> numKeptDice
@@ -122,13 +163,9 @@ public class DiceController {
             diceImage.setOpacity(0.5); // Mark as kept
         }
 
-        // Update the keepDice list with the new dice images
+        // Reset the keepDice list
         keepDice.clear();
         keepDice.addAll(diceImages.subList(0, numKeptDice));
-
-        // Roll remaining dice (totalDice - numKeptDice - 1)
-        // if first roll, roll all dice
-        int remainingDice = firstRoll ? totalDice : totalDice - numKeptDice;
 
         CountDownLatch latch = new CountDownLatch(remainingDice);
 
@@ -151,17 +188,10 @@ public class DiceController {
         new Thread(() -> {
             try {
                 latch.await();
-                Platform.runLater(() -> {
-                    if (totalDice - numKeptDice <= 1) {
-                        rollButton.setDisable(true);
-                        // Set the opacity of the dice to 0.5
-                        diceImages.get(numKeptDice).setOpacity(0.5);
-                    }
-                    totalDice--; // Reduce total dice available
-                    
+                Platform.runLater(() -> {                 
                     if (firstRoll) {
                         firstRoll = false;
-                        // disableButtons(true, true);
+                        disableButtons(true, true);
                         boolean isInstruction = gameController.showInstruction("You have rolled the dice once. Please select the pokemons you want to catch before continuing.", 400, 100, 1, 0, 3000);
                         if (!isInstruction) {
                             gameController.disableAllPokemons(false);
@@ -173,6 +203,16 @@ public class DiceController {
                     } else {
                         disableButtons(false, false);
                     }
+
+                    if (totalDice - numKeptDice <= 1) {
+                        System.out.println("Triggering end turn");
+                        System.out.println("Total dice: " + totalDice);
+                        System.out.println("Num kept dice: " + numKeptDice);
+                        disableButtons(true, false);
+                        // Set the opacity of the dice to 0.5
+                        diceImages.get(numKeptDice).setOpacity(0.5);
+                    }
+                    totalDice--; // Reduce total dice available
                 });
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -200,17 +240,27 @@ public class DiceController {
                 if (firstRoll) {
                     return;
                 }
-                if (keepDice.contains(diceImage)) {
-                    // Unkeep the dice
-                    keepDice.remove(diceImage);
-                    diceImage.setOpacity(1.0); // Reset opacity
-                    numKeptDice--;
-                } else {
-                    // Keep the dice
-                    keepDice.add(diceImage);
-                    diceImage.setOpacity(0.5); // Mark as kept
-                    numKeptDice++;
+                // If the dice is kept, raise Error since cannot unkeep the dice
+                if (keepDice.contains(diceImage) && diceImage.getOpacity() == 0.5){
+                    GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "This dice is already kept. You cannot unkeep it.");
+                    return;
                 }
+                // Toggle the opacity of the dice image
+                diceImage.setOpacity(diceImage.getOpacity() == 1.0 ? 0.5 : 1.0);
+
+                
+
+                // if (keepDice.contains(diceImage)) {
+                //     // Unkeep the dice
+                //     keepDice.remove(diceImage);
+                //     diceImage.setOpacity(1.0); // Reset opacity
+                //     numKeptDice--;
+                // } else {
+                //     // Keep the dice
+                //     keepDice.add(diceImage);
+                //     diceImage.setOpacity(0.5); // Mark as kept
+                //     numKeptDice++;
+                // }
             });
         }
     }
