@@ -16,6 +16,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -81,9 +83,37 @@ public class GameUtils {
         fadeOut.setOnFinished(e -> callback.run());
     }
 
-    public static void updateToolTip(Pokemon pokemon, ImageView image) {
+    public static void updateToolTip_deprecated(Pokemon pokemon, ImageView image) {
         Tooltip tooltip = new Tooltip(pokemon.toString());
         tooltip.setShowDelay(javafx.util.Duration.ZERO);
+        Tooltip.install(image, tooltip);
+    }
+
+    public static void updateToolTip(Pokemon pokemon, ImageView image, BorderPane borderPane) {
+        TextFlow styledContent = pokemon.getStyledTooltipContent(borderPane);
+        Tooltip tooltip = new Tooltip();
+        
+        tooltip.setGraphic(styledContent);
+        tooltip.getStyleClass().add("tooltip");
+        
+        // Set tooltip pref width and height binding borderPane size
+        tooltip.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.28));
+        tooltip.prefHeightProperty().bind(borderPane.heightProperty().multiply(0.24));
+
+        // Bind tooltip padding to borderPane
+        borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
+            double paddingHorizontal = newWidth.doubleValue() * 0.0002; // Adjust multiplier as needed
+            String dynamicPadding = String.format("-fx-padding: %.2fem;",
+                paddingHorizontal);
+            tooltip.setStyle(dynamicPadding);
+        });
+
+        // Set the show delay to 0 milliseconds (instant display)
+        tooltip.setShowDelay(javafx.util.Duration.ZERO);
+
+        // Set the show duration to INDEFINITE
+        tooltip.setShowDuration(Duration.INDEFINITE);
+
         Tooltip.install(image, tooltip);
     }
 

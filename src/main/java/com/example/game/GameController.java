@@ -25,7 +25,6 @@ import com.example.settings.SettingsController;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -36,7 +35,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -45,13 +43,11 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -133,45 +129,17 @@ public class GameController {
         pokemonImages.put("pikachu", pikachu);
         pokemonImages.put("talonflame", talonflame);
 
+        // Listen for when the BorderPane is added to a Scene
+        borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                String css = this.getClass().getResource("/com/example/game/style.css").toExternalForm();
+                newScene.getStylesheets().add(css);
+            }
+        });
+
         pokemons.values().forEach(pokemon -> {
             ImageView image = pokemonImages.get(pokemon.getName());
-
-            // Create the Tooltip
-            // Tooltip tooltip = new Tooltip(pokemon.toString());
-            TextFlow styledContent = pokemon.getStyledTooltipContent(borderPane);
-            Tooltip tooltip = new Tooltip();
-            
-            tooltip.setGraphic(styledContent);
-            tooltip.getStyleClass().add("tooltip");
-            
-            // Listen for when the BorderPane is added to a Scene
-            borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
-                if (newScene != null) {
-                    String css = this.getClass().getResource("/com/example/game/style.css").toExternalForm();
-                    newScene.getStylesheets().add(css);
-                }
-            });
-
-            // Set tooltip pref width and height binding borderPane size
-            tooltip.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.28));
-            tooltip.prefHeightProperty().bind(borderPane.heightProperty().multiply(0.24));
-
-            // Bind tooltip padding to borderPane
-            borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-                double paddingHorizontal = newWidth.doubleValue() * 0.0002; // Adjust multiplier as needed
-                String dynamicPadding = String.format("-fx-padding: %.2fem;",
-                    paddingHorizontal);
-                tooltip.setStyle(dynamicPadding);
-            });
-
-            // Set the show delay to 0 milliseconds (instant display)
-            tooltip.setShowDelay(javafx.util.Duration.ZERO);
-
-            // Set the show duration to INDEFINITE
-            tooltip.setShowDuration(javafx.util.Duration.ZERO);
-
-            Tooltip.install(image, tooltip);
-            GameUtils.updateToolTip(pokemon, image);
+            GameUtils.updateToolTip(pokemon, image, borderPane);
         });
 
         disableAllPokemons(true);
@@ -343,40 +311,13 @@ public class GameController {
                     pokemon.setGroupOwner(curPlayer);
                     ImageView image = pokemonImages.get(pokemon.getName());
                     image.setOpacity(0.5);
-                    GameUtils.updateToolTip(pokemon, image);
+                    GameUtils.updateToolTip(pokemon, image, borderPane);
                 }
             } else {
                 ImageView image = pokemonImages.get(chosenPokemon.getName());
-                GameUtils.updateToolTip(chosenPokemon, image);
+                GameUtils.updateToolTip(chosenPokemon, image, borderPane);
             }
             updatePlayerBoard(players);
-            // Create the Tooltip
-            TextFlow styledContent = chosenPokemon.getStyledTooltipContent(borderPane);
-            Tooltip tooltip = new Tooltip();
-            
-            tooltip.setGraphic(styledContent);
-            tooltip.getStyleClass().add("tooltip");
-            
-            // Listen for when the BorderPane is added to a Scene
-            borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
-                if (newScene != null) {
-                    String css = this.getClass().getResource("/com/example/game/style.css").toExternalForm();
-                    newScene.getStylesheets().add(css);
-                }
-            });
-
-            // Set tooltip pref width and height binding borderPane size
-            tooltip.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.29));
-            tooltip.prefHeightProperty().bind(borderPane.heightProperty().multiply(0.23));
-
-            // Bind tooltip padding to borderPane
-            borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-                double paddingHorizontal = newWidth.doubleValue() * 0.001; // Adjust multiplier as needed
-                double paddingVertical = borderPane.getHeight() * 0.001; // Adjust multiplier as needed
-                String dynamicPadding = String.format("-fx-padding: %.2fem %.2fem %.2fem %.2fem;",
-                    paddingVertical, paddingHorizontal, paddingVertical, paddingHorizontal);
-                tooltip.setStyle(dynamicPadding);
-            });
 
             String path = "src\\main\\resources\\com\\example\\assets\\stocks\\%s.mp4";
             String videoPath = Paths.get(String.format(path, chosenPokemon.getName())).toUri().toString();

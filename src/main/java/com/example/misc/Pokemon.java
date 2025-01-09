@@ -7,13 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javafx.beans.binding.Bindings;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -86,21 +81,18 @@ public class Pokemon {
     @Override
     public String toString() {
         if (groupOwner != null) {
-            return  "Group " + this.group + " is already owned by Player " + groupOwner.getName() + '\n' + 
-                    "Name: " + name + "\n" + 
-                    "Score: " + score + '\n' +
-                    "Group Score: " + groupScore + '\n';
+            return  "Score: " + score + '\n' +
+                    "Group Score: " + groupScore + '\n' + 
+                    "Group " + this.group + " is already owned by Player " + groupOwner.getName() + '\n';
         }
         if (owned) {
-            return  "Name: " + name + '\n' +
-                    "Score: " + score + '\n' +
-                    "Requirements: " + requirements.toString() + '\n' +
+            return  "Score: " + score + '\n' +
+                    "Requirements: \n" + requirements.toString() + '\n' +
                     "Description: " + description + '\n' +
                     "Owned by: " + owner.getName() + '\n';
         }
-        return  "Name: " + name + '\n' +
-                "Score: " + score + '\n' +
-                "Requirements: " + requirements.toString() + '\n' +
+        return  "Score: " + score + '\n' +
+                "Requirements: \n" + requirements.toString() + '\n' +
                 "Description: " + description + '\n';
     }
 
@@ -115,13 +107,7 @@ public class Pokemon {
         Text rightCorner = new Text(">");
         rightCorner.getStyleClass().add("text-name");
 
-        Text scoreText = new Text("\nScore: " + score );
-        scoreText.getStyleClass().add("text-info");
-
-        Text requirementsText = new Text("\nRequirements: \n" + requirements.toString());
-        requirementsText.getStyleClass().add("text-info");
-
-        Text descriptionText = new Text("\nDescription: " + description);
+        Text descriptionText = new Text(this.toString());
         descriptionText.getStyleClass().add("text-info");
 
         // Bind font size to the scene size
@@ -140,16 +126,6 @@ public class Pokemon {
             root.widthProperty()
         ));
 
-        scoreText.fontProperty().bind(Bindings.createObjectBinding(
-            () -> Font.font("System", FontWeight.BOLD, root.getWidth() / 100),
-            root.widthProperty()
-        ));
-
-        requirementsText.fontProperty().bind(Bindings.createObjectBinding(
-            () -> Font.font("System", FontWeight.BOLD, root.getWidth() / 100),
-            root.widthProperty()
-        ));
-
         descriptionText.fontProperty().bind(Bindings.createObjectBinding(
             () -> Font.font("System", FontWeight.BOLD, root.getWidth() / 100),
             root.widthProperty()
@@ -161,7 +137,7 @@ public class Pokemon {
         nameContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.25));
 
         // Combine the centered name and other Text nodes into a TextFlow
-        TextFlow textFlow = new TextFlow(nameContainer, scoreText, requirementsText, descriptionText);
+        TextFlow textFlow = new TextFlow(nameContainer, descriptionText);
         textFlow.getStyleClass().add("text-flow");
 
         // Bind textflow padding to root

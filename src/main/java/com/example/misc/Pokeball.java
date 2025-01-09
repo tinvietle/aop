@@ -3,6 +3,7 @@ package com.example.misc;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,10 +71,10 @@ public class Pokeball {
     }
 
     public String toString() {
-        return "Red: " + red + '\n' +
-                "Great: " + great + '\n' +
-                "Ultra: " + ultra + '\n' +
-                "Master: " + master;
+        return "- Red: " + redToString() + '\n' +
+                "- Great: " + great + '\n' +
+                "- Ultra: " + ultra + '\n' +
+                "- Master: " + master;
     }
 
     public void addMasterBall() {
@@ -162,6 +163,11 @@ public class Pokeball {
             }
         }
         return false; // No match found for this target
+    }
+
+    private String redToString() {
+        return red.stream().map(String::valueOf) // Convert each Integer to String
+                            .collect(Collectors.joining(", ")); // Join with ", ";
     }
 }
 
