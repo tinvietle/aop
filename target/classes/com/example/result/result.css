@@ -59,3 +59,9 @@
 .action-button:pressed {
     -fx-background-color: rgba(255, 255, 255, 0.4); /* More opaque when pressed */
 }
+
+.leaderboardText {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Pocket Monk";
+}

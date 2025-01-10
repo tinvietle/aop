@@ -12,8 +12,8 @@ public class SoundManager {
     private static SoundManager instance;
     private MediaPlayer mediaPlayer;
     private List<String> bgmList;
-    private double volume = 0.1;
-    private double sfxVolume = 0.5;
+    private double volume = 0.05;
+    private double sfxVolume = 0.8;
 
     private SoundManager() {
         bgmList = new ArrayList<>();

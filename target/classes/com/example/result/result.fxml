@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.geometry.Insets?>
 
-<HBox spacing="50" alignment="CENTER" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.result.ResultDisplay">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox alignment="CENTER" prefHeight="500.0" prefWidth="800.0" spacing="50" stylesheets="@result.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.example.result.ResultDisplay">
     <padding>
-        <Insets top="40" right="40" bottom="40" left="40"/>
+        <Insets bottom="40" left="40" right="40" top="40" />
     </padding>
     
-    <VBox alignment="CENTER" spacing="20" prefWidth="500" styleClass="content-box">
-        <ImageView fx:id="trophyImage" fitWidth="300" fitHeight="300" preserveRatio="true"/>
-        <Label text="Winner!" style="-fx-font-size: 80px; -fx-font-weight: bold; -fx-font-family: 'Pocket Monk';"/>
-        <Label fx:id="winnerName" style="-fx-font-size: 36px;"/>
-        <Label fx:id="winnerScore" style="-fx-font-size: 32px;"/>
+    <VBox alignment="CENTER" prefWidth="500" spacing="20" styleClass="content-box">
+        <ImageView fx:id="trophyImage" fitHeight="300" fitWidth="300" preserveRatio="true">
+         <image>
+            <Image url="@../assets/trophy.png" />
+         </image></ImageView>
+        <Label style="-fx-font-size: 80px; -fx-font-weight: bold; -fx-font-family: 'Pocket Monk';" text="Winner!" />
+        <Label fx:id="winnerName" style="-fx-font-size: 36px;" />
+        <Label fx:id="winnerScore" style="-fx-font-size: 32px;" />
     </VBox>
     
-    <VBox fx:id="leaderboardContainer" alignment="CENTER" spacing="20" prefWidth="500" styleClass="content-box">
-        <Label text="Leaderboard" style="-fx-font-size: 70px; -fx-font-weight: bold; -fx-font-family: 'Pocket Monk';"/>
-        <ListView fx:id="leaderboardList" prefHeight="600" style="-fx-font-size: 24px;"/>
-        <Button text="New Game" fx:id="newGameButton" styleClass="action-button" maxWidth="Infinity"/>
-        <Button text="Exit" fx:id="exitButton" styleClass="action-button" maxWidth="Infinity"/>
+    <VBox fx:id="leaderboardContainer" alignment="CENTER" prefWidth="500" spacing="20" styleClass="content-box">
+        <Label styleClass="leaderboardText" text="Leaderboard" />
+        <ListView fx:id="leaderboardList" prefHeight="600" style="-fx-font-size: 24px;" />
+        <Button fx:id="newGameButton" maxWidth="Infinity" styleClass="action-button" text="New Game" />
+        <Button fx:id="exitButton" maxWidth="Infinity" styleClass="action-button" text="Exit" />
     </VBox>
 </HBox>
