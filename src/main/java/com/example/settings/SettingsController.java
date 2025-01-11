@@ -8,6 +8,7 @@ import com.example.misc.SoundManager;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -24,6 +25,18 @@ public class SettingsController {
 
     @FXML
     private Slider sfxVolumeSlider;
+
+    @FXML
+    private Slider masterVolumeSlider;
+
+    @FXML
+    private Label masterVolumeLabel;
+
+    @FXML
+    private Label bgmVolumeLabel;
+
+    @FXML
+    private Label sfxVolumeLabel;
 
     @FXML
     private StackPane settingsRootPane;
@@ -64,17 +77,26 @@ public class SettingsController {
                 }
             });
 
+            // Initialize master volume slider
+            masterVolumeSlider.setValue(SoundManager.getInstance().getMasterVolume());
+            masterVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                SoundManager.getInstance().setMasterVolume(newVal.doubleValue());
+                masterVolumeLabel.setText(String.format("%.2f", newVal.doubleValue()));
+            });
+
             // Initialize volume slider
             volumeSlider.setValue(SoundManager.getInstance().getVolume());
-            volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> 
-                SoundManager.getInstance().setVolume(newVal.doubleValue())
-            );
+            volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                SoundManager.getInstance().setVolume(newVal.doubleValue());
+                bgmVolumeLabel.setText(String.format("%.2f", newVal.doubleValue()));
+            });
 
             // Initialize SFX volume slider
             sfxVolumeSlider.setValue(SoundManager.getInstance().getSFXVolume());
-            sfxVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) ->
-                SoundManager.getInstance().setSFXVolume(newVal.doubleValue())
-            );
+            sfxVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                SoundManager.getInstance().setSFXVolume(newVal.doubleValue());
+                sfxVolumeLabel.setText(String.format("%.2f", newVal.doubleValue()));
+            });
         } catch (Exception e) {
             System.err.println("Error initializing settings: " + e.getMessage());
             e.printStackTrace();

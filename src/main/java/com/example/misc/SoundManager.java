@@ -14,6 +14,7 @@ public class SoundManager {
     private List<String> bgmList;
     private double volume = 0.1;
     private double sfxVolume = 0.5;
+    private double masterVolume = 1.0;
 
     private SoundManager() {
         bgmList = new ArrayList<>();
@@ -127,5 +128,13 @@ public class SoundManager {
 
     public double getSFXVolume() {
         return sfxVolume;
+    }
+
+    public double getMasterVolume() {
+        return masterVolume;
+    }
+
+    public void setMasterVolume(double masterVolume) {
+        this.masterVolume = masterVolume;
     }
 }
