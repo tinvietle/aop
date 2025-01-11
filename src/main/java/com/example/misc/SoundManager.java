@@ -98,7 +98,7 @@ public class SoundManager {
         try {
             Media sfxMedia = new Media(getClass().getResource(sfxPath).toString());
             MediaPlayer sfxPlayer = new MediaPlayer(sfxMedia);
-            sfxPlayer.setVolume(sfxVolume);
+            sfxPlayer.setVolume(masterVolume * sfxVolume);
             sfxPlayer.play();
         } catch (Exception e) {
             System.err.println("Error playing SFX: " + e.getMessage());
@@ -114,7 +114,7 @@ public class SoundManager {
     public void setVolume(double volume) {
         this.volume = volume;
         if (mediaPlayer != null) {
-            mediaPlayer.setVolume(volume);
+            mediaPlayer.setVolume(masterVolume * this.volume);
         }
     }
 
@@ -136,5 +136,8 @@ public class SoundManager {
 
     public void setMasterVolume(double masterVolume) {
         this.masterVolume = masterVolume;
+        if (mediaPlayer != null) {
+            mediaPlayer.setVolume(masterVolume * volume);
+        }
     }
 }
