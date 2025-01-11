@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -41,41 +42,18 @@ public class SettingsController {
     @FXML
     private StackPane settingsRootPane;
 
+    @FXML 
+    private ImageView backgroundImage;
+
     private Stage primaryStage;
     private Scene previousScene;
 
     @FXML
     public void initialize() {
         try {
-            // Set background image with proper scaling
-            URL resourceUrl = App.class.getResource("/com/example/assets/settings.jpg");
-            if (resourceUrl == null) {
-                throw new IOException("Cannot find settings background image");
-            }
-            Image backgroundImage = new Image(resourceUrl.toString());
-            BackgroundImage background = new BackgroundImage(
-                backgroundImage, 
-                BackgroundRepeat.NO_REPEAT, 
-                BackgroundRepeat.NO_REPEAT, 
-                BackgroundPosition.CENTER, 
-                new BackgroundSize(
-                    100, 
-                    100, 
-                    true, 
-                    true, 
-                    true, 
-                    true  
-                )
-            );
-            settingsRootPane.setBackground(new Background(background));
-            
-            // Add size listener to adjust background when window resizes
-            settingsRootPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
-                if (newScene != null) {
-                    settingsRootPane.prefWidthProperty().bind(newScene.widthProperty());
-                    settingsRootPane.prefHeightProperty().bind(newScene.heightProperty());
-                }
-            });
+            // Bind backgroundIMage size to the root pane size
+            backgroundImage.fitWidthProperty().bind(settingsRootPane.widthProperty());
+            backgroundImage.fitHeightProperty().bind(settingsRootPane.heightProperty());
 
             // Initialize master volume slider
             masterVolumeSlider.setValue(SoundManager.getInstance().getMasterVolume());

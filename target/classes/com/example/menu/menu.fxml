@@ -4,15 +4,15 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.Blend?>
-<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootPane" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.menu.MenuController">
+<StackPane fx:id="rootPane" prefHeight="500.0" prefWidth="800.0" stylesheets="@menuStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.menu.MenuController">
     <children>
         <!-- Background Video -->
         <MediaView fx:id="backgroundVideo">
@@ -23,9 +23,9 @@
         <!-- Game UI -->
         <BorderPane>
             <top>
-                <Label fx:id="titleText" text="Age Of Pokemon" BorderPane.alignment="CENTER">
+                <Label fx:id="titleText" styleClass="titleText" text="Age Of Pokemon" BorderPane.alignment="CENTER">
                     <font>
-                        <Font name="Pocket Monk" size="80" />
+                        <Font size="80.0" />
                     </font>
                     <effect>
                         <Glow level="0.6">
@@ -34,9 +34,6 @@
                             </input>
                         </Glow>
                     </effect>
-                    <style>
-                        -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);
-                    </style>
                <padding>
                   <Insets top="20.0" />
                </padding>
@@ -45,59 +42,29 @@
             <center>
                 <VBox alignment="CENTER" spacing="20">
                     <children>
-                        <Button fx:id="startButton" prefHeight="60.0" prefWidth="500.0" 
-                                style="-fx-background-color: linear-gradient(to bottom, #2A2A2A, #1A1A1A);
-                                       -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);
-                                       -fx-font-size: 24;
-                                       -fx-font-weight: bold;
-                                       -fx-cursor: hand;
-                                       -fx-background-radius: 15;
-                                       -fx-border-color: #3A3A3A;
-                                       -fx-border-width: 2;
-                                       -fx-border-radius: 15;" 
-                                text="Start Game">
+                        <Button fx:id="startButton" prefHeight="60.0" prefWidth="500.0" styleClass="buttonText" text="Start Game">
                             <effect>
                                 <Glow level="0.3">
                                     <input>
-                                        <DropShadow color="#ffd700" spread="0.2" radius="10" />
+                                        <DropShadow color="#ffd700" radius="10" spread="0.2" />
                                     </input>
                                 </Glow>
                             </effect>
                         </Button>
-                        <Button fx:id="settingsButton" prefHeight="60.0" prefWidth="500.0"
-                                style="-fx-background-color: linear-gradient(to bottom, #2A2A2A, #1A1A1A);
-                                       -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);
-                                       -fx-font-size: 24;
-                                       -fx-font-weight: bold;
-                                       -fx-cursor: hand;
-                                       -fx-background-radius: 15;
-                                       -fx-border-color: #3A3A3A;
-                                       -fx-border-width: 2;
-                                       -fx-border-radius: 15;"
-                                text="Settings">
+                        <Button fx:id="settingsButton" prefHeight="60.0" prefWidth="500.0" styleClass="buttonText" text="Settings">
                             <effect>
                                 <Glow level="0.3">
                                     <input>
-                                        <DropShadow color="#ffd700" spread="0.2" radius="10" />
+                                        <DropShadow color="#ffd700" radius="10" spread="0.2" />
                                     </input>
                                 </Glow>
                             </effect>
                         </Button>
-                        <Button fx:id="exitButton" prefHeight="60.0" prefWidth="500.0"
-                                style="-fx-background-color: linear-gradient(to bottom, #2A2A2A, #1A1A1A);
-                                       -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);
-                                       -fx-font-size: 24;
-                                       -fx-font-weight: bold;
-                                       -fx-cursor: hand;
-                                       -fx-background-radius: 15;
-                                       -fx-border-color: #3A3A3A;
-                                       -fx-border-width: 2;
-                                       -fx-border-radius: 15;"
-                                text="Exit">
+                        <Button fx:id="exitButton" prefHeight="60.0" prefWidth="500.0" styleClass="buttonText" text="Exit">
                             <effect>
                                 <Glow level="0.3">
                                     <input>
-                                        <DropShadow color="#ffd700" spread="0.2" radius="10" />
+                                        <DropShadow color="#ffd700" radius="10" spread="0.2" />
                                     </input>
                                 </Glow>
                             </effect>

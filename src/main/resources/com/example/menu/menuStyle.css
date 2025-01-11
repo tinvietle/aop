@@ -1,0 +1,16 @@
+.titleText {
+    -fx-text-fill:  linear-gradient(to bottom, #4e4407, #ff8c00);
+    -fx-font-family: "Pocket Monk";
+}
+
+.buttonText{
+    -fx-background-color:  linear-gradient(to bottom, #2A2A2A, #1A1A1A);
+    -fx-text-fill:  linear-gradient(to bottom, #ffd700, #ff8c00);
+    -fx-font-size: 24;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 15;
+    -fx-border-color:  #3A3A3A;
+    -fx-border-width: 2;
+    -fx-border-radius: 15;
+}

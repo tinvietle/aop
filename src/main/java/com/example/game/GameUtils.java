@@ -98,15 +98,45 @@ public class GameUtils {
         
         // Set tooltip pref width and height binding borderPane size
         tooltip.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.28));
-        tooltip.prefHeightProperty().bind(borderPane.heightProperty().multiply(0.26));
+        // tooltip.prefHeightProperty().bind(borderPane.heightProperty().multiply(0.30));
+        final double contentHeight;
+        if (pokemon.getGroupOwner() != null) {
+            contentHeight = 100;
+        } else if (pokemon.getOwned()) {
+            contentHeight = 170;
+        } else {
+            contentHeight = 164;
+        }
+        double defaultHeight = contentHeight * 1.1 * borderPane.getHeight() / 800 ; // Adjust multiplier as needed
+        System.out.println("Height: " + defaultHeight);
+        tooltip.setPrefHeight(defaultHeight);
+
+        // Add listener for tooltip pref height
+        borderPane.heightProperty().addListener((obs, oldHeight, newHeight) -> {
+            double adjustedHeight = contentHeight * 1.1 * borderPane.getHeight() / 800; // Adjust multiplier as needed
+            tooltip.setPrefHeight(adjustedHeight);
+            System.out.println("Height: " + adjustedHeight);
+        });
+
+        double defaultPadding = borderPane.getWidth() * 0.002 ; // Adjust multiplier as needed
+        System.out.println("Padding: " + defaultPadding);
+        String dynamicPadding = String.format("-fx-padding: %.2f;",
+            defaultPadding);
+        tooltip.setStyle(dynamicPadding);
 
         // Bind tooltip padding to borderPane
         borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-            double paddingHorizontal = newWidth.doubleValue() * 0.0002; // Adjust multiplier as needed
-            String dynamicPadding = String.format("-fx-padding: %.2fem;",
-                paddingHorizontal);
-            tooltip.setStyle(dynamicPadding);
+            double paddingHorizontal = borderPane.getWidth() * 0.002; // Adjust multiplier as needed
+            double borderWidth = borderPane.getWidth() * 0.002;
+            System.out.println("Padding: " + paddingHorizontal);
+            String newDynamicPadding = String.format(
+                "-fx-padding: %.2f;", paddingHorizontal,
+                "-fx-border-width: %.2f;", borderWidth
+            );
+            tooltip.setStyle(newDynamicPadding);
         });
+        // String fixedPadding = "-fx-padding: 0.5em;";
+        // tooltip.setStyle(fixedPadding);
 
         // Set the show delay to 0 milliseconds (instant display)
         tooltip.setShowDelay(javafx.util.Duration.ZERO);

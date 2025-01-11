@@ -72,21 +72,15 @@ public class MenuController {
 
         // Bind font size to scene width, and add other attributes: bold, black
         titleText.styleProperty().bind(Bindings.concat(
-                "-fx-font-size: ", rootPane.widthProperty().multiply(0.1), ";",
-                "-fx-font-weight: bold; ",
-                "-fx-text-fill: black;",
-                "-fx-font-family: 'Pocket Monk';"));
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.1), ";"));
 
         // Bind button font size to scene width, and add other attributes: bold, black
         startButton.styleProperty().bind(Bindings.concat(
-                "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";",
-                "-fx-text-fill: black;"));
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";"));
         settingsButton.styleProperty().bind(Bindings.concat(
-                "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";",
-                "-fx-text-fill: black;"));
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";"));
         exitButton.styleProperty().bind(Bindings.concat(
-                "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";",
-                "-fx-text-fill: black;"));
+                "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";"));
 
         // Set up button event handlers
         startButton.setOnAction(event -> handleStartGame());
