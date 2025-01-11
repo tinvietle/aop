@@ -81,19 +81,19 @@ public class Pokemon {
     @Override
     public String toString() {
         if (groupOwner != null) {
-            return  "Score: " + score + '\n' +
+            return  "\nScore: " + score + '\n' +
                     "Group Score: " + groupScore + '\n' + 
-                    "Group " + this.group + " is already owned by Player " + groupOwner.getName() + '\n';
+                    "Group " + this.group + " is already owned by Player " + groupOwner.getName();
         }
         if (owned) {
-            return  "Score: " + score + '\n' +
+            return  "\nScore: " + score + '\n' +
                     "Requirements: \n" + requirements.toString() + '\n' +
                     "Description: " + description + '\n' +
-                    "Owned by: " + owner.getName() + '\n';
+                    "Owned by: " + owner.getName();
         }
-        return  "Score: " + score + '\n' +
+        return  "\nScore: " + score + '\n' +
                 "Requirements: \n" + requirements.toString() + '\n' +
-                "Description: " + description + '\n';
+                "Description: " + description ;
     }
 
     public TextFlow getStyledTooltipContent(BorderPane root) {
@@ -134,10 +134,11 @@ public class Pokemon {
         // Wrap nameText, left/rightCorner in a centered HBox
         TextFlow nameContainer = new TextFlow(leftCorner, nameText, rightCorner);
         nameContainer.setTextAlignment(TextAlignment.CENTER);
-        nameContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.25));
+        nameContainer.prefWidthProperty().bind(root.widthProperty().multiply(0.25));        
 
         // Combine the centered name and other Text nodes into a TextFlow
         TextFlow textFlow = new TextFlow(nameContainer, descriptionText);
+        textFlow.prefWidthProperty().bind(root.widthProperty().multiply(0.25));
         textFlow.getStyleClass().add("text-flow");
 
         // Bind textflow padding to root
