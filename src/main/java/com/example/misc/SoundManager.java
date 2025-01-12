@@ -15,6 +15,7 @@ public class SoundManager {
     private double volume = 0.1;
     private double sfxVolume = 0.5;
     private double masterVolume = 1.0;
+    private double voiceVolume = 0.5;
 
     private SoundManager() {
         bgmList = new ArrayList<>();
@@ -105,6 +106,17 @@ public class SoundManager {
         }
     }
 
+    public void playVoice(String voicePath) {
+        try {
+            Media voiceMedia = new Media(getClass().getResource(voicePath).toString());
+            MediaPlayer voicePlayer = new MediaPlayer(voiceMedia);
+            voicePlayer.setVolume(masterVolume * voiceVolume);
+            voicePlayer.play();
+        } catch (Exception e) {
+            System.err.println("Error playing voice: " + e.getMessage());
+        }
+    }
+
     public void stopBGM() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
@@ -139,5 +151,13 @@ public class SoundManager {
         if (mediaPlayer != null) {
             mediaPlayer.setVolume(masterVolume * volume);
         }
+    }
+
+    public double getVoiceVolume() {
+        return voiceVolume;
+    }
+
+    public void setVoiceVolume(double volume) {
+        this.voiceVolume = volume;
     }
 }

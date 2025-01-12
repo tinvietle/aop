@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 
-<StackPane fx:id="settingsRootPane" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.settings.SettingsController">
+    <StackPane fx:id="settingsRootPane" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.settings.SettingsController">
    <ImageView fx:id="backgroundImage" fitHeight="300.0" fitWidth="380.0" pickOnBounds="true">
       <image>
          <Image url="@../assets/settings.jpg" />
@@ -51,6 +51,16 @@
                             showTickLabels="true" showTickMarks="true"
                             style="-fx-control-inner-background: white;" value="0.25" />
                     <Label fx:id="sfxVolumeLabel" style="-fx-text-fill: white;" text="0.25"/>
+                </HBox>
+            </VBox>
+
+            <VBox alignment="CENTER" spacing="10">
+                <Label style="-fx-text-fill: white;" text="Voice Volume" />
+                <HBox alignment="CENTER" spacing="10">
+                    <Slider fx:id="voiceVolumeSlider" min="0" max="1" value="0.5"
+                            showTickLabels="true" showTickMarks="true" prefWidth="300"
+                            style="-fx-control-inner-background: white;"/>
+                    <Label fx:id="voiceVolumeLabel" style="-fx-text-fill: white;" text="0.5"/>
                 </HBox>
             </VBox>
 

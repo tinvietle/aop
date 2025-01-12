@@ -6,28 +6,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import javafx.scene.text.TextFlow;
 
 import com.example.App;
 import com.example.capture.OnlyMedia;
 import com.example.help.HelpController;
+import com.example.misc.Group;
+import com.example.misc.GroupReader;
 import com.example.misc.Player;
 import com.example.misc.Pokeball;
 import com.example.misc.Pokemon;
 import com.example.misc.PokemonReader;
-import com.example.misc.Group;
-import com.example.misc.GroupReader;
 import com.example.misc.SoundManager;
 import com.example.misc.Utils;
 import com.example.result.ResultDisplay;
 import com.example.settings.SettingsController;
 
-import javafx.animation.Interpolator;
-import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -38,7 +34,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -51,14 +46,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.util.Duration;
 
 
 public class GameController {
@@ -254,65 +245,10 @@ public class GameController {
     @FXML
     private void openHelpScene() throws IOException {   
         try {
-            // GameUtils.loadScene("/com/example/help/help.fxml", "Help", (Stage) borderPane.getScene().getWindow(), loader -> {
-            //     HelpController helpController = loader.getController();
-            //     helpController.setPreviousScene((Stage) borderPane.getScene().getWindow(), borderPane.getScene());
-            // });
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/help/help.fxml"));
-            Parent helpRoot = loader.load();
-
-            HelpController helpController = loader.getController();
-
-            // Get the root StackPane of the current scene
-            StackPane rootPane = (StackPane) borderPane.getScene().getRoot();
-
-            // Apply Gaussian blur only to the rootPane (background content)
-            StackPane backgrounPane = new StackPane();
-            backgrounPane.getChildren().addAll(rootPane.getChildren());
-            rootPane.getChildren().clear();
-
-            // Apply the blur effect to the background
-            GaussianBlur blur = new GaussianBlur(10);
-            backgrounPane.setEffect(blur);
-
-            // Add the background to the root pane
-            rootPane.getChildren().add(backgrounPane);
-
-            // Make sure helpRoot has a fixed size
-            if (helpRoot instanceof Region) {
-                Region region = (Region) helpRoot;
-                region.setMaxWidth(800);  // Set max width for the popup
-                region.setMaxHeight(500); // Set max height for the popup
-            }
-
-            // Create an overlay to prevent clicking on the background
-            Pane overlay = new Pane();
-            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
-            overlay.setPrefSize(rootPane.getWidth(), rootPane.getHeight());
-            rootPane.getChildren().add(overlay);
-
-            // Add the popup to the root pane and center it
-            rootPane.getChildren().add(helpRoot);
-            StackPane.setAlignment(helpRoot, Pos.BOTTOM_CENTER); // Center the popup
-
-            // Calculate the starting Y position (below the screen)
-            helpRoot.setTranslateY(rootPane.getHeight()); // Start at the bottom of the scene
-
-            // Animate the popup (wipe in from bottom)
-            TranslateTransition transition = new TranslateTransition(Duration.millis(300), helpRoot);
-            transition.setFromY(rootPane.getHeight()); // Start position at the bottom
-            transition.setToY(-rootPane.getHeight()*0.5 + 200); // Final position centered (300px for the height)
-            transition.setInterpolator(Interpolator.EASE_OUT);
-            transition.play();
-
-            // Handle closing the popup (remove blur and popup immediately)
-            helpController.setCloseAction((Void v) -> {
-                rootPane.getChildren().remove(helpRoot); // Remove the popup immediately
-                rootPane.getChildren().remove(overlay); // Remove the overlay
-                backgrounPane.setEffect(null); // Remove the blur effect from the background
+            GameUtils.loadScene("/com/example/help/help.fxml", "Help", (Stage) borderPane.getScene().getWindow(), loader -> {
+                HelpController helpController = loader.getController();
+                helpController.setPreviousScene((Stage) borderPane.getScene().getWindow(), borderPane.getScene());
             });
-
         } catch (Exception e) {
             System.err.println("Error opening settings: " + e.getMessage());
             e.printStackTrace();
@@ -332,6 +268,7 @@ public class GameController {
         String pokemonName = ((Node) event.getSource()).getId();
         Pokemon attemptedPokemon = pokemons.get(pokemonName);
         if (confirmChoose()) {
+            SoundManager.getInstance().playVoice("/com/example/assets/voice/" + pokemonName + ".wav");
             if (attemptedPokemon.getGroupOwner() != null) {
                 GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "This Pokemon is part of a group already owned by Player " + attemptedPokemon.getGroupOwner().getName());
                 return;
@@ -367,7 +304,7 @@ public class GameController {
             curPlayer.addPokemon(chosenPokemon);
             chosenPokemon.setOwner(curPlayer);
             Group group = groups.get(chosenPokemon.getGroup());
-            if (group.checkOwned(curPlayer)) {
+            if (group != null && group.checkOwned(curPlayer)) {
                 curPlayer.updateScore(group.getScore());
                 for (Pokemon pokemon : group.getPokemons()) {
                     System.out.println(curPlayer.getName() + " owns " + pokemon.getName());

@@ -21,6 +21,9 @@ public class SettingsController {
     private Slider masterVolumeSlider;
 
     @FXML
+    private Slider voiceVolumeSlider;
+
+    @FXML
     private Label masterVolumeLabel;
 
     @FXML
@@ -28,6 +31,9 @@ public class SettingsController {
 
     @FXML
     private Label sfxVolumeLabel;
+
+    @FXML
+    private Label voiceVolumeLabel;
 
     @FXML
     private StackPane settingsRootPane;
@@ -81,6 +87,16 @@ public class SettingsController {
                 });
             } else {
                 System.err.println("SFX volume controls not properly initialized");
+            }
+
+            // Initialize voice volume controls
+            if (voiceVolumeSlider != null && voiceVolumeLabel != null) {
+                voiceVolumeSlider.setValue(SoundManager.getInstance().getVoiceVolume());
+                voiceVolumeLabel.textProperty().bind(
+                    voiceVolumeSlider.valueProperty().multiply(100).asString("%.0f"));
+                voiceVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                    SoundManager.getInstance().setVoiceVolume(newVal.doubleValue());
+                });
             }
         } catch (Exception e) {
             System.err.println("Error initializing settings: " + e.getMessage());
