@@ -88,6 +88,7 @@ public class GameController {
     @FXML private Accordion accordionView;
     @FXML private StackPane turnOverlay, welcomeOverlay;
     @FXML private Text turnText, welcomeText;
+    @FXML private Label turnLabel;
 
     // Pokemon ImageViews
     @FXML private ImageView cloyster, galvantula, gengar, gyarados, hawlucha, helioptile, 
@@ -523,7 +524,8 @@ public class GameController {
     }
 
     public void setCurPlayer(Player player) {
-        curPlayer = player;
+        this.curPlayer = player;
+        turnLabel.setText("Turn: " + player.getName());
     }
 
     public boolean showInstruction(String text, double width, double height, double x, double y, long outDelay) {
