@@ -26,7 +26,7 @@
             </effect>
         </Button>
          
-      <Label fx:id="messageLabel" styleClass="labelText" text="Click anywhere to return" textFill="WHITE">
+      <Label fx:id="messageLabel" prefHeight="71.0" prefWidth="395.0" styleClass="labelText" text="Click anywhere to return" textFill="WHITE">
          <font>
             <Font size="28.0" />
          </font>

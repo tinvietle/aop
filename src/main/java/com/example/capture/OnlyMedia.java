@@ -2,6 +2,7 @@ package com.example.capture;
 
 import com.example.misc.SoundManager;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
