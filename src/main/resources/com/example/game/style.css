@@ -45,3 +45,15 @@
 .text-info{
     -fx-fill: white;
 }
+
+.turn-label {
+    -fx-font-family: 'Pocket Monk';
+    -fx-font-size: 42px;
+    -fx-text-fill: #333333;
+    -fx-padding: 15 25;
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow(gaussian, white, 3, 1, 0, 0),  /* Inner white glow */
+                dropshadow(gaussian, black, 2, 1, 0, 0),   /* Black outline */
+                dropshadow(gaussian, white, 4, 0.5, 0, 0); /* Outer glow */
+    -fx-border-color: transparent;
+}

@@ -12,8 +12,10 @@ public class SoundManager {
     private static SoundManager instance;
     private MediaPlayer mediaPlayer;
     private List<String> bgmList;
-    private double volume = 0.05;
-    private double sfxVolume = 0.8;
+    private double volume = 0.1;
+    private double sfxVolume = 0.5;
+    private double masterVolume = 1.0;
+    private double voiceVolume = 0.5;
 
     private SoundManager() {
         bgmList = new ArrayList<>();
@@ -56,7 +58,7 @@ public class SoundManager {
             String mediaPath = bgmList.get(random.nextInt(bgmList.size()));
             Media media = new Media(mediaPath);
             mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(volume);
+            mediaPlayer.setVolume(volume * masterVolume);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
             
             // Add error handling for media player
@@ -79,7 +81,7 @@ public class SoundManager {
 
             Media media = new Media(getClass().getResource(bgmPath).toString());
             mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(volume);
+            mediaPlayer.setVolume(volume * masterVolume);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
             // Add error handling for media player
@@ -97,10 +99,21 @@ public class SoundManager {
         try {
             Media sfxMedia = new Media(getClass().getResource(sfxPath).toString());
             MediaPlayer sfxPlayer = new MediaPlayer(sfxMedia);
-            sfxPlayer.setVolume(sfxVolume);
+            sfxPlayer.setVolume(sfxVolume * masterVolume);
             sfxPlayer.play();
         } catch (Exception e) {
             System.err.println("Error playing SFX: " + e.getMessage());
+        }
+    }
+
+    public void playVoice(String voicePath) {
+        try {
+            Media voiceMedia = new Media(getClass().getResource(voicePath).toString());
+            MediaPlayer voicePlayer = new MediaPlayer(voiceMedia);
+            voicePlayer.setVolume(voiceVolume * masterVolume);
+            voicePlayer.play();
+        } catch (Exception e) {
+            System.err.println("Error playing voice: " + e.getMessage());
         }
     }
 
@@ -113,7 +126,7 @@ public class SoundManager {
     public void setVolume(double volume) {
         this.volume = volume;
         if (mediaPlayer != null) {
-            mediaPlayer.setVolume(volume);
+            mediaPlayer.setVolume(masterVolume * this.volume);
         }
     }
 
@@ -127,5 +140,24 @@ public class SoundManager {
 
     public double getSFXVolume() {
         return sfxVolume;
+    }
+
+    public double getMasterVolume() {
+        return masterVolume;
+    }
+
+    public void setMasterVolume(double masterVolume) {
+        this.masterVolume = masterVolume;
+        if (mediaPlayer != null) {
+            mediaPlayer.setVolume(masterVolume * volume);
+        }
+    }
+
+    public double getVoiceVolume() {
+        return voiceVolume;
+    }
+
+    public void setVoiceVolume(double volume) {
+        this.voiceVolume = volume;
     }
 }

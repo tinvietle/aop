@@ -1,6 +1,7 @@
 package com.example.capture;
 
-import javafx.beans.binding.Bindings;
+import com.example.misc.SoundManager;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -140,6 +141,8 @@ public class OnlyMedia {
             System.out.println("Media playback stalled, attempting to resume...");
             mediaPlayer.seek(mediaPlayer.getCurrentTime());
         });
+
+        mediaPlayer.setVolume(SoundManager.getInstance().getVolume() * SoundManager.getInstance().getMasterVolume());
     }
 
     public void playMedia() {

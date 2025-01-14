@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -150,7 +151,24 @@ public class GameUtils {
     public static void showAlert(AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
+        alert.setHeaderText(title);
         alert.setContentText(message);
-        alert.showAndWait(); // Wait for the user to close the alert
+        
+        // Apply styling
+        styleDialog(alert);
+        
+        // Set resizable to allow content to expand
+        alert.getDialogPane().setMinHeight(200);
+        alert.setResizable(true);
+        
+        alert.showAndWait();
+    }
+
+    private static void styleDialog(Alert alert) {
+        alert.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(
+            GameUtils.class.getResource("/misc/style.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
     }
 }

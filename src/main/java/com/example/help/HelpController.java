@@ -3,6 +3,7 @@ package com.example.help;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
@@ -12,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.text.Text;
@@ -39,6 +41,9 @@ public class HelpController {
     @FXML
     private Text backButton;
 
+    @FXML
+    private Text closeButton;
+
     private String[] tutorialImages;
     private int currentIndex = 0;
 
@@ -48,6 +53,12 @@ public class HelpController {
     @FXML
     private void initialize() {
         try {
+            // Clip the root pane
+            Rectangle clip = new Rectangle();
+            clip.widthProperty().bind(root.widthProperty());
+            clip.heightProperty().bind(root.heightProperty());
+            root.setClip(clip);
+
             // Load only images with "tutorial" in their names from the directory
             File dir = new File(getClass().getResource("/com/example/assets/helpScene").toURI());
             tutorialImages = Arrays.stream(dir.listFiles((d, name) -> name.endsWith(".png") && name.contains("tutorial")))
@@ -110,6 +121,19 @@ public class HelpController {
         if (currentIndex > 0) {
             currentIndex--;
             updateTutorialImage(false); // false for backward transition
+        }
+    }
+
+    private Consumer<Void> closeAction;
+
+    public void setCloseAction(Consumer<Void> closeAction) {
+        this.closeAction = closeAction;
+    }
+
+    @FXML
+    private void closeHelp() {
+        if (closeAction != null) {
+            closeAction.accept(null); // Trigger the close action
         }
     }
 

@@ -1,21 +1,12 @@
 package com.example.settings;
 
-import java.io.IOException;
-import java.net.URL;
-
-import com.example.App;
 import com.example.misc.SoundManager;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -25,6 +16,24 @@ public class SettingsController {
 
     @FXML
     private Slider sfxVolumeSlider;
+
+    @FXML
+    private Slider masterVolumeSlider;
+
+    @FXML
+    private Slider voiceVolumeSlider;
+
+    @FXML
+    private Label masterVolumeLabel;
+
+    @FXML
+    private Label bgmVolumeLabel;
+
+    @FXML
+    private Label sfxVolumeLabel;
+
+    @FXML
+    private Label voiceVolumeLabel;
 
     @FXML
     private StackPane settingsRootPane;
@@ -38,21 +47,57 @@ public class SettingsController {
     @FXML
     public void initialize() {
         try {
-            // Bind backgroundIMage size to the root pane size
-            backgroundImage.fitWidthProperty().bind(settingsRootPane.widthProperty());
-            backgroundImage.fitHeightProperty().bind(settingsRootPane.heightProperty());
+            // First check if all required FXML elements are properly injected
+            if (backgroundImage != null && settingsRootPane != null) {
+                backgroundImage.fitWidthProperty().bind(settingsRootPane.widthProperty());
+                backgroundImage.fitHeightProperty().bind(settingsRootPane.heightProperty());
+            }
 
-            // Initialize volume slider
-            volumeSlider.setValue(SoundManager.getInstance().getVolume());
-            volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> 
-                SoundManager.getInstance().setVolume(newVal.doubleValue())
-            );
+            // Initialize master volume controls
+            if (masterVolumeSlider != null && masterVolumeLabel != null) {
+                masterVolumeSlider.setValue(SoundManager.getInstance().getMasterVolume());
+                masterVolumeLabel.textProperty().bind(
+                    masterVolumeSlider.valueProperty().multiply(100).asString("%.0f"));
+                masterVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                    SoundManager.getInstance().setMasterVolume(newVal.doubleValue());
+                });
+            } else {
+                System.err.println("Master volume controls not properly initialized");
+            }
 
-            // Initialize SFX volume slider
-            sfxVolumeSlider.setValue(SoundManager.getInstance().getSFXVolume());
-            sfxVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) ->
-                SoundManager.getInstance().setSFXVolume(newVal.doubleValue())
-            );
+            // Initialize BGM volume controls
+            if (volumeSlider != null && bgmVolumeLabel != null) {
+                volumeSlider.setValue(SoundManager.getInstance().getVolume());
+                bgmVolumeLabel.textProperty().bind(
+                    volumeSlider.valueProperty().multiply(100).asString("%.0f"));
+                volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                    SoundManager.getInstance().setVolume(newVal.doubleValue());
+                });
+            } else {
+                System.err.println("BGM volume controls not properly initialized");
+            }
+
+            // Initialize SFX volume controls
+            if (sfxVolumeSlider != null && sfxVolumeLabel != null) {
+                sfxVolumeSlider.setValue(SoundManager.getInstance().getSFXVolume());
+                sfxVolumeLabel.textProperty().bind(
+                    sfxVolumeSlider.valueProperty().multiply(100).asString("%.0f"));
+                sfxVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                    SoundManager.getInstance().setSFXVolume(newVal.doubleValue());
+                });
+            } else {
+                System.err.println("SFX volume controls not properly initialized");
+            }
+
+            // Initialize voice volume controls
+            if (voiceVolumeSlider != null && voiceVolumeLabel != null) {
+                voiceVolumeSlider.setValue(SoundManager.getInstance().getVoiceVolume());
+                voiceVolumeLabel.textProperty().bind(
+                    voiceVolumeSlider.valueProperty().multiply(100).asString("%.0f"));
+                voiceVolumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
+                    SoundManager.getInstance().setVoiceVolume(newVal.doubleValue());
+                });
+            }
         } catch (Exception e) {
             System.err.println("Error initializing settings: " + e.getMessage());
             e.printStackTrace();
