@@ -47,7 +47,6 @@ public class HelpController {
 
     private String[] tutorialImages;
     private int currentIndex = 0;
-    private DropShadow glowEffect;
 
     private Stage primaryStage;
     private Scene previousScene;

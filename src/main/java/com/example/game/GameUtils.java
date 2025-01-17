@@ -109,18 +109,15 @@ public class GameUtils {
             contentHeight = 164;
         }
         double defaultHeight = contentHeight * 1.1 * borderPane.getHeight() / 800 ; // Adjust multiplier as needed
-        System.out.println("Height: " + defaultHeight);
         tooltip.setPrefHeight(defaultHeight);
 
         // Add listener for tooltip pref height
         borderPane.heightProperty().addListener((obs, oldHeight, newHeight) -> {
             double adjustedHeight = contentHeight * 1.1 * borderPane.getHeight() / 800; // Adjust multiplier as needed
             tooltip.setPrefHeight(adjustedHeight);
-            System.out.println("Height: " + adjustedHeight);
         });
 
         double defaultPadding = borderPane.getWidth() * 0.002 ; // Adjust multiplier as needed
-        System.out.println("Padding: " + defaultPadding);
         String dynamicPadding = String.format("-fx-padding: %.2f;",
             defaultPadding);
         tooltip.setStyle(dynamicPadding);
@@ -129,7 +126,6 @@ public class GameUtils {
         borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
             double paddingHorizontal = borderPane.getWidth() * 0.002; // Adjust multiplier as needed
             double borderWidth = borderPane.getWidth() * 0.002;
-            System.out.println("Padding: " + paddingHorizontal);
             String newDynamicPadding = String.format(
                 "-fx-padding: %.2f;", paddingHorizontal,
                 "-fx-border-width: %.2f;", borderWidth

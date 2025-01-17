@@ -294,11 +294,15 @@ public class GameController {
             // Add the background to the root pane
             rootPane.getChildren().add(backgrounPane);
 
-            // Make sure helpRoot has a fixed size
+            double prefHeight = borderPane.getHeight() / 2 * 1.3;
+            double prefWidth = prefHeight * 1.6;          
+
+            // Make sure helpRoot is scaleable
             if (helpRoot instanceof Region) {
                 Region region = (Region) helpRoot;
-                region.setMaxWidth(800);  // Set max width for the popup
-                region.setMaxHeight(500); // Set max height for the popup
+                System.out.println("Setting prefWidth: " + prefWidth + ", prefHeight: " + prefHeight);
+                region.setMaxWidth(prefWidth);
+                region.setMaxHeight(prefHeight);
             }
 
             // Create an overlay to prevent clicking on the background
@@ -317,15 +321,22 @@ public class GameController {
             // Animate the popup (wipe in from bottom)
             TranslateTransition transition = new TranslateTransition(Duration.millis(300), helpRoot);
             transition.setFromY(rootPane.getHeight()); // Start position at the bottom
-            transition.setToY(-rootPane.getHeight()*0.5 + 200); // Final position centered (300px for the height)
+            transition.setToY(-rootPane.getHeight()*0.5 + prefHeight/2.2); // Final position centered (300px for the height)
             transition.setInterpolator(Interpolator.EASE_OUT);
             transition.play();
 
-            // Bind the rootPane size to the root pane size
-            if (helpRoot instanceof Region) {
-                ((Region) helpRoot).prefWidthProperty().bind(rootPane.widthProperty());
-                ((Region) helpRoot).prefHeightProperty().bind(rootPane.heightProperty());
-            }
+            // Add listener to scale the popup when the scene is resized
+            rootPane.heightProperty().addListener((obs, oldVal, newVal) -> {
+                double newHeight = newVal.doubleValue() / 2 * 1.3;
+                double newWidth = newHeight * 1.6;
+                if (helpRoot instanceof Region) {
+                    Region region = (Region) helpRoot;
+                    region.setMaxWidth(newWidth);
+                    region.setMaxHeight(newHeight);
+                    
+                }
+                helpRoot.setTranslateY(-rootPane.getHeight() * 0.5 + newHeight / 2.2); // Update position
+            });
 
             // Handle closing the popup (remove blur and popup immediately)
             helpController.setCloseAction((Void v) -> {
