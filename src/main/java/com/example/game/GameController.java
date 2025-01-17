@@ -96,6 +96,8 @@ public class GameController {
                          jellicent, klingklang, ludicolo, machamp, manectric, 
                          pangoro, pikachu, talonflame;
 
+    private boolean helpSceneOpened = false;
+
     // Constructor
     public GameController() {
         PokemonReader reader = new PokemonReader();
@@ -112,19 +114,21 @@ public class GameController {
     }
 
     @FXML
-    private void initialize() {
+    private void initialize() throws IOException {
         initializePokemonImages();
         setupUIBindings();
         setupDiceController();
         initializeTurnOverlay();
-        Platform.runLater(() -> {
-            try {
-                openHelpScene();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        });
+        // borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+        //     if (newScene != null & !helpSceneOpened) {
+        //         helpSceneOpened = true;
+        //         try {
+        //             openHelpScene();
+        //         } catch (IOException e) {
+        //             e.printStackTrace();
+        //         }
+        //     }
+        // });
     }
 
     private void initializePokemonImages() {
@@ -190,7 +194,7 @@ public class GameController {
 
         // Bind turn label
         turnLabel.styleProperty().bind(Bindings.concat(
-                "-fx-font-size: ", borderPane.heightProperty().multiply(0.02), ";"));
+                "-fx-font-size: ", borderPane.heightProperty().multiply(0.05), ";"));
 
         // Bind all ImageView sizes to the stackPane size
         bindImageView(talonflame, 490.0, 165.0, 0.2, 0.2);   // Example ratios
@@ -317,11 +321,22 @@ public class GameController {
             transition.setInterpolator(Interpolator.EASE_OUT);
             transition.play();
 
+            // Bind the rootPane size to the root pane size
+            if (helpRoot instanceof Region) {
+                ((Region) helpRoot).prefWidthProperty().bind(rootPane.widthProperty());
+                ((Region) helpRoot).prefHeightProperty().bind(rootPane.heightProperty());
+            }
+
             // Handle closing the popup (remove blur and popup immediately)
             helpController.setCloseAction((Void v) -> {
                 rootPane.getChildren().remove(helpRoot); // Remove the popup immediately
                 rootPane.getChildren().remove(overlay); // Remove the overlay
                 backgrounPane.setEffect(null); // Remove the blur effect from the background
+                if (!helpSceneOpened) {
+                    showTurnTransition();
+                    helpSceneOpened = true;
+                }
+                
             });
 
         } catch (Exception e) {
@@ -478,7 +493,15 @@ public class GameController {
         updatePlayerBoard(players);
         // Set initial player and show first turn
         setCurPlayer(players.get(0));
-        showTurnTransition();
+        if (!helpSceneOpened){
+            try {
+                openHelpScene();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else{
+            showTurnTransition();
+        }
     }
 
     private void showTurnTransition() {
