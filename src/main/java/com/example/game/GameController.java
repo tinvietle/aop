@@ -188,6 +188,10 @@ public class GameController {
         accordionView.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.2));
         accordionView.prefHeightProperty().bind(borderPane.heightProperty().multiply(200 / 500.0));
 
+        // Bind turn label
+        turnLabel.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", borderPane.heightProperty().multiply(0.02), ";"));
+
         // Bind all ImageView sizes to the stackPane size
         bindImageView(talonflame, 490.0, 165.0, 0.2, 0.2);   // Example ratios
         bindImageView(cloyster, 249.0, 310.0, 0.09, 0.1);

@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.paint.Color?>
 
-<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.game.GameController">
+<BorderPane fx:id="borderPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.game.GameController">
    <top>
       <MenuBar fx:id="menuBar" prefHeight="24.0" prefWidth="800.0" style="-fx-background-color: #87CEEB; -fx-font-family: 'Arial Black'; -fx-border-color: #FFFFFF; -fx-border-width: 2;" BorderPane.alignment="CENTER">
         <menus>
@@ -241,11 +241,9 @@
                   </ImageView>
                </children>
             </Pane>
-            <Label fx:id="turnLabel" 
-                   styleClass="turn-label"
-                   StackPane.alignment="TOP_RIGHT">
+            <Label fx:id="turnLabel" styleClass="turn-label" StackPane.alignment="TOP_RIGHT">
                 <padding>
-                    <Insets top="20" right="20"/>
+                    <Insets right="20" top="20" />
                 </padding>
             </Label>
          </children>
