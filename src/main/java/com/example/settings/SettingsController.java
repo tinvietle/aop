@@ -49,8 +49,19 @@ public class SettingsController {
         try {
             // First check if all required FXML elements are properly injected
             if (backgroundImage != null && settingsRootPane != null) {
+                // Bind all FXML components size to root pane size
                 backgroundImage.fitWidthProperty().bind(settingsRootPane.widthProperty());
                 backgroundImage.fitHeightProperty().bind(settingsRootPane.heightProperty());
+
+                volumeSlider.prefWidthProperty().bind(settingsRootPane.widthProperty().multiply(0.3));
+                volumeSlider.prefHeightProperty().bind(settingsRootPane.heightProperty().multiply(0.05));
+                sfxVolumeSlider.prefWidthProperty().bind(settingsRootPane.widthProperty().multiply(0.3));
+                sfxVolumeSlider.prefHeightProperty().bind(settingsRootPane.heightProperty().multiply(0.05));
+                masterVolumeSlider.prefWidthProperty().bind(settingsRootPane.widthProperty().multiply(0.3));
+                masterVolumeSlider.prefHeightProperty().bind(settingsRootPane.heightProperty().multiply(0.05));
+                voiceVolumeSlider.prefWidthProperty().bind(settingsRootPane.widthProperty().multiply(0.3));
+                voiceVolumeSlider.prefHeightProperty().bind(settingsRootPane.heightProperty().multiply(0.05));
+
             }
 
             // Initialize master volume controls
