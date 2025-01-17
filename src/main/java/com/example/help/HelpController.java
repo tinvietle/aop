@@ -5,14 +5,18 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+import javafx.animation.PauseTransition;
 import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -39,16 +43,16 @@ public class HelpController {
     private ImageView frame;
 
     @FXML
-    private Text backButton;
-
-    @FXML
     private Text closeButton;
 
     private String[] tutorialImages;
     private int currentIndex = 0;
+    private DropShadow glowEffect;
 
     private Stage primaryStage;
     private Scene previousScene;
+
+    
 
     @FXML
     private void initialize() {
@@ -89,19 +93,40 @@ public class HelpController {
             frame.fitWidthProperty().bind(root.widthProperty());
             frame.fitHeightProperty().bind(root.heightProperty());
 
-            // Bind the text size to the root pane size
-            backButton.styleProperty().bind(Bindings.concat(
-                "-fx-font-size: ", root.heightProperty().multiply(0.04), ";"));
-
             // Bind location of the navigation buttons
             nextButton.layoutXProperty().bind(root.widthProperty().multiply(759.0 / 800.0));
             nextButton.layoutYProperty().bind(root.heightProperty().multiply(220.0 / 500.0));
             prevButton.layoutXProperty().bind(root.widthProperty().multiply(15.0 / 800.0));
             prevButton.layoutYProperty().bind(root.heightProperty().multiply(220.0 / 500.0));
 
-            // Bind location of the back button
-            backButton.layoutXProperty().bind(root.widthProperty().multiply(342.0 / 800.0));
-            backButton.layoutYProperty().bind(root.heightProperty().multiply(485.0 / 500.0));
+            // Bind location of the close button
+            closeButton.layoutXProperty().bind(root.widthProperty().multiply(374.0 / 800.0));
+            closeButton.layoutYProperty().bind(root.heightProperty().multiply(480.0 / 500.0));
+
+            // Bind the size of the close button
+            closeButton.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", root.heightProperty().multiply(0.05).asString(), "px;",
+                "-fx-cursor:", "hand;"
+                ));
+            // Create DropShadow for the glow effect
+            DropShadow glowEffect = new DropShadow();
+            glowEffect.setColor(Color.WHITE);
+            glowEffect.spreadProperty().set(0.2);
+
+            // Bind the glow radius to a fraction of the root pane height
+            glowEffect.radiusProperty().bind(root.heightProperty().multiply(0.05));
+
+            // Add hover effect for the nextButton
+            nextButton.setOnMouseEntered(e -> nextButton.setEffect(glowEffect));
+            nextButton.setOnMouseExited(e -> nextButton.setEffect(null));
+
+            // Add hover effect for the prevButton
+            prevButton.setOnMouseEntered(e -> prevButton.setEffect(glowEffect));
+            prevButton.setOnMouseExited(e -> prevButton.setEffect(null));
+
+            // Add hover effect for the closeButton
+            closeButton.setOnMouseEntered(e -> closeButton.setEffect(glowEffect));
+            closeButton.setOnMouseExited(e -> closeButton.setEffect(null));
 
         } catch (URISyntaxException | IllegalStateException e) {
             e.printStackTrace();
@@ -167,14 +192,6 @@ public class HelpController {
 
         // Hide nextButton if on the last tutorial
         nextButton.setVisible(currentIndex < tutorialImages.length - 1);
-    }
-
-    @FXML
-    private void backtoGame() {
-        if (primaryStage != null && previousScene != null) {
-            primaryStage.setScene(previousScene);
-            primaryStage.centerOnScreen();
-        }
     }
 
     public void setPreviousScene(Stage stage, Scene scene) {

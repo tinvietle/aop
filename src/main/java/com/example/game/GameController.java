@@ -23,6 +23,7 @@ import com.example.settings.SettingsController;
 
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -116,6 +117,14 @@ public class GameController {
         setupUIBindings();
         setupDiceController();
         initializeTurnOverlay();
+        Platform.runLater(() -> {
+            try {
+                openHelpScene();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        });
     }
 
     private void initializePokemonImages() {

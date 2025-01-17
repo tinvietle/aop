@@ -33,11 +33,7 @@
             <Image url="@../assets/helpScene/button.png" />
          </image>
       </ImageView>
-      <Text fx:id="backButton" fill="WHITE" layoutX="294.0" layoutY="481.0" onMouseClicked="#backtoGame" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" text="Back to game">
-         <font>
-            <Font name="Pocket Monk" size="22.0" />
-         </font></Text>
-      <Text fx:id="closeButton" fill="WHITE" layoutX="454.0" layoutY="481.0" onMouseClicked="#closeHelp" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" text="Close">
+      <Text fx:id="closeButton" fill="WHITE" layoutX="374.0" layoutY="480.0" onMouseClicked="#closeHelp" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" text="Close">
          <font>
             <Font name="Pocket Monk" size="22.0" />
          </font>
