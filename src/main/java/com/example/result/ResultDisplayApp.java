@@ -50,6 +50,10 @@ public class ResultDisplayApp extends Application {
         controller.displayResults(testPlayers);
         
         stage.setTitle("Age of Pokemon");
+        stage.setMinHeight(500);
+        stage.setMinWidth(800);
+        stage.setHeight(500);
+        stage.setWidth(800);
         stage.setMaximized(true);
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/com/example/result/result.css").toExternalForm());

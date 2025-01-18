@@ -8,28 +8,40 @@ import com.example.misc.Player;
 import com.example.misc.SoundManager;
 import com.example.misc.Utils;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ResultDisplay {
     @FXML
+    private HBox rootBox;
+    @FXML
     private ImageView trophyImage;
+    @FXML
+    private Label winerText;
     @FXML
     private Label winnerName;
     @FXML
     private Label winnerScore;
     @FXML
+    private Label leaderboardText;
+    @FXML
     private ListView<String> leaderboardList;
     @FXML
     private VBox leaderboardContainer;
+    @FXML
+    private VBox firstContainer;
     @FXML
     private Button newGameButton;
     @FXML
@@ -55,6 +67,96 @@ public class ResultDisplay {
         // Set button actions
         newGameButton.setOnAction(event -> handleNewGame());
         exitButton.setOnAction(event -> handleExit());
+
+        // Bind the first container size to the window size
+        firstContainer.prefWidthProperty().bind(rootBox.widthProperty().multiply(0.4));
+        firstContainer.prefHeightProperty().bind(rootBox.heightProperty().multiply(0.8));
+
+        // Bind the leaderboard container size to the window size
+        leaderboardContainer.prefWidthProperty().bind(rootBox.widthProperty().multiply(0.4));
+        leaderboardContainer.prefHeightProperty().bind(rootBox.heightProperty().multiply(0.8));
+
+        // Bind the trophy image size to the window size
+        trophyImage.fitWidthProperty().bind(firstContainer.widthProperty().multiply(0.4));
+        trophyImage.fitHeightProperty().bind(firstContainer.heightProperty().multiply(0.4));
+
+        // Bind the new game button size to the window size
+        newGameButton.prefWidthProperty().bind(leaderboardContainer.widthProperty().multiply(0.8));
+        newGameButton.prefHeightProperty().bind(leaderboardContainer.heightProperty().multiply(0.05));
+
+        // Bind the exit button size to the window size
+        exitButton.prefWidthProperty().bind(leaderboardContainer.widthProperty().multiply(0.8));
+        exitButton.prefHeightProperty().bind(leaderboardContainer.heightProperty().multiply(0.05));
+
+        // Bind the text size to the window size
+        winerText.styleProperty().bind(Bindings.concat(
+            "-fx-font-size: ", firstContainer.heightProperty().multiply(0.1), "px;"));
+        winnerName.styleProperty().bind(Bindings.concat(
+            "-fx-font-size: ", firstContainer.heightProperty().multiply(0.03), "px;"));
+        winnerScore.styleProperty().bind(Bindings.concat(
+            "-fx-font-size: ", firstContainer.heightProperty().multiply(0.03), "px;"));
+
+        // Bind the leaderboard text size to the window size
+        leaderboardText.styleProperty().bind(Bindings.concat(
+            "-fx-font-size: ", leaderboardContainer.widthProperty().multiply(0.12), "px;"));
+        
+        // Bind the leaderboard list text size to the window size
+        leaderboardList.styleProperty().bind(Bindings.concat(
+            "-fx-font-size: ", leaderboardContainer.heightProperty().multiply(0.03), "px;",
+            "-fx-padding: ", leaderboardContainer.heightProperty().multiply(0.01), "px;"));
+
+        // Bind the list cell padding to the window size
+        // Use a custom cell factory to allow dynamic padding
+        leaderboardList.setCellFactory(lv -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    setText(item);
+                }
+            }
+        });
+
+        // Add a listener to dynamically update padding
+        // Use a custom cell factory to dynamically adjust padding
+        leaderboardList.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty || item == null) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        setText(item);
+                    }
+                }
+            };
+
+            // Add a listener to update padding dynamically
+            leaderboardContainer.widthProperty().addListener((observable, oldWidth, newWidth) -> {
+                double paddLeftRight = newWidth.doubleValue() * 0.05; // 5% of container width
+                cell.setPadding(new Insets(0, paddLeftRight, 0, paddLeftRight));
+            });
+
+            leaderboardContainer.heightProperty().addListener((observable, oldHeight, newHeight) -> {
+                double paddTopBottom = newHeight.doubleValue() * 0.012; // 1% of container height
+                cell.setPadding(new Insets(paddTopBottom, 0, paddTopBottom, 0));
+            });
+
+            return cell;
+        });
+
+        // Bind button text size to the window size
+        newGameButton.styleProperty().bind(Bindings.concat(
+            "-fx-font-size: ", leaderboardContainer.heightProperty().multiply(0.03), "px;"));
+        exitButton.styleProperty().bind(Bindings.concat(
+            "-fx-font-size: ", leaderboardContainer.heightProperty().multiply(0.03), "px;"));        
     }
 
     public void displayResults(List<Player> players) {
@@ -71,9 +173,9 @@ public class ResultDisplay {
         winnerScore.setText("Score: " + winner.getScore());
 
         // Calculate optimal height per player
-        double baseHeight = 100; // base height per player
+        double baseHeight = 58; // base height per player
         double totalHeight = players.size() * baseHeight;
-        leaderboardList.setPrefHeight(totalHeight);
+        leaderboardList.prefHeightProperty().bind(leaderboardContainer.heightProperty().multiply(totalHeight / 500));
         leaderboardList.getStyleClass().add("leaderboard-list");
 
         // Update leaderboard
