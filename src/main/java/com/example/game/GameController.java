@@ -23,7 +23,6 @@ import com.example.settings.SettingsController;
 
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -413,6 +412,8 @@ public class GameController {
                     ImageView image = pokemonImages.get(pokemon.getName());
                     image.setOpacity(0.5);
                     GameUtils.updateToolTip(pokemon, image, borderPane);
+
+                    curPlayer.updateScore(-pokemon.getScore());
                 }
             } else {
                 ImageView image = pokemonImages.get(chosenPokemon.getName());
