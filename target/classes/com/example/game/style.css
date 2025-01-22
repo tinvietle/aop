@@ -45,3 +45,45 @@
 .text-info{
     -fx-fill: white;
 }
+
+.turn-label {
+    -fx-font-family: 'Pocket Monk';
+    -fx-font-size: 42px;
+    -fx-text-fill: #333333;
+    -fx-padding: 15 25;
+    -fx-background-color: transparent;
+    -fx-effect: dropshadow(gaussian, white, 3, 1, 0, 0),  /* Inner white glow */
+                dropshadow(gaussian, black, 2, 1, 0, 0),   /* Black outline */
+                dropshadow(gaussian, white, 4, 0.5, 0, 0); /* Outer glow */
+    -fx-border-color: transparent;
+}
+
+/* Style for TitledPane in Accordion */
+.titled-pane {
+    -fx-font-size: 14px;
+    -fx-text-fill: #FFFFFF; /* White text for title */
+}
+
+.titled-pane > .title {
+    -fx-background-color: #4682B4; /* Steel Blue for title bar */
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: 'Pocket Monk';
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-padding: 8;
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 0 2 2 2; /* Border below the title */
+}
+
+.titled-pane > .content {
+    -fx-background-color: #87CEEB; /* Sky Blue background for content */
+    -fx-padding: 10;
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 0 2 2 2; /* Border around the content */
+}
+
+.image-view {
+    -fx-padding: 20px; /* Add 20px of space around the ImageView */
+}
+
+

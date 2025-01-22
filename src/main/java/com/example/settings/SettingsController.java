@@ -2,12 +2,17 @@ package com.example.settings;
 
 import com.example.misc.SoundManager;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class SettingsController {
@@ -41,16 +46,39 @@ public class SettingsController {
     @FXML 
     private ImageView backgroundImage;
 
+    @FXML
+    private HBox settingsHBox;
+
+    @FXML
+    private VBox mainSettings;
+
+    @FXML
+    private Label soundLabel;
+
+    @FXML
+    private Button backButton;
+
     private Stage primaryStage;
     private Scene previousScene;
 
     @FXML
-    public void initialize() {
+    public void initialize() {  
         try {
             // First check if all required FXML elements are properly injected
             if (backgroundImage != null && settingsRootPane != null) {
+                // Bind all FXML components size to root pane size
                 backgroundImage.fitWidthProperty().bind(settingsRootPane.widthProperty());
                 backgroundImage.fitHeightProperty().bind(settingsRootPane.heightProperty());
+
+                volumeSlider.prefWidthProperty().bind(settingsRootPane.widthProperty().multiply(0.3));
+                volumeSlider.prefHeightProperty().bind(settingsRootPane.heightProperty().multiply(0.05));
+                sfxVolumeSlider.prefWidthProperty().bind(settingsRootPane.widthProperty().multiply(0.3));
+                sfxVolumeSlider.prefHeightProperty().bind(settingsRootPane.heightProperty().multiply(0.05));
+                masterVolumeSlider.prefWidthProperty().bind(settingsRootPane.widthProperty().multiply(0.3));
+                masterVolumeSlider.prefHeightProperty().bind(settingsRootPane.heightProperty().multiply(0.05));
+                voiceVolumeSlider.prefWidthProperty().bind(settingsRootPane.widthProperty().multiply(0.3));
+                voiceVolumeSlider.prefHeightProperty().bind(settingsRootPane.heightProperty().multiply(0.05));
+
             }
 
             // Initialize master volume controls
@@ -98,6 +126,38 @@ public class SettingsController {
                     SoundManager.getInstance().setVoiceVolume(newVal.doubleValue());
                 });
             }
+
+            // Dynamically update padding
+            settingsHBox.paddingProperty().bind(
+                Bindings.createObjectBinding(() -> {
+                    double top = settingsRootPane.getHeight() * 0.1;
+                    double right = settingsRootPane.getWidth() * 0.02;
+                    double bottom = settingsRootPane.getHeight() * 0.1;
+                    return new Insets(top, right, bottom, 0.0);
+                }, settingsRootPane.heightProperty(), settingsRootPane.widthProperty())
+            );
+
+            // Dynamically update the VBox sizes
+            mainSettings.maxHeightProperty().bind(settingsRootPane.heightProperty().multiply(0.8));
+            mainSettings.prefWidthProperty().bind(settingsRootPane.widthProperty().multiply(0.35));
+
+            // Bind style properties
+            soundLabel.styleProperty().bind(
+                Bindings.createStringBinding(
+                    () -> String.format("-fx-font-size: %.1fpx; -fx-font-family: 'Pocket Monk'; -fx-text-fill: white;",
+                                        settingsRootPane.getWidth() * 0.045),
+                    settingsRootPane.widthProperty()
+                )
+            );
+
+            backButton.styleProperty().bind(
+                Bindings.createStringBinding(
+                    () -> String.format("-fx-font-size: %.1fpx; -fx-font-family: 'Pocket Monk'; -fx-text-fill: white;",
+                                        settingsRootPane.getWidth() * 0.035),
+                    settingsRootPane.widthProperty()
+                )
+            );
+
         } catch (Exception e) {
             System.err.println("Error initializing settings: " + e.getMessage());
             e.printStackTrace();

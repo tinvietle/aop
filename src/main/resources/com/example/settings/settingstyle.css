@@ -1,0 +1,80 @@
+.outer-vbox {
+    -fx-alignment: center;
+    -fx-spacing: 20;
+    -fx-padding: 20;
+}
+
+.settings-box {
+    -fx-background-color: rgba(0, 0, 0, 0.8);
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 0, 0);
+    -fx-spacing: 15;
+    -fx-padding: 25;
+    -fx-alignment: center;
+    -fx-min-width: 200px; 
+    -fx-max-width: 600px;
+    -fx-min-height: 450px;
+}
+
+.settings-label {
+    -fx-font-size: 36px; 
+    -fx-text-fill: white;
+    -fx-font-family: 'Pocket Monk';
+}
+
+.volume-label {
+    -fx-text-fill: white;
+}
+
+.volume-slider {
+    -fx-control-inner-background: white;
+}
+
+.volume-slider .track {
+    -fx-background-color: #95a5a6;
+    -fx-background-radius: 3px;
+    -fx-pref-height: 8px;
+}
+
+.volume-slider .thumb {
+    -fx-background-color: #3498db;
+    -fx-pref-height: 16px;
+    -fx-pref-width: 16px;
+    -fx-background-radius: 8px;
+}
+
+.volume-slider .thumb:hover {
+    -fx-background-color: #2980b9;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 4, 0, 0, 0);
+}
+
+.volume-value {
+    -fx-text-fill: white;
+    -fx-min-width: 50px;
+    -fx-alignment: center-left;
+}
+
+.small-section {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
+.settings-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 26px; /* Increased font size */
+    -fx-font-family: 'Pocket Monk';
+    -fx-cursor: hand;
+    -fx-min-width: 120px;
+}
+
+.settings-button:hover {
+    -fx-text-fill: #3498db;
+    -fx-effect: dropshadow(gaussian, rgba(52, 152, 219, 0.5), 5, 0, 0, 0);
+    -fx-translate-y: -1px;
+}
+
+.settings-button:pressed {
+    -fx-text-fill: #2980b9;
+    -fx-translate-y: 1px;
+}

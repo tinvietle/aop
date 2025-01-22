@@ -1,3 +1,7 @@
+.hbox {
+    -fx-padding: 20;
+}
+
 .content-box {
     -fx-background-color: rgba(0, 0, 0, 0.8);  /* Made slightly more opaque for better readability */
     -fx-padding: 20;
@@ -16,7 +20,7 @@
 
 .leaderboard-list .list-cell {
     -fx-background-color: transparent;
-    -fx-padding: 15;
+    /* -fx-padding: 15; */
     -fx-border-color: #ddd;
     -fx-border-width: 0 0 1 0;
     -fx-text-fill: white;
@@ -65,3 +69,10 @@
     -fx-font-weight: bold;
     -fx-font-family: "Pocket Monk";
 }
+
+.winerText {
+    -fx-font-size: 80px;
+    -fx-font-weight: bold; 
+    -fx-font-family: "Pocket Monk";
+}
+

@@ -58,7 +58,7 @@ public class SoundManager {
             String mediaPath = bgmList.get(random.nextInt(bgmList.size()));
             Media media = new Media(mediaPath);
             mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(volume);
+            mediaPlayer.setVolume(volume * masterVolume);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
             
             // Add error handling for media player
@@ -81,7 +81,7 @@ public class SoundManager {
 
             Media media = new Media(getClass().getResource(bgmPath).toString());
             mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(volume);
+            mediaPlayer.setVolume(volume * masterVolume);
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
             // Add error handling for media player
@@ -99,7 +99,7 @@ public class SoundManager {
         try {
             Media sfxMedia = new Media(getClass().getResource(sfxPath).toString());
             MediaPlayer sfxPlayer = new MediaPlayer(sfxMedia);
-            sfxPlayer.setVolume(masterVolume * sfxVolume);
+            sfxPlayer.setVolume(sfxVolume * masterVolume);
             sfxPlayer.play();
         } catch (Exception e) {
             System.err.println("Error playing SFX: " + e.getMessage());
@@ -110,7 +110,7 @@ public class SoundManager {
         try {
             Media voiceMedia = new Media(getClass().getResource(voicePath).toString());
             MediaPlayer voicePlayer = new MediaPlayer(voiceMedia);
-            voicePlayer.setVolume(masterVolume * voiceVolume);
+            voicePlayer.setVolume(voiceVolume * masterVolume);
             voicePlayer.play();
         } catch (Exception e) {
             System.err.println("Error playing voice: " + e.getMessage());

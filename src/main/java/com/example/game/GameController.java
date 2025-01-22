@@ -89,11 +89,14 @@ public class GameController {
     @FXML private Accordion accordionView;
     @FXML private StackPane turnOverlay, welcomeOverlay;
     @FXML private Text turnText, welcomeText;
+    @FXML private Label turnLabel;
 
     // Pokemon ImageViews
     @FXML private ImageView cloyster, galvantula, gengar, gyarados, hawlucha, helioptile, 
                          jellicent, klingklang, ludicolo, machamp, manectric, 
                          pangoro, pikachu, talonflame;
+
+    private boolean helpSceneOpened = false;
 
     // Constructor
     public GameController() {
@@ -111,18 +114,21 @@ public class GameController {
     }
 
     @FXML
-    private void initialize() {
+    private void initialize() throws IOException {
         initializePokemonImages();
         setupUIBindings();
         setupDiceController();
         initializeTurnOverlay();
-        Platform.runLater(() -> {
-            try {
-                openHelpScene();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        // borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+        //     if (newScene != null & !helpSceneOpened) {
+        //         helpSceneOpened = true;
+        //         try {
+        //             openHelpScene();
+        //         } catch (IOException e) {
+        //             e.printStackTrace();
+        //         }
+        //     }
+        // });
     }
 
     private void initializePokemonImages() {
@@ -185,6 +191,10 @@ public class GameController {
 
         accordionView.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.2));
         accordionView.prefHeightProperty().bind(borderPane.heightProperty().multiply(200 / 500.0));
+
+        // Bind turn label
+        turnLabel.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", borderPane.heightProperty().multiply(0.05), ";"));
 
         // Bind all ImageView sizes to the stackPane size
         bindImageView(talonflame, 490.0, 165.0, 0.2, 0.2);   // Example ratios
@@ -284,11 +294,15 @@ public class GameController {
             // Add the background to the root pane
             rootPane.getChildren().add(backgrounPane);
 
-            // Make sure helpRoot has a fixed size
+            double prefHeight = borderPane.getHeight() / 2 * 1.3;
+            double prefWidth = prefHeight * 1.6;          
+
+            // Make sure helpRoot is scaleable
             if (helpRoot instanceof Region) {
                 Region region = (Region) helpRoot;
-                region.setMaxWidth(800);  // Set max width for the popup
-                region.setMaxHeight(500); // Set max height for the popup
+                System.out.println("Setting prefWidth: " + prefWidth + ", prefHeight: " + prefHeight);
+                region.setMaxWidth(prefWidth);
+                region.setMaxHeight(prefHeight);
             }
 
             // Create an overlay to prevent clicking on the background
@@ -307,15 +321,33 @@ public class GameController {
             // Animate the popup (wipe in from bottom)
             TranslateTransition transition = new TranslateTransition(Duration.millis(300), helpRoot);
             transition.setFromY(rootPane.getHeight()); // Start position at the bottom
-            transition.setToY(-rootPane.getHeight()*0.5 + 200); // Final position centered (300px for the height)
+            transition.setToY(-rootPane.getHeight()*0.5 + prefHeight/2.2); // Final position centered (300px for the height)
             transition.setInterpolator(Interpolator.EASE_OUT);
             transition.play();
+
+            // Add listener to scale the popup when the scene is resized
+            rootPane.heightProperty().addListener((obs, oldVal, newVal) -> {
+                double newHeight = newVal.doubleValue() / 2 * 1.3;
+                double newWidth = newHeight * 1.6;
+                if (helpRoot instanceof Region) {
+                    Region region = (Region) helpRoot;
+                    region.setMaxWidth(newWidth);
+                    region.setMaxHeight(newHeight);
+                    
+                }
+                helpRoot.setTranslateY(-rootPane.getHeight() * 0.5 + newHeight / 2.2); // Update position
+            });
 
             // Handle closing the popup (remove blur and popup immediately)
             helpController.setCloseAction((Void v) -> {
                 rootPane.getChildren().remove(helpRoot); // Remove the popup immediately
                 rootPane.getChildren().remove(overlay); // Remove the overlay
                 backgrounPane.setEffect(null); // Remove the blur effect from the background
+                if (!helpSceneOpened) {
+                    showTurnTransition();
+                    helpSceneOpened = true;
+                }
+                
             });
 
         } catch (Exception e) {
@@ -381,6 +413,8 @@ public class GameController {
                     ImageView image = pokemonImages.get(pokemon.getName());
                     image.setOpacity(0.5);
                     GameUtils.updateToolTip(pokemon, image, borderPane);
+
+                    curPlayer.updateScore(-pokemon.getScore());
                 }
             } else {
                 ImageView image = pokemonImages.get(chosenPokemon.getName());
@@ -472,7 +506,15 @@ public class GameController {
         updatePlayerBoard(players);
         // Set initial player and show first turn
         setCurPlayer(players.get(0));
-        showTurnTransition();
+        if (!helpSceneOpened){
+            try {
+                openHelpScene();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else{
+            showTurnTransition();
+        }
     }
 
     private void showTurnTransition() {
@@ -531,7 +573,8 @@ public class GameController {
     }
 
     public void setCurPlayer(Player player) {
-        curPlayer = player;
+        this.curPlayer = player;
+        turnLabel.setText("Turn: " + player.getName());
     }
 
     public boolean showInstruction(String text, double width, double height, double x, double y, long outDelay) {

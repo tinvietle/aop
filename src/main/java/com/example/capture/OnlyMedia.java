@@ -1,11 +1,15 @@
 package com.example.capture;
 
+import com.example.misc.SoundManager;
+
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -97,7 +101,13 @@ public class OnlyMedia {
         messageLabel.setVisible(false);
 
         mediaPlayer.setOnEndOfMedia(() -> {
-            handleVideoEnd();
+            GaussianBlur blur = new GaussianBlur(15);
+            mediaView.setEffect(blur);
+
+            messageLabel.setVisible(true);
+            Pane.setOnMouseClicked(event -> {
+                handleVideoEnd();
+            });
         });
 
         mediaPlayer.statusProperty().addListener((observable, oldStatus, newStatus) -> {
@@ -114,6 +124,14 @@ public class OnlyMedia {
         // Bind the media view size to the parent pane
         mediaView.fitWidthProperty().bind(Pane.widthProperty());
         mediaView.fitHeightProperty().bind(Pane.heightProperty());
+        messageLabel.prefWidthProperty().bind(Pane.widthProperty().multiply(335.0 / 800.0));
+        messageLabel.prefHeightProperty().bind(Pane.heightProperty().multiply(72.0 / 500.0));
+        messageLabel.styleProperty().bind(Bindings.concat(
+            "-fx-font-size:", Pane.heightProperty().multiply(28.0/500.0), ";",
+            "-fx-background-radius:", Pane.heightProperty().multiply(10.0/500.0), "px;",
+            "fx-border-radius:", Pane.heightProperty().multiply(1.0/500.0), "px;",
+            "fx-padding:", Pane.heightProperty().multiply(15.0/500.0), "px;"
+        ));
     }
 
     private void configureMediaPlayer() {
@@ -124,6 +142,8 @@ public class OnlyMedia {
             System.out.println("Media playback stalled, attempting to resume...");
             mediaPlayer.seek(mediaPlayer.getCurrentTime());
         });
+
+        mediaPlayer.setVolume(SoundManager.getInstance().getVolume() * SoundManager.getInstance().getMasterVolume());
     }
 
     public void playMedia() {

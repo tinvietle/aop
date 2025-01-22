@@ -9,24 +9,24 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox alignment="CENTER" prefHeight="500.0" prefWidth="800.0" spacing="50" stylesheets="@result.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.example.result.ResultDisplay">
+<HBox fx:id="rootBox" alignment="CENTER" spacing="50" styleClass="hbox" stylesheets="@result.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.result.ResultDisplay">
     <padding>
         <Insets bottom="40" left="40" right="40" top="40" />
     </padding>
     
-    <VBox alignment="CENTER" prefWidth="500" spacing="20" styleClass="content-box">
+    <VBox fx:id="firstContainer" alignment="CENTER" prefWidth="500" spacing="20" styleClass="content-box">
         <ImageView fx:id="trophyImage" fitHeight="300" fitWidth="300" preserveRatio="true">
          <image>
             <Image url="@../assets/trophy.png" />
          </image></ImageView>
-        <Label style="-fx-font-size: 80px; -fx-font-weight: bold; -fx-font-family: 'Pocket Monk';" text="Winner!" />
+        <Label fx:id="winerText" styleClass="winerText" text="Winner!" />
         <Label fx:id="winnerName" style="-fx-font-size: 36px;" />
         <Label fx:id="winnerScore" style="-fx-font-size: 32px;" />
     </VBox>
     
     <VBox fx:id="leaderboardContainer" alignment="CENTER" prefWidth="500" spacing="20" styleClass="content-box">
-        <Label styleClass="leaderboardText" text="Leaderboard" />
-        <ListView fx:id="leaderboardList" prefHeight="600" style="-fx-font-size: 24px;" />
+        <Label fx:id="leaderboardText" styleClass="leaderboardText" text="Leaderboard" />
+        <ListView fx:id="leaderboardList" />
         <Button fx:id="newGameButton" maxWidth="Infinity" styleClass="action-button" text="New Game" />
         <Button fx:id="exitButton" maxWidth="Infinity" styleClass="action-button" text="Exit" />
     </VBox>

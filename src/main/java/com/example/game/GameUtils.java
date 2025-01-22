@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -108,18 +109,15 @@ public class GameUtils {
             contentHeight = 164;
         }
         double defaultHeight = contentHeight * 1.1 * borderPane.getHeight() / 800 ; // Adjust multiplier as needed
-        System.out.println("Height: " + defaultHeight);
         tooltip.setPrefHeight(defaultHeight);
 
         // Add listener for tooltip pref height
         borderPane.heightProperty().addListener((obs, oldHeight, newHeight) -> {
             double adjustedHeight = contentHeight * 1.1 * borderPane.getHeight() / 800; // Adjust multiplier as needed
             tooltip.setPrefHeight(adjustedHeight);
-            System.out.println("Height: " + adjustedHeight);
         });
 
         double defaultPadding = borderPane.getWidth() * 0.002 ; // Adjust multiplier as needed
-        System.out.println("Padding: " + defaultPadding);
         String dynamicPadding = String.format("-fx-padding: %.2f;",
             defaultPadding);
         tooltip.setStyle(dynamicPadding);
@@ -128,7 +126,6 @@ public class GameUtils {
         borderPane.widthProperty().addListener((obs, oldWidth, newWidth) -> {
             double paddingHorizontal = borderPane.getWidth() * 0.002; // Adjust multiplier as needed
             double borderWidth = borderPane.getWidth() * 0.002;
-            System.out.println("Padding: " + paddingHorizontal);
             String newDynamicPadding = String.format(
                 "-fx-padding: %.2f;", paddingHorizontal,
                 "-fx-border-width: %.2f;", borderWidth
@@ -150,7 +147,24 @@ public class GameUtils {
     public static void showAlert(AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
+        alert.setHeaderText(title);
         alert.setContentText(message);
-        alert.showAndWait(); // Wait for the user to close the alert
+        
+        // Apply styling
+        styleDialog(alert);
+        
+        // Set resizable to allow content to expand
+        alert.getDialogPane().setMinHeight(200);
+        alert.setResizable(true);
+        
+        alert.showAndWait();
+    }
+
+    private static void styleDialog(Alert alert) {
+        alert.initStyle(javafx.stage.StageStyle.TRANSPARENT);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(
+            GameUtils.class.getResource("/misc/style.css").toExternalForm());
+        dialogPane.getStyleClass().add("dialog-pane");
     }
 }
