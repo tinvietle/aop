@@ -1,7 +1,10 @@
 package com.example.menu;
 
 
+import java.io.IOException;
+
 import com.example.App;
+import com.example.capture.OnlyMedia;
 import com.example.misc.SoundManager;
 import com.example.misc.Utils;
 import com.example.settings.SettingsController;
@@ -151,7 +154,31 @@ public class MenuController {
 
     private void handleExit() {
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
-        System.out.println("Exiting application");
-        Utils.closeProgram();
+        // System.out.println("Exiting application");
+        // Utils.closeProgram();
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));
+            Scene onlyMediaScene = new Scene(fxmlLoader.load());
+            OnlyMedia controller = fxmlLoader.getController();
+
+            String videoPath = App.class.getResource("/com/example/assets/credit.mp4").toExternalForm();
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+
+            // Get the size of current stage to pass to the controller
+            controller.initializeMedia(videoPath.toString(), stage.getWidth(), stage.getHeight());
+
+            // Pass the stage and the previous scene to the controller
+            controller.setPreviousScene(stage, stage.getScene());
+
+            stage.setTitle("JavaFX MediaPlayer!");
+            stage.setScene(onlyMediaScene);
+            stage.setResizable(true);
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            System.err.println("Error loading media scene: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
