@@ -85,7 +85,7 @@ public class RegisterController {
 
         titleLabel.paddingProperty().bind(
             Bindings.createObjectBinding(() -> {
-                double top = registerRootPane.getHeight() * 0.04;
+                double top = registerRootPane.getHeight() * 0.1;
                 return new Insets(top, 0, 0, 0);
             }, registerRootPane.heightProperty())
         );
