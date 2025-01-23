@@ -379,6 +379,7 @@ public class GameController {
                 return;
             }
             chosenPokemon = pokemons.get(pokemonName);
+            dicePaneController.setChosenPokemon(chosenPokemon);
             disableAllPokemons(true);
             showInstruction("Continue rolling to catch the chosen Pokemon.", 400, 100, 1, 0, 3000);
             dicePaneController.disableButtons(false, false);
@@ -438,6 +439,7 @@ public class GameController {
             System.out.println("Roll: " + roll.toString());
             nextTurn();
         }
+        dicePaneController.setChosenPokemon(null);
     }
 
     public void disableAllPokemons(boolean disable) {

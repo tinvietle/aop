@@ -169,5 +169,24 @@ public class Pokeball {
         return red.stream().map(String::valueOf) // Convert each Integer to String
                             .collect(Collectors.joining(", ")); // Join with ", ";
     }
+
+    public List<String> getAllRequirements(){
+        List<String> requirements = new ArrayList<>();
+        System.out.println("Red: " + red);
+        // if red not contains 0
+        if (!red.contains(0)) {
+            requirements.add("Red:" + redToString());
+        }
+        if (great > 0) {
+            requirements.add("Great:" + great);
+        }
+        if (ultra > 0) {
+            requirements.add("Ultra:" + ultra);
+        }
+        if (master > 0) {
+            requirements.add("Master:" + master);
+        }
+        return requirements;
+    }
 }
 
