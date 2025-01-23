@@ -1,27 +1,24 @@
 package com.example.register;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 
 import com.example.App;
 import com.example.game.GameController;
 import com.example.misc.SoundManager;
 
 import javafx.animation.TranslateTransition;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -44,14 +41,56 @@ public class RegisterController {
     private StackPane registerRootPane;
 
     @FXML
-    public void initialize() {
-        // Set background image
-        String imagePath = Paths.get("src\\main\\resources\\com\\example\\assets\\register.jpg").toUri().toString();
-        Image backgroundImage = new Image(imagePath);
-        BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
-        registerRootPane.setBackground(new Background(background));
+    private Label errorLabel;
 
-        // Initialize the Spinner with value factory (updated max value to 6)
+    @FXML
+    private ImageView backgroundImage;
+
+    @FXML
+    private Label titleLabel;  // Add this field for the Register Players title
+
+    @FXML
+    public void initialize() {
+        // Bind background image size to root pane size
+        backgroundImage.fitWidthProperty().bind(registerRootPane.widthProperty());
+        backgroundImage.fitHeightProperty().bind(registerRootPane.heightProperty());
+
+        // Bind container sizes
+        playerNamesContainer.maxHeightProperty().bind(registerRootPane.heightProperty().multiply(0.5));
+        playerNamesContainer.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.4));
+
+        // Bind spinner size
+        playerCountSpinner.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.1));
+        playerCountSpinner.prefHeightProperty().bind(registerRootPane.heightProperty().multiply(0.03));
+
+        // Bind button sizes
+        startGameButton.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.15));
+        startGameButton.prefHeightProperty().bind(registerRootPane.heightProperty().multiply(0.05));
+        backButton.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.15));
+        backButton.prefHeightProperty().bind(registerRootPane.heightProperty().multiply(0.05));
+
+        // Bind text sizes
+        errorLabel.styleProperty().bind(
+            Bindings.concat("-fx-font-size: ", registerRootPane.heightProperty().multiply(0.03), "px;")
+        );
+
+        // Bind title label font size and padding
+        titleLabel.styleProperty().bind(
+            Bindings.createStringBinding(
+                () -> String.format("-fx-font-size: %.1fpx; -fx-font-family: 'Pocket Monk'; -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);",
+                                    registerRootPane.getWidth() * 0.065),
+                registerRootPane.widthProperty()
+            )
+        );
+
+        titleLabel.paddingProperty().bind(
+            Bindings.createObjectBinding(() -> {
+                double top = registerRootPane.getHeight() * 0.15;
+                double bottom = registerRootPane.getHeight() * 0.01;
+                return new Insets(top, 0, bottom, 0);
+            }, registerRootPane.heightProperty())
+        );
+
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 6, 2);
         playerCountSpinner.setValueFactory(valueFactory);
 
@@ -119,14 +158,26 @@ public class RegisterController {
 
     private void handleStartGame() {
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
+        errorLabel.setText("");
         // Validate player names
         int playerCount = playerCountSpinner.getValue();
         String[] playerNames = new String[playerCount];
+        java.util.HashSet<String> nameSet = new java.util.HashSet<>();
         for (int i = 0; i < playerCount; i++) {
             TextField nameField = (TextField) playerNamesContainer.getChildren().get(i);
-            playerNames[i] = nameField.getText().trim();
+            String name = nameField.getText().trim();
+            if (!name.matches("[A-Za-z]{1,10}")) {
+                errorLabel.setText("Error: Name must be 1 to 10 letters only.");
+                return;
+            }
+            if (nameSet.contains(name)) {
+                errorLabel.setText("Error: Name must be unique.");
+                return;
+            }
+            nameSet.add(name);
+            playerNames[i] = name;
             if (playerNames[i].isEmpty()) {
-                System.err.println("Player " + (i + 1) + " name is empty.");
+               errorLabel.setText("Player " + (i + 1) + " name is empty.");
                 return;
             }
         }

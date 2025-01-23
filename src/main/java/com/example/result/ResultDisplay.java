@@ -1,6 +1,7 @@
 package com.example.result;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.App;
@@ -165,12 +166,38 @@ public class ResultDisplay {
         }
 
         // Sort players by score in descending order
-        players.sort((p1, p2) -> Integer.compare(p2.getScore(), p1.getScore()));
+        players.sort((p1, p2) -> {
+            int scoreComp = Integer.compare(p2.getScore(), p1.getScore());
+            if (scoreComp != 0) return scoreComp;
+            int capturedComp = Integer.compare(p2.getNumCapturedPokemons(), p1.getNumCapturedPokemons());
+            if (capturedComp != 0) return capturedComp;
+            return Integer.compare(p2.getNumGroups(), p1.getNumGroups());
+        });
 
-        // Display winner
-        Player winner = players.get(0);
-        winnerName.setText("Player: " + winner.getName());
-        winnerScore.setText("Score: " + winner.getScore());
+        // Identify all top players (same top score, captured pokemons, and groups)
+        List<Player> winners = findWinners(players);
+
+        // Show winners
+        if (winners.size() > 1) {
+            winerText.setText("Tie!");
+            StringBuilder tieDisplay = new StringBuilder();
+            for (Player w : winners) {
+                tieDisplay.append(String.format(
+                    "Player: %s - %d points - %d pokemons - %d groups\n",
+                    w.getName(), w.getScore(), w.getNumCapturedPokemons(), w.getNumGroups()
+                ));
+            }
+            winnerName.setText(tieDisplay.toString().trim());
+            winnerScore.setText("");
+        } else {
+            Player w = winners.get(0);
+            winerText.setText("Winner!");
+            winnerName.setText(String.format(
+                "Player: %s - %d points - %d pokemons - %d groups",
+                w.getName(), w.getScore(), w.getNumCapturedPokemons(), w.getNumGroups()
+            ));
+            winnerScore.setText("");
+        }
 
         // Calculate optimal height per player
         double baseHeight = 58; // base height per player
@@ -178,21 +205,43 @@ public class ResultDisplay {
         leaderboardList.prefHeightProperty().bind(leaderboardContainer.heightProperty().multiply(totalHeight / 500));
         leaderboardList.getStyleClass().add("leaderboard-list");
 
-        // Update leaderboard
+        // Build leaderboard with shared ranks if same score/pokemons/groups
         leaderboardList.getItems().clear();
+        int rank = 1;
+        Player prev = null;
         for (int i = 0; i < players.size(); i++) {
-            Player player = players.get(i);
-            String position;
-            switch (i) {
-                case 0: position = "🥇"; break;
-                case 1: position = "🥈"; break;
-                case 2: position = "🥉"; break;
-                default: position = (i + 1) + "th";
+            Player p = players.get(i);
+            if (i == 0) {
+                prev = p;
+            } else {
+                if (p.getScore() != prev.getScore() ||
+                    p.getNumCapturedPokemons() != prev.getNumCapturedPokemons() ||
+                    p.getNumGroups() != prev.getNumGroups()) {
+                    rank = i + 1;
+                }
+                prev = p;
             }
             leaderboardList.getItems().add(
-                String.format("%s %s - %d points", position, player.getName(), player.getScore())
+                String.format("%d) %s - %d points - %d pokemons - %d groups",
+                    rank, p.getName(), p.getScore(), p.getNumCapturedPokemons(), p.getNumGroups()
+                )
             );
         }
+    }
+
+    private List<Player> findWinners(List<Player> players) {
+        List<Player> topPlayers = new ArrayList<>();
+        topPlayers.add(players.get(0));
+        for (int i = 1; i < players.size(); i++) {
+            if (players.get(i).getScore() == topPlayers.get(0).getScore() &&
+                players.get(i).getNumCapturedPokemons() == topPlayers.get(0).getNumCapturedPokemons() &&
+                players.get(i).getNumGroups() == topPlayers.get(0).getNumGroups()) {
+                topPlayers.add(players.get(i));
+            } else {
+                break;
+            }
+        }
+        return topPlayers;
     }
 
     private void handleNewGame() {

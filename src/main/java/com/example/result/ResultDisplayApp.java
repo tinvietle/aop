@@ -40,12 +40,16 @@ public class ResultDisplayApp extends Application {
         // For testing purposes
         ResultDisplay controller = loader.getController();
         List<Player> testPlayers = Arrays.asList(
-            new Player("Alice") {{ updateScore(5); }},
-            new Player("Bob") {{ updateScore(3); }},
-            new Player("Charlie") {{ updateScore(1); }},
+            new Player("Alice") {{
+                updateScore(5);
+                updateNumGroup();
+            }},
+            new Player("Bob") {{
+                updateScore(5);
+            }},
+            new Player("Charlie") {{ updateScore(4); }},
             new Player("David") {{ updateScore(4); }},
-            new Player("Eve") {{ updateScore(2); }},
-            new Player("Frank") {{ updateScore(6); }}
+            new Player("Eve") {{ updateScore(2); }}
         );
         controller.displayResults(testPlayers);
         
