@@ -4,8 +4,11 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
+
+import com.example.misc.Utils;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -13,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -188,11 +192,12 @@ public class DiceController {
         new Thread(() -> {
             try {
                 latch.await();
-                Platform.runLater(() -> {                 
+                Platform.runLater(() -> {   
+                    disableButtons(false, false);              
                     if (firstRoll) {
                         firstRoll = false;
-                        disableButtons(true, true);
-                        boolean isInstruction = gameController.showInstruction("You have rolled the dice once. Please select the pokemons you want to catch before continuing.", 400, 100, 1, 0, 3000);
+                        // disableButtons(true, true);
+                        boolean isInstruction = gameController.showInstruction("You can start catching a Pokemon by filling one line per roll, or remove one dice and reroll.", 400, 100, 1, 0, 3000);
                         if (!isInstruction) {
                             gameController.disableAllPokemons(false);
                         } else {
@@ -200,10 +205,8 @@ public class DiceController {
                                 gameController.disableAllPokemons(false);;
                             });
                         }
-                    } else {
-                        disableButtons(false, false);
-                    }
-
+                    } 
+                    
                     if (totalDice - numKeptDice <= 1) {
                         System.out.println("Triggering end turn");
                         System.out.println("Total dice: " + totalDice);
@@ -269,6 +272,13 @@ public class DiceController {
     void endTurn(ActionEvent event) {
         if (firstRoll) {
             return;
+        }
+
+        if (gameController.getChosenPokemon() == null) {
+            Alert alert = Utils.confirmBox("You have not chosen a Pokemon", "You have not chosen a Pokemon", "Press OK if you want to end turn.");
+            Optional<ButtonType> result = alert.showAndWait();
+            boolean confirm = result.isPresent() && result.get() == ButtonType.OK;
+            if (!confirm) return;
         }
 
         // Disable the roll button and end button

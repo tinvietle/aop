@@ -23,7 +23,6 @@ import com.example.settings.SettingsController;
 
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -381,7 +380,7 @@ public class GameController {
             chosenPokemon = pokemons.get(pokemonName);
             disableAllPokemons(true);
             showInstruction("Continue rolling to catch the chosen Pokemon.", 400, 100, 1, 0, 3000);
-            dicePaneController.disableButtons(false, false);
+            // dicePaneController.disableButtons(false, false);
         }
     }
 
@@ -393,6 +392,11 @@ public class GameController {
 
     @FXML
     public void catchPokemon(Pokeball roll) {
+        if (chosenPokemon == null) {
+            GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You have not chosen a pokemon. Better luck next time!");
+            nextTurn();
+            return;
+        }
         if (roll.compare(chosenPokemon.getRequirements())) {
             System.out.println("Caught the pokemon");
 
@@ -407,6 +411,7 @@ public class GameController {
             Group group = groups.get(chosenPokemon.getGroup());
             if (group != null && group.checkOwned(curPlayer)) {
                 curPlayer.updateScore(group.getScore());
+                curPlayer.updateNumGroup();
                 for (Pokemon pokemon : group.getPokemons()) {
                     System.out.println(curPlayer.getName() + " owns " + pokemon.getName());
                     pokemon.setGroupOwner(curPlayer);
@@ -439,6 +444,10 @@ public class GameController {
             nextTurn();
         }
     }
+
+    public Pokemon getChosenPokemon() {
+        return chosenPokemon;
+    }   
 
     public void disableAllPokemons(boolean disable) {
         isPokemonActive = !disable;
@@ -566,6 +575,7 @@ public class GameController {
     }
 
     public void nextTurn() {
+        chosenPokemon = null;
         dicePaneController.resetDice();
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
         setCurPlayer(players.get(currentPlayerIndex));

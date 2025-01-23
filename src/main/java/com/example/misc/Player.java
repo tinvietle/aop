@@ -7,11 +7,13 @@ public class Player {
     String name;
     int score;
     List<Pokemon> capturedPokemons;
+    int numGroups;
 
     public Player(String name) {
         this.name = name;
         this.score = 0;
         this.capturedPokemons = new ArrayList<>();
+        this.numGroups = 0;
     }
 
     public String getName() {
@@ -32,5 +34,17 @@ public class Player {
 
     public void removePokemon(Pokemon pokemon) {
         capturedPokemons.remove(pokemon);
+    }
+
+    public int getNumCapturedPokemons() {
+        return capturedPokemons.size();
+    }
+
+    public void updateNumGroup() {
+        numGroups++;
+    }
+
+    public int getNumGroups() {
+        return numGroups;
     }
 }
