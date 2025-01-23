@@ -4,13 +4,15 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.Font?>
 
-<StackPane fx:id="registerRootPane" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.register.RegisterController" stylesheets="@register.css">
+<StackPane fx:id="registerRootPane" prefHeight="500.0" prefWidth="800.0" stylesheets="@register.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.register.RegisterController">
     <ImageView fx:id="backgroundImage" fitHeight="500.0" fitWidth="800.0" preserveRatio="false">
         <image>
             <Image url="@../assets/register.jpg" />
@@ -21,20 +23,19 @@
             <effect>
                 <Glow level="0.6">
                     <input>
-                        <DropShadow color="#000000" 
-                                   spread="0.7"
-                                   radius="5"
-                                   offsetX="0"
-                                   offsetY="0" />
+                        <DropShadow color="#ffd700" spread="0.5" />
                     </input>
                 </Glow>
             </effect>
+         <font>
+            <Font size="80.0" />
+         </font>
         </Label>
         
         <VBox alignment="CENTER" spacing="10">
             <Label fx:id="errorLabel" styleClass="error-label" />
             <Label styleClass="subtitle-label" text="Number of Players:" />
-            <Spinner fx:id="playerCountSpinner" editable="true" initialValue="2" max="6" min="2" prefWidth="250" prefHeight="40" styleClass="player-spinner" />
+            <Spinner fx:id="playerCountSpinner" editable="true" initialValue="2" max="6" min="2" prefHeight="40" prefWidth="250" styleClass="player-spinner" />
         </VBox>
         
         <VBox fx:id="playerNamesContainer" alignment="TOP_CENTER" maxHeight="380" maxWidth="450" spacing="15" styleClass="player-names-container">
@@ -42,12 +43,12 @@
         </VBox>
         
         <VBox alignment="CENTER" spacing="20">
-            <Button fx:id="startGameButton" prefWidth="300" prefHeight="50" styleClass="start-button" text="Start Game">
+            <Button fx:id="startGameButton" prefHeight="50" prefWidth="300" styleClass="start-button" text="Start Game">
                 <effect>
                     <Glow level="0.3" />
                 </effect>
             </Button>
-            <Button fx:id="backButton" prefWidth="300" prefHeight="50" styleClass="back-button" text="Back">
+            <Button fx:id="backButton" prefHeight="50" prefWidth="300" styleClass="back-button" text="Back">
                 <effect>
                     <Glow level="0.3" />
                 </effect>

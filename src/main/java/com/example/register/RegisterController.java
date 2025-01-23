@@ -76,18 +76,17 @@ public class RegisterController {
 
         // Bind title label font size and padding
         titleLabel.styleProperty().bind(
-            Bindings.createStringBinding(
-                () -> String.format("-fx-font-size: %.1fpx; -fx-font-family: 'Pocket Monk'; -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);",
-                                    registerRootPane.getWidth() * 0.065),
-                registerRootPane.widthProperty()
+            Bindings.concat(
+                "-fx-font-size: ", registerRootPane.widthProperty().multiply(0.1),
+                "; -fx-font-family: 'Pocket Monk'; ",
+                "-fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);"
             )
         );
 
         titleLabel.paddingProperty().bind(
             Bindings.createObjectBinding(() -> {
-                double top = registerRootPane.getHeight() * 0.15;
-                double bottom = registerRootPane.getHeight() * 0.01;
-                return new Insets(top, 0, bottom, 0);
+                double top = registerRootPane.getHeight() * 0.04;
+                return new Insets(top, 0, 0, 0);
             }, registerRootPane.heightProperty())
         );
 
