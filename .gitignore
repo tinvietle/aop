@@ -3,3 +3,6 @@ target/classes/com/example/assets/
 
 src/main/java/com/example/game/GameController_copy.java
 target/classes/com/example/game/GameController_copy.class
+
+src/main/java/com/example/misc/Pokeball_old.java
+target/classes/com/example/misc/Pokeball_old.class

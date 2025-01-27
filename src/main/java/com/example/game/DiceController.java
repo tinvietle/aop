@@ -12,7 +12,9 @@ import java.util.concurrent.CountDownLatch;
 
 import com.example.misc.Utils;
 import com.example.misc.Pokemon;
-import com.example.misc.Pokeball;
+import com.example.misc.Pokeball_old;
+import com.example.misc.Line;
+import com.example.misc.Requirement;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -39,7 +41,7 @@ public class DiceController {
     private int remainingDice = 0;
     private StringBuilder result = new StringBuilder();  
     private Runnable onRollComplete; // Callback for roll completion
-    private Pokemon chosenPokemon;
+    // private Pokemon chosenPokemon;
     private Map<String, Boolean> listRequirementsMap;
     private List<String> requirementList;
 
@@ -127,7 +129,7 @@ public class DiceController {
         disableButtons(true, true);
         List<ImageView> diceImages = List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7);
 
-        if (chosenPokemon != null) {
+        if (gameController.getTarget() != null) {
             // Retrieve the new kept dice images using for loop
             List<ImageView> newKeptDiceImages = new ArrayList<>();
             for (ImageView diceImage : diceImages) {
@@ -168,86 +170,104 @@ public class DiceController {
                     }
                 }
             }
-            // Count types of balls
-            int totalTypes = 0;
-            for (String ballType : ballsMap.keySet()){
-                if (ballsMap.get(ballType) > 0){
-                    totalTypes++;
-                    System.out.println("Ball type: " + ballType + " Count: " + ballsMap.get(ballType));
+
+            List<Line> tempStatisfiedLines = new ArrayList<>();
+
+            for (Line line : gameController.getTarget().getLines()) {
+                if (line.satisfied(ballsMap)) {
+                    tempStatisfiedLines.add(line);
                 }
             }
-            System.out.println("Total types: " + totalTypes);
-            // Check if the new kept dice images satisfy the requirements of the chosen pokemon
-            List<String> tempStatisfiedRequirements = new ArrayList<>();
-            // Loop through requirements
-            // print the requirements list map
-            System.out.println("Requirements map: " + listRequirementsMap);
-            for (String requirement : requirementList){
-                // If the requirement is not satisfied
-                if (!listRequirementsMap.get(requirement)){
-                    // Split the string to get requirements
-                    String[] requirementSplit = requirement.split(" ");
-                    int length = requirementSplit.length;
-                    // Check if the length of the requirement is equal to the total types of balls kept
-                    if (length == totalTypes){
-                        boolean isSatisfied = false;
-                        // Loop through the each small requirement
-                        for (int i = 0; i < length; i++){
-                            // Split the requirement to get the ball type and the count
-                            String[] parts = requirementSplit[i].split(":");
-                            String ballType = parts[0];
-                            int ballCount = Integer.parseInt(parts[1]);
-                            if (ballsMap.get(ballType) == ballCount){
-                                isSatisfied = true;
-                            } else {
-                                isSatisfied = false;
-                                break;
-                            }
-                        }
-                        if (isSatisfied){
-                            tempStatisfiedRequirements.add(requirement);
-                        }
-                    }
-                }
-            }
+
+            // // Count types of balls
+            // int totalTypes = 0;
+            // for (String ballType : ballsMap.keySet()){
+            //     if (ballsMap.get(ballType) > 0){
+            //         totalTypes++;
+            //         System.out.println("Ball type: " + ballType + " Count: " + ballsMap.get(ballType));
+            //     }
+            // }
+            // System.out.println("Total types: " + totalTypes);
+            // // Check if the new kept dice images satisfy the requirements of the chosen pokemon
+            // List<String> tempStatisfiedRequirements = new ArrayList<>();
+            // // Loop through requirements
+            // // print the requirements list map
+            // System.out.println("Requirements map: " + listRequirementsMap);
+            // for (String requirement : requirementList){
+            //     // If the requirement is not satisfied
+            //     if (!listRequirementsMap.get(requirement)){
+            //         // Split the string to get requirements
+            //         String[] requirementSplit = requirement.split(" ");
+            //         int length = requirementSplit.length;
+            //         // Check if the length of the requirement is equal to the total types of balls kept
+            //         if (length == totalTypes){
+            //             boolean isSatisfied = false;
+            //             // Loop through the each small requirement
+            //             for (int i = 0; i < length; i++){
+            //                 // Split the requirement to get the ball type and the count
+            //                 String[] parts = requirementSplit[i].split(":");
+            //                 String ballType = parts[0];
+            //                 int ballCount = Integer.parseInt(parts[1]);
+            //                 if (ballsMap.get(ballType) == ballCount){
+            //                     isSatisfied = true;
+            //                 } else {
+            //                     isSatisfied = false;
+            //                     break;
+            //                 }
+            //             }
+            //             if (isSatisfied){
+            //                 tempStatisfiedRequirements.add(requirement);
+            //             }
+            //         }
+            //     }
+            // }
             // if tempStatisfiedRequirements is empty, raise error
             // and set the opacity of new kept dice images to 1.0
-            System.out.println("Temp satisfied requirements: " + tempStatisfiedRequirements);
-            if (tempStatisfiedRequirements.isEmpty() && !newKeptDiceImages.isEmpty()){
-                GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "The kept balls do not satisfy the requirements of the chosen Pokemon. Please try again.");
+            System.out.println("Temp satisfied requirements: " + tempStatisfiedLines);
+            if (tempStatisfiedLines.isEmpty() && !newKeptDiceImages.isEmpty()){
+                GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "The kept balls do not satisfy any lines of the chosen Pokemon. Please try again.");
                 for (ImageView diceImage : newKeptDiceImages){
                     diceImage.setOpacity(1.0);
                 }
                 disableButtons(false, false);
                 return;
             }
-            // if length of tempStatisfiedRequirements is more than 1, select requirements with the most total balls
-            // and set listRequirementMap of that to true
-            if (tempStatisfiedRequirements.size() > 1){
-                int maxTotalBalls = 0;
-                String maxRequirement = "";
-                for (String requirement : tempStatisfiedRequirements){
-                    String[] requirementSplit = requirement.split(" ");
-                    int totalBalls = 0;
-                    for (int i = 0; i < requirementSplit.length; i++){
-                        String[] parts = requirementSplit[i].split(":");
-                        int ballCount = Integer.parseInt(parts[1]);
-                        totalBalls += ballCount;
-                    }
-                    if (totalBalls > maxTotalBalls){
-                        maxTotalBalls = totalBalls;
-                        maxRequirement = requirement;
-                    }
-                }
-                // Set the listRequirementMap of the maxRequirement to true
-                listRequirementsMap.put(maxRequirement, true);
-            } else {
-                // Set the listRequirementMap of the first requirement to true
-                if (!tempStatisfiedRequirements.isEmpty()){
-                    listRequirementsMap.put(tempStatisfiedRequirements.get(0), true);
-                }
+            
+            // Do not cost one dice if requirements are met
+            if (!newKeptDiceImages.isEmpty()){
+                totalDice++;
             }
             
+            // if length of tempStatisfiedRequirements is more than 1, select requirements with the most total balls
+            // and set listRequirementMap of that to true
+            if (tempStatisfiedLines.size() > 0){    
+                Line chosenLine = tempStatisfiedLines.get(0);
+                if (tempStatisfiedLines.size() > 1){
+                    for (Line line : tempStatisfiedLines){
+                        if (line.isBigger(chosenLine)){
+                            chosenLine = line;
+                        }
+                    }
+                    // int maxTotalBalls = 0;
+                    // String maxRequirement = "";
+                    // for (String requirement : tempStatisfiedRequirements){
+                    //     String[] requirementSplit = requirement.split(" ");
+                    //     int totalBalls = 0;
+                    //     for (int i = 0; i < requirementSplit.length; i++){
+                    //         String[] parts = requirementSplit[i].split(":");
+                    //         int ballCount = Integer.parseInt(parts[1]);
+                    //         totalBalls += ballCount;
+                    //     }
+                    //     if (totalBalls > maxTotalBalls){
+                    //         maxTotalBalls = totalBalls;
+                    //         maxRequirement = requirement;
+                    //     }
+                    // }
+                    // // Set the listRequirementMap of the maxRequirement to true
+                    // listRequirementsMap.put(maxRequirement, true);
+                } 
+                gameController.reduceTarget(chosenLine);
+            }
         }
 
 
@@ -380,7 +400,7 @@ public class DiceController {
                     return;
                 }
                 // Toggle the opacity of the dice image
-                if (chosenPokemon != null) {
+                if (gameController.getTarget() != null) {
                     diceImage.setOpacity(diceImage.getOpacity() == 1.0 ? 0.5 : 1.0);
                 } else {
                     // Show alert that it is not possible to choose Pokeball, only reroll or select Pokemon
@@ -410,16 +430,82 @@ public class DiceController {
             return;
         }
 
-        if (gameController.getChosenPokemon() == null) {
-            Alert alert = Utils.confirmBox("You have not chosen a Pokemon", "You have not chosen a Pokemon", "Press OK if you want to end turn.");
-            Optional<ButtonType> result = alert.showAndWait();
-            boolean confirm = result.isPresent() && result.get() == ButtonType.OK;
-            if (!confirm) return;
-        }
+        // if (gameController.getChosenPokemon() == null) {
+        //     Alert alert = Utils.confirmBox("You have not chosen a Pokemon", "You have not chosen a Pokemon", "Press OK if you want to end turn.");
+        //     Optional<ButtonType> result = alert.showAndWait();
+        //     boolean confirm = result.isPresent() && result.get() == ButtonType.OK;
+        //     if (!confirm) return;
+        // }
 
         // Disable the roll button and end button
         rollButton.setDisable(true);
         endButton.setDisable(true);
+
+        // Retrieve the picked dices before ending the turn
+        List<ImageView> diceImages = List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7);
+
+        if (gameController.getTarget() != null) {
+            // Retrieve the new kept dice images using for loop
+            List<ImageView> newKeptDiceImages = new ArrayList<>();
+            for (ImageView diceImage : diceImages) {
+                if (diceImage.getOpacity() == 0.5 && diceImage.getImage() != null && !keepDice.contains(diceImage)) {
+                    newKeptDiceImages.add(diceImage);
+                }
+            }
+            // Calculate the new kept dice images total balls
+            Map<String, Integer> ballsMap = new HashMap<>();
+            ballsMap.put("Red", 0);
+            ballsMap.put("Great", 0);
+            ballsMap.put("Ultra", 0);
+            ballsMap.put("Master", 0);
+            for (ImageView diceImage : newKeptDiceImages) {
+                if (diceImage.getOpacity() == 0.5 && diceImage.getImage() != null) {
+                    String filename = diceImage.getImage().getUrl().substring(diceImage.getImage().getUrl().lastIndexOf("/") + 1, diceImage.getImage().getUrl().lastIndexOf("."));
+                    switch (filename) {
+                        case "1Pokeball":
+                            ballsMap.put("Red", ballsMap.get("Red") + 1);
+                            break;
+                        case "2Pokeball":
+                            ballsMap.put("Red", ballsMap.get("Red") + 2);
+                            break;
+                        case "3Pokeball":
+                            ballsMap.put("Red", ballsMap.get("Red") + 3);
+                            break;
+                        case "GreatBall":
+                            ballsMap.put("Great", ballsMap.get("Great") + 1);
+                            break;
+                        case "UltraBall":
+                            ballsMap.put("Ultra", ballsMap.get("Ultra") + 1);
+                            break;
+                        case "MasterBall":
+                            ballsMap.put("Master", ballsMap.get("Master") + 1);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
+            List<Line> tempStatisfiedLines = new ArrayList<>();
+
+            for (Line line : gameController.getTarget().getLines()) {
+                if (line.satisfied(ballsMap)) {
+                    tempStatisfiedLines.add(line);
+                }
+            }
+
+            if (tempStatisfiedLines.size() > 0){    
+                Line chosenLine = tempStatisfiedLines.get(0);
+                if (tempStatisfiedLines.size() > 1){
+                    for (Line line : tempStatisfiedLines){
+                        if (line.isBigger(chosenLine)){
+                            chosenLine = line;
+                        }
+                    }
+                } 
+                gameController.reduceTarget(chosenLine);
+            }
+        }
 
         // Add the final kept dice to the result and ignore null dice images
         keepDice.clear();
@@ -486,23 +572,20 @@ public class DiceController {
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
-    public void setChosenPokemon(Pokemon chosenPokemon) {
-        this.chosenPokemon = chosenPokemon;
-        if (chosenPokemon == null) {
-            return;
-        }
-        // Set the requirements of the chosen pokemon and map each requirement to false
-        Pokeball requirements = chosenPokemon.getRequirements();
-        listRequirementsMap = new HashMap<>();
-        requirementList = new ArrayList<>();
+    // public void setChosenPokemon(Pokemon chosenPokemon) {
+    //     this.chosenPokemon = chosenPokemon;
+    //     if (chosenPokemon == null) {
+    //         return;
+    //     }
+    //     // Set the requirements of the chosen pokemon and map each requirement to false
+    //     Requirement requirements = chosenPokemon.getRequirement();
+    //     listRequirementsMap = new HashMap<>();
+    //     requirementList = new ArrayList<>();
         
-        // Assuming Pokeball has a method to get all requirements as a list
-        for (String requirement : requirements.getAllRequirements()) {
-            listRequirementsMap.put(requirement, false);
-            requirementList.add(requirement);
-        }
-        
-        // Print the requirements map of the chosen pokemon
-        System.out.println("Requirements map: " + listRequirementsMap);
-    }
+    //     // Assuming Pokeball has a method to get all requirements as a list
+    //     for (String requirement : requirements.getAllRequirements()) {
+    //         listRequirementsMap.put(requirement, false);
+    //         requirementList.add(requirement);
+    //     }
+    // }
 }

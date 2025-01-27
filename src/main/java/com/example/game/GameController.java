@@ -13,9 +13,11 @@ import com.example.help.HelpController;
 import com.example.misc.Group;
 import com.example.misc.GroupReader;
 import com.example.misc.Player;
-import com.example.misc.Pokeball;
+import com.example.misc.Line;
+import com.example.misc.Pokeball_old;
 import com.example.misc.Pokemon;
 import com.example.misc.PokemonReader;
+import com.example.misc.Requirement;
 import com.example.misc.SoundManager;
 import com.example.misc.Utils;
 import com.example.result.ResultDisplay;
@@ -74,6 +76,7 @@ public class GameController {
     private Pokemon chosenPokemon;
     private boolean isPokemonActive = false;
     private boolean isInstruction = true;
+    private Requirement target;
 
     // FXML Components
     @FXML private GridPane playerInfo;
@@ -378,7 +381,8 @@ public class GameController {
                 return;
             }
             chosenPokemon = pokemons.get(pokemonName);
-            dicePaneController.setChosenPokemon(chosenPokemon);
+            // dicePaneController.setChosenPokemon(chosenPokemon);
+            target = chosenPokemon.getRequirementLines();
             disableAllPokemons(true);
             showInstruction("Continue rolling to catch the chosen Pokemon.", 400, 100, 1, 0, 3000);
             // dicePaneController.disableButtons(false, false);
@@ -392,13 +396,13 @@ public class GameController {
     }
 
     @FXML
-    public void catchPokemon(Pokeball roll) {
+    public void catchPokemon(Pokeball_old roll) {
         if (chosenPokemon == null) {
             GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You have not chosen a pokemon. Better luck next time!");
             nextTurn();
             return;
         }
-        if (roll.compare(chosenPokemon.getRequirements())) {
+        if (target != null && target.length() == 0) {
             System.out.println("Caught the pokemon");
 
             if (chosenPokemon.getOwner() != null) {
@@ -440,16 +444,20 @@ public class GameController {
         } else {
             GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You failed to catch the Pokemon. Better luck next time!");
             System.out.println("Failed to catch the pokemon");
-            System.out.println("Requirements: " + chosenPokemon.getRequirements().toString());
+            System.out.println("Requirements: " + chosenPokemon.getRequirementLines().toString());
             System.out.println("Roll: " + roll.toString());
             nextTurn();
         }
-        dicePaneController.setChosenPokemon(null);
+        // dicePaneController.setChosenPokemon(null);
     }
 
-    public Pokemon getChosenPokemon() {
-        return chosenPokemon;
-    }   
+    public Requirement getTarget() {
+        return target;
+    }
+    
+    public void reduceTarget(Line line) {
+        this.target.removeLine(line);
+    }
 
     public void disableAllPokemons(boolean disable) {
         isPokemonActive = !disable;
@@ -572,7 +580,7 @@ public class GameController {
     }
 
     public void endTurn() {
-        Pokeball roll = new Pokeball(dicePaneController.getResult());
+        Pokeball_old roll = new Pokeball_old(dicePaneController.getResult());
         catchPokemon(roll);
     }
 
@@ -580,6 +588,7 @@ public class GameController {
         chosenPokemon = null;
         dicePaneController.resetDice();
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        target = null;
         setCurPlayer(players.get(currentPlayerIndex));
         showTurnTransition();
     }
