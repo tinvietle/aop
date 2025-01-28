@@ -35,9 +35,6 @@ public class DiceController {
     private int remainingDice = 0;
     private StringBuilder result = new StringBuilder();  
     private Runnable onRollComplete; // Callback for roll completion
-    // private Pokemon chosenPokemon;
-    private Map<String, Boolean> listRequirementsMap;
-    private List<String> requirementList;
 
     @FXML
     private Pane Pane;

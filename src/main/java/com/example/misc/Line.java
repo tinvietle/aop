@@ -30,6 +30,13 @@ public class Line {
         this.master = line.get(3);
     }
     
+    public Line(Line line) {
+        this.red = line.red;
+        this.great = line.great;
+        this.ultra = line.ultra;
+        this.master = line.master;
+    }
+    
     public boolean isBigger(Line pokeball) {
         return this.red > pokeball.red;
     }
@@ -55,6 +62,9 @@ public class Line {
 
     public boolean satisfied(Map<String, Integer> roll) {
         // Except for red, other balls must strictly match
-        return roll.get("Red") >= red && roll.get("Great") == great && roll.get("Ultra") == ultra && roll.get("Master") == master;
+        if (red > 0) {
+            return roll.get("Red") >= red && roll.get("Great") == 0 && roll.get("Ultra") == 0 && roll.get("Master") == 0;
+        }
+        return  roll.get("Red") == 0 && roll.get("Great") == great && roll.get("Ultra") == ultra && roll.get("Master") == master;
     }
 }

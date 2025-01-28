@@ -14,7 +14,6 @@ import com.example.misc.Group;
 import com.example.misc.GroupReader;
 import com.example.misc.Player;
 import com.example.misc.Line;
-import com.example.misc.Pokeball_old;
 import com.example.misc.Pokemon;
 import com.example.misc.PokemonReader;
 import com.example.misc.Requirement;
@@ -411,7 +410,6 @@ public class GameController {
             }
         
             curPlayer.updateScore(chosenPokemon.getScore());
-            curPlayer.addPokemon(chosenPokemon);
             chosenPokemon.setOwner(curPlayer);
             Group group = groups.get(chosenPokemon.getGroup());
             if (group != null && group.checkOwned(curPlayer)) {

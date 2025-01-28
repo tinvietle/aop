@@ -14,6 +14,13 @@ public class Requirement {
         this.lines = lines;
     }
 
+    public Requirement(Requirement requirement) {
+        lines = new ArrayList<>();
+        for (Line line : requirement.getLines()) {
+            lines.add(new Line(line));
+        }
+    }
+
     public void addLine(Line requirement) {
         lines.add(requirement);
     }

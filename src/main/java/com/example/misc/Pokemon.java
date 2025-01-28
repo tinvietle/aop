@@ -1,6 +1,5 @@
 package com.example.misc;
 
-import java.util.ArrayList;
 import java.util.List;
 // import java.util.Map;
 
@@ -231,6 +230,6 @@ public class Pokemon {
 
     // Function to get requirement lines, used in gamecontroller
     public Requirement getRequirementLines() {
-        return requirement;
+        return new Requirement(requirement);
     }
 }
