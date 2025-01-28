@@ -396,7 +396,7 @@ public class GameController {
     }
 
     @FXML
-    public void catchPokemon(Pokeball_old roll) {
+    public void catchPokemon() {
         if (chosenPokemon == null) {
             GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You have not chosen a pokemon. Better luck next time!");
             nextTurn();
@@ -445,7 +445,7 @@ public class GameController {
             GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You failed to catch the Pokemon. Better luck next time!");
             System.out.println("Failed to catch the pokemon");
             System.out.println("Requirements: " + chosenPokemon.getRequirementLines().toString());
-            System.out.println("Roll: " + roll.toString());
+            // System.out.println("Roll: " + roll.toString());
             nextTurn();
         }
         // dicePaneController.setChosenPokemon(null);
@@ -580,8 +580,8 @@ public class GameController {
     }
 
     public void endTurn() {
-        Pokeball_old roll = new Pokeball_old(dicePaneController.getResult());
-        catchPokemon(roll);
+        // Pokeball_old roll = new Pokeball_old(dicePaneController.getResult());
+        catchPokemon();
     }
 
     public void nextTurn() {
