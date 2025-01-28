@@ -47,7 +47,7 @@ public class RegisterController {
     private ImageView backgroundImage;
 
     @FXML
-    private Label titleLabel;  
+    private Label titleLabel;  // Add this field for the Register Players title
 
     @FXML
     public void initialize() {
@@ -56,8 +56,8 @@ public class RegisterController {
         backgroundImage.fitHeightProperty().bind(registerRootPane.heightProperty());
 
         // Bind container sizes
-        playerNamesContainer.maxHeightProperty().bind(registerRootPane.heightProperty().multiply(0.6));
-        playerNamesContainer.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.5));
+        playerNamesContainer.maxHeightProperty().bind(registerRootPane.heightProperty().multiply(0.5));
+        playerNamesContainer.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.4));
 
         // Bind spinner size
         playerCountSpinner.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.1));
@@ -71,21 +71,23 @@ public class RegisterController {
 
         // Bind text sizes
         errorLabel.styleProperty().bind(
-            Bindings.concat("-fx-font-size: ", registerRootPane.heightProperty().multiply(0.015), "px;")
+            Bindings.concat("-fx-font-size: ", registerRootPane.heightProperty().multiply(0.03), "px;")
         );
 
-        // Update title label binding to match menu style
+        // Bind title label font size and padding
         titleLabel.styleProperty().bind(
-            Bindings.concat(
-                "-fx-font-size: ", registerRootPane.widthProperty().multiply(0.1),
-                ";"
+            Bindings.createStringBinding(
+                () -> String.format("-fx-font-size: %.1fpx; -fx-font-family: 'Pocket Monk'; -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);",
+                                    registerRootPane.getWidth() * 0.065),
+                registerRootPane.widthProperty()
             )
         );
 
         titleLabel.paddingProperty().bind(
             Bindings.createObjectBinding(() -> {
                 double top = registerRootPane.getHeight() * 0.15;
-                return new Insets(top, 0, 0, 0);
+                double bottom = registerRootPane.getHeight() * 0.01;
+                return new Insets(top, 0, bottom, 0);
             }, registerRootPane.heightProperty())
         );
 
