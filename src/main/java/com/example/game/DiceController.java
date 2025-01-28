@@ -6,15 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
-import com.example.misc.Utils;
-import com.example.misc.Pokemon;
-import com.example.misc.Pokeball_old;
 import com.example.misc.Line;
-import com.example.misc.Requirement;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -22,7 +17,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;

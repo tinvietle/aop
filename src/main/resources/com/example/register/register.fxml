@@ -4,71 +4,60 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.Font?>
 
-<StackPane fx:id="registerRootPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.register.RegisterController">
-    <VBox alignment="TOP_CENTER" prefHeight="700" prefWidth="500" spacing="15" style="-fx-background-color: rgba(0, 0, 0, 0.8);">
-        <Label text="Register Players" 
-               style="-fx-font-family: 'Pocket Monk'; 
-                      -fx-font-size: 72; 
-                      -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);
-                      -fx-padding: 10;">
+<StackPane fx:id="registerRootPane" prefHeight="500" prefWidth="800" stylesheets="@register.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.register.RegisterController">
+    <ImageView fx:id="backgroundImage" fitHeight="500" fitWidth="800" preserveRatio="false">
+        <image>
+            <Image url="@../assets/register.jpg" />
+        </image>
+    </ImageView>
+    <VBox alignment="TOP_CENTER" spacing="7" styleClass="root-vbox">
+        <Label fx:id="titleLabel" text="Register Players" styleClass="titleLabel">
             <effect>
                 <Glow level="0.6">
                     <input>
-                        <DropShadow color="#000000" 
-                                   spread="0.7"
-                                   radius="5"
-                                   offsetX="0"
-                                   offsetY="0" />
+                        <DropShadow color="#ffd700" spread="0.5" />
                     </input>
                 </Glow>
             </effect>
-            <VBox.margin>
-                <Insets top="80.0" bottom="5.0" />
-            </VBox.margin>
+            <padding>
+                <Insets top="20.0" />
+            </padding>
+         <font>
+            <Font size="40.0" />
+         </font>
         </Label>
         
-        <VBox alignment="CENTER" spacing="10">
-            <Label style="-fx-font-size: 24; -fx-text-fill: white;" text="Number of Players:" />
-            <Spinner fx:id="playerCountSpinner" editable="true" initialValue="2" max="10" min="2" prefWidth="250" prefHeight="40" style="-fx-font-size: 20;" />
+        <VBox alignment="CENTER" spacing="5">
+            <Label fx:id="errorLabel" styleClass="error-label" />
+            <Label styleClass="subtitle-label" text="Number of Players:" />
+            <Spinner fx:id="playerCountSpinner" editable="true" initialValue="2" max="6" min="2" prefHeight="20" prefWidth="125" styleClass="player-spinner" />
         </VBox>
         
-        <VBox fx:id="playerNamesContainer" alignment="TOP_CENTER" maxHeight="380" maxWidth="450" spacing="15" style="-fx-background-color: rgba(255, 255, 255, 0.8); -fx-padding: 25; -fx-background-radius: 15; -fx-border-color: rgba(0, 0, 0, 0.5); -fx-border-width: 3; -fx-border-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+        <VBox fx:id="playerNamesContainer" alignment="TOP_CENTER" maxHeight="300" maxWidth="350" spacing="7" styleClass="player-names-container">
             <!-- Player name fields will be added here dynamically -->
         </VBox>
         
-        <VBox alignment="CENTER" spacing="20">
-            <Button fx:id="startGameButton" prefWidth="300" prefHeight="50"
-                    style="-fx-background-color: linear-gradient(to bottom, #4CAF50, #45a049);
-                           -fx-text-fill: white;
-                           -fx-font-size: 24;
-                           -fx-font-weight: bold;
-                           -fx-cursor: hand;
-                           -fx-background-radius: 12;
-                           -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 6, 0, 0, 2);"
-                    text="Start Game">
+        <VBox alignment="CENTER" spacing="10">
+            <Button fx:id="startGameButton" prefHeight="25" prefWidth="150" styleClass="start-button" text="Start Game">
                 <effect>
                     <Glow level="0.3" />
                 </effect>
             </Button>
-            <Button fx:id="backButton" prefWidth="300" prefHeight="50"
-                    style="-fx-background-color: linear-gradient(to bottom, #f44336, #da190b);
-                           -fx-text-fill: white;
-                           -fx-font-size: 24;
-                           -fx-font-weight: bold;
-                           -fx-cursor: hand;
-                           -fx-background-radius: 12;
-                           -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 6, 0, 0, 2);"
-                    text="Back">
+            <Button fx:id="backButton" prefHeight="25" prefWidth="150" styleClass="back-button" text="Back">
                 <effect>
                     <Glow level="0.3" />
                 </effect>
             </Button>
             <padding>
-                <Insets bottom="30" />
+                <Insets bottom="15" />
             </padding>
         </VBox>
     </VBox>
