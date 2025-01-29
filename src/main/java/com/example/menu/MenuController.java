@@ -102,8 +102,8 @@ public class MenuController {
             stage.setScene(registerScene);
             stage.centerOnScreen();
 
-            // Stop the background video
-            VideoPlayer.stopBackgroundVideo(backgroundVideo);
+            // // Stop the background video
+            // VideoPlayer.stopBackgroundVideo(backgroundVideo);
 
         } catch (Exception e) {
             System.err.println("Error loading register scene: " + e.getMessage());
