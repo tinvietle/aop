@@ -14,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -21,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class RegisterController {
@@ -47,7 +49,21 @@ public class RegisterController {
     private ImageView backgroundImage;
 
     @FXML
-    private Label titleLabel;  // Add this field for the Register Players title
+    private Label titleLabel;  
+
+    @FXML
+    private Label playerCountLabel;
+
+    @FXML
+    private ComboBox<String> difficultyComboBox;
+
+    private Stage primaryStage;
+    private Scene previousScene;
+
+    public void setPreviousScene(Stage stage, Scene scene) {
+        this.primaryStage = stage;
+        this.previousScene = scene;
+    }
 
     @FXML
     public void initialize() {
@@ -55,40 +71,77 @@ public class RegisterController {
         backgroundImage.fitWidthProperty().bind(registerRootPane.widthProperty());
         backgroundImage.fitHeightProperty().bind(registerRootPane.heightProperty());
 
-        // Bind container sizes
-        playerNamesContainer.maxHeightProperty().bind(registerRootPane.heightProperty().multiply(0.5));
-        playerNamesContainer.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.4));
+        // Bind container sizes with minimum sizes
+        playerNamesContainer.setMinWidth(250);
+        playerNamesContainer.maxHeightProperty().bind(registerRootPane.heightProperty().multiply(0.4));
+        playerNamesContainer.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.25));
 
-        // Bind spinner size
-        playerCountSpinner.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.1));
-        playerCountSpinner.prefHeightProperty().bind(registerRootPane.heightProperty().multiply(0.03));
+        // Bind spinner size with minimum sizes
+        playerCountSpinner.setMinWidth(100);
+        playerCountSpinner.setMinHeight(30);
+        playerCountSpinner.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.15));
+        playerCountSpinner.prefHeightProperty().bind(registerRootPane.heightProperty().multiply(0.05));
 
-        // Bind button sizes
-        startGameButton.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.15));
-        startGameButton.prefHeightProperty().bind(registerRootPane.heightProperty().multiply(0.05));
-        backButton.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.15));
-        backButton.prefHeightProperty().bind(registerRootPane.heightProperty().multiply(0.05));
+        // Bind spinner font size with smaller minimum size
+        playerCountSpinner.styleProperty().bind(
+            Bindings.createStringBinding(
+                () -> String.format("-fx-font-size: %.1fpx;", Math.max(10, registerRootPane.getWidth() * 0.015)),
+                registerRootPane.widthProperty()
+            )
+        );
+
+        // Fixed button sizes
+        startGameButton.setPrefWidth(200);
+        startGameButton.setPrefHeight(40);
+        backButton.setPrefWidth(200);
+        backButton.setPrefHeight(40);
+
+        // Bind font sizes only
+        startGameButton.styleProperty().bind(
+            Bindings.createStringBinding(
+                () -> String.format("-fx-font-size: %.1fpx;", Math.min(20, registerRootPane.getWidth() * 0.02)),
+                registerRootPane.widthProperty()
+            )
+        );
+
+        backButton.styleProperty().bind(
+            Bindings.createStringBinding(
+                () -> String.format("-fx-font-size: %.1fpx;", Math.min(20, registerRootPane.getWidth() * 0.02)),
+                registerRootPane.widthProperty()
+            )
+        );
 
         // Bind text sizes
         errorLabel.styleProperty().bind(
-            Bindings.concat("-fx-font-size: ", registerRootPane.heightProperty().multiply(0.03), "px;")
+            Bindings.createStringBinding(
+                () -> String.format("-fx-font-size: %.1fpx;", 
+                    Math.max(14, registerRootPane.getHeight() * 0.02)),
+                registerRootPane.heightProperty()
+            )
         );
 
-        // Bind title label font size and padding
+        // Update title label binding to match menu style
         titleLabel.styleProperty().bind(
-            Bindings.createStringBinding(
-                () -> String.format("-fx-font-size: %.1fpx; -fx-font-family: 'Pocket Monk'; -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);",
-                                    registerRootPane.getWidth() * 0.065),
-                registerRootPane.widthProperty()
+            Bindings.concat(
+                "-fx-font-size: ", registerRootPane.widthProperty().multiply(0.1),
+                ";"
             )
         );
 
         titleLabel.paddingProperty().bind(
             Bindings.createObjectBinding(() -> {
-                double top = registerRootPane.getHeight() * 0.15;
-                double bottom = registerRootPane.getHeight() * 0.01;
-                return new Insets(top, 0, bottom, 0);
+                double top = registerRootPane.getHeight() * 0.05;
+                return new Insets(top, 0, 0, 0);
             }, registerRootPane.heightProperty())
+        );
+
+        // Bind "Number of Players:" label
+        playerCountLabel.styleProperty().bind(
+            Bindings.createStringBinding(
+                () -> String.format("-fx-font-size: %.1fpx;", 
+                    Math.max(14, registerRootPane.getHeight() * 0.02)),
+                registerRootPane.heightProperty()
+            )
         );
 
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 6, 2);
@@ -107,6 +160,45 @@ public class RegisterController {
         // Set up button event handlers
         backButton.setOnAction(event -> handleBack());
         startGameButton.setOnAction(event -> handleStartGame());
+
+        errorLabel.styleProperty().bind(
+            Bindings.concat("-fx-font-size: ", registerRootPane.heightProperty().multiply(0.018), "px;")
+        );
+
+        playerCountSpinner.styleProperty().bind(
+            Bindings.createStringBinding(
+                () -> String.format("-fx-font-size: %.1fpx;", registerRootPane.getWidth() * 0.02),
+                registerRootPane.widthProperty()
+            )
+        );
+
+        // Bind ComboBox size
+        difficultyComboBox.prefWidthProperty().bind(registerRootPane.widthProperty().multiply(0.15));
+        difficultyComboBox.prefHeightProperty().bind(registerRootPane.heightProperty().multiply(0.04));
+
+        // Bind ComboBox font size
+        difficultyComboBox.styleProperty().bind(
+            Bindings.createStringBinding(
+                () -> String.format("-fx-font-size: %.1fpx;", Math.max(10, registerRootPane.getWidth() * 0.012)),
+                registerRootPane.widthProperty()
+            )
+        );
+
+        difficultyComboBox.getItems().addAll("Easy", "Normal", "Hard");
+        difficultyComboBox.setValue("Normal");
+
+        // Bind text field font size with smaller minimum size
+        playerNamesContainer.getChildren().forEach(node -> {
+            if (node instanceof TextField) {
+                TextField nameField = (TextField) node;
+                nameField.styleProperty().bind(
+                    Bindings.createStringBinding(
+                        () -> String.format("-fx-font-size: %.1fpx;", Math.max(10, registerRootPane.getWidth() * 0.015)),
+                        registerRootPane.widthProperty()
+                    )
+                );
+            }
+        });
     }
 
     private void updatePlayerNameFields(int count) {
@@ -114,51 +206,43 @@ public class RegisterController {
         for (int i = 1; i <= count; i++) {
             TextField nameField = new TextField();
             nameField.setPromptText("Player " + i + " Name");
+            nameField.setMinWidth(200);
+            nameField.setMinHeight(25);
+
+            // Add click sound when focusing on text field
+            nameField.focusedProperty().addListener((obs, oldVal, newVal) -> {
+                if (newVal) { // When gaining focus
+                    SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
+                }
+            });
+
+            // Bind font size to scene width with smaller minimum size
+            nameField.styleProperty().bind(
+                Bindings.createStringBinding(
+                    () -> String.format("-fx-font-size: %.1fpx;", Math.max(10, registerRootPane.getWidth() * 0.015)),
+                    registerRootPane.widthProperty()
+                )
+            );
             playerNamesContainer.getChildren().add(nameField);
         }
+        
+        // Play sound when changing player count
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
     }
 
     private void handleBack() {
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
-        try {
-            // Load the menu screen first
-            Parent menuRoot = App.loadFXML("menu/menu");
-            Scene currentScene = registerRootPane.getScene();
-            double sceneWidth = currentScene.getWidth();
-            
-            // Create a container for both screens
-            StackPane container = new StackPane();
-            menuRoot.setTranslateX(-sceneWidth);
-            container.getChildren().addAll(registerRootPane, menuRoot);
-            
-            // Set the container as the new root
-            currentScene.setRoot(container);
-            
-            // Create parallel transitions for both screens
-            TranslateTransition slideOut = new TranslateTransition(Duration.millis(500), registerRootPane);
-            slideOut.setToX(sceneWidth);
-            
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(500), menuRoot);
-            slideIn.setToX(0);
-            
-            // Play both transitions
-            slideOut.play();
-            slideIn.play();
-            
-            // When animation finishes, clean up
-            slideIn.setOnFinished(event -> {
-                container.getChildren().remove(registerRootPane);
-            });
-            
-        } catch (Exception e) {
-            System.err.println("Error during transition: " + e.getMessage());
-            e.printStackTrace();
+        if (primaryStage != null && previousScene != null) {
+            primaryStage.setScene(previousScene);
+            primaryStage.centerOnScreen();
         }
     }
 
     private void handleStartGame() {
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         errorLabel.setText("");
+        String difficulty = difficultyComboBox.getValue();
+        // Use difficulty as needed
         // Validate player names
         int playerCount = playerCountSpinner.getValue();
         String[] playerNames = new String[playerCount];
@@ -167,7 +251,7 @@ public class RegisterController {
             TextField nameField = (TextField) playerNamesContainer.getChildren().get(i);
             String name = nameField.getText().trim();
             if (!name.matches("[A-Za-z]{1,10}")) {
-                errorLabel.setText("Name must contain only letters (A-Z, a-z) and be 1-10 characters long.");
+                errorLabel.setText("Error: Name must be 1 to 10 letters only.");
                 return;
             }
             if (nameSet.contains(name)) {

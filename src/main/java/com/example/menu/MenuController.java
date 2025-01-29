@@ -6,10 +6,9 @@ import java.io.IOException;
 import com.example.App;
 import com.example.capture.OnlyMedia;
 import com.example.misc.SoundManager;
-import com.example.misc.Utils;
+import com.example.register.RegisterController;
 import com.example.settings.SettingsController;
 
-import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +20,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class MenuController {
 
@@ -94,38 +92,21 @@ public class MenuController {
     private void handleStartGame() {
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
-            // Load the next screen first
-            Parent registerRoot = App.loadFXML("register/register");
-            Scene currentScene = rootPane.getScene();
-            double sceneWidth = currentScene.getWidth();
-            
-            // Create a container for both screens
-            StackPane container = new StackPane();
-            registerRoot.setTranslateX(sceneWidth);
-            container.getChildren().addAll(rootPane, registerRoot);
-            
-            // Set the container as the new root
-            currentScene.setRoot(container);
-            
-            // Create parallel transitions for both screens
-            TranslateTransition slideOut = new TranslateTransition(Duration.millis(250), rootPane);
-            slideOut.setToX(-sceneWidth);
-            
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(250), registerRoot);
-            slideIn.setToX(0);
-            
-            // Play both transitions
-            slideOut.play();
-            slideIn.play();
-            
-            // When animation finishes, clean up
-            slideIn.setOnFinished(event -> {
-                VideoPlayer.stopBackgroundVideo(backgroundVideo);
-                container.getChildren().remove(rootPane);
-            });
-            
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("register/register.fxml"));
+            Parent registerRoot = loader.load();
+            RegisterController registerController = loader.getController();
+            Scene registerScene = new Scene(registerRoot);
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+
+            registerController.setPreviousScene(stage, stage.getScene());
+            stage.setScene(registerScene);
+            stage.centerOnScreen();
+
+            // Stop the background video
+            VideoPlayer.stopBackgroundVideo(backgroundVideo);
+
         } catch (Exception e) {
-            System.err.println("Error during transition: " + e.getMessage());
+            System.err.println("Error loading register scene: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -78,27 +78,31 @@
 }
 
 .start-button {
-    -fx-background-color: linear-gradient(to bottom, #4CAF50, #45a049);
-    -fx-text-fill: white;
-    -fx-font-size: 24;
+    -fx-background-color: transparent;
+    -fx-text-fill: #4CAF50;
     -fx-font-weight: bold;
     -fx-cursor: hand;
-    -fx-background-radius: 12;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 6, 0, 0, 2);
-    -fx-pref-width: 300;
-    -fx-pref-height: 50;
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+}
+
+.start-button:hover {
+    -fx-background-color: rgba(74, 175, 80, 0.2);
 }
 
 .back-button {
-    -fx-background-color: linear-gradient(to bottom, #f44336, #da190b);
-    -fx-text-fill: white;
-    -fx-font-size: 24;
+    -fx-background-color: transparent;
+    -fx-text-fill: #f44336;
     -fx-font-weight: bold;
     -fx-cursor: hand;
-    -fx-background-radius: 12;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 6, 0, 0, 2);
-    -fx-pref-width: 300;
-    -fx-pref-height: 50;
+    -fx-border-color: #f44336;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(244, 67, 54, 0.2);
 }
 
 .player-names-container .text-field {
@@ -107,8 +111,8 @@
     -fx-border-width: 1.5;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
-    -fx-padding: 8 12;
-    -fx-font-size: 14px;
+    -fx-padding: 4 8; /* Adjust padding to make the text field smaller */
+    -fx-font-size: 10px; /* Adjust font size to make the text field smaller */
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0.1, 0, 0);
 }
 
@@ -117,4 +121,20 @@
     -fx-border-color: #ffd700;
     -fx-border-width: 2;
     -fx-effect: dropshadow(three-pass-box, rgba(255,215,0,0.4), 5, 0.3, 0, 0);
+}
+
+.difficulty-combo-box {
+    -fx-pref-width: 150px; 
+    -fx-pref-height: 30px; 
+    -fx-font-size: 12px; 
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f0f0f0);
+    -fx-border-color: linear-gradient(to bottom, #ffd700, #ff8c00);
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10;
+}
+
+.difficulty-combo-box .list-cell {
+    -fx-font-size: 12px; /* Smaller font size */
 }
