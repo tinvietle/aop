@@ -17,7 +17,7 @@
 <StackPane fx:id="registerRootPane" prefHeight="500" prefWidth="800" stylesheets="@register.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.register.RegisterController">
     <ImageView fx:id="backgroundImage" fitHeight="500" fitWidth="800" preserveRatio="false">
         <image>
-            <Image url="@../assets/register1.png" />
+            <Image url="@../assets/register.jpg" />
         </image>
     </ImageView>
     <VBox alignment="TOP_CENTER" spacing="7" styleClass="root-vbox">
