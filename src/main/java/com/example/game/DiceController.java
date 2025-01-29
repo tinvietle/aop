@@ -10,6 +10,7 @@ import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 import com.example.misc.Line;
+import com.example.misc.SoundManager;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -117,6 +118,7 @@ public class DiceController {
 
     @FXML
     void rollHandler(ActionEvent event) {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         disableButtons(true, true);
         List<ImageView> diceImages = List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7);
 
@@ -417,6 +419,7 @@ public class DiceController {
 
     @FXML
     void endTurn(ActionEvent event) {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         if (firstRoll) {
             return;
         }

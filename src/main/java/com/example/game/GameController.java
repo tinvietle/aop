@@ -12,8 +12,8 @@ import com.example.capture.OnlyMedia;
 import com.example.help.HelpController;
 import com.example.misc.Group;
 import com.example.misc.GroupReader;
-import com.example.misc.Player;
 import com.example.misc.Line;
+import com.example.misc.Player;
 import com.example.misc.Pokemon;
 import com.example.misc.PokemonReader;
 import com.example.misc.Requirement;
@@ -245,17 +245,20 @@ public class GameController {
 
     @FXML
     private void newGame() throws IOException {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         Stage stage = (Stage) borderPane.getScene().getWindow();
         GameUtils.loadScene("/com/example/menu/menu.fxml", "Age of Pokemon", stage, null);
     }
 
     @FXML
     private void closeProgram() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         Utils.closeProgram();
     }
 
     @FXML
     private void openSettings() throws IOException {   
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             GameUtils.loadScene("/com/example/settings/settings.fxml", "Settings", (Stage) borderPane.getScene().getWindow(), loader -> {
                 SettingsController settingsController = loader.getController();
@@ -269,6 +272,7 @@ public class GameController {
 
     @FXML
     private void openHelpScene() throws IOException {   
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             // GameUtils.loadScene("/com/example/help/help.fxml", "Help", (Stage) borderPane.getScene().getWindow(), loader -> {
             //     HelpController helpController = loader.getController();
@@ -359,6 +363,7 @@ public class GameController {
 
     @FXML
     private void userInstruction() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         isInstruction = !isInstruction;
         instructionButton.setText(isInstruction ? "Hide Instruction" : "Show Instruction");
     }
