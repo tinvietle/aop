@@ -35,7 +35,7 @@ public class MenuController {
     private Button settingsButton;
 
     @FXML
-    private Button exitButton;
+    private Button creditButton;
 
     @FXML
     private StackPane rootPane;  // Add this FXML injection for the root pane
@@ -66,12 +66,12 @@ public class MenuController {
         // Bind buttons width to the root pane width
         startButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
         settingsButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
-        exitButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
+        creditButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
 
         // Bind buttons height to the root pane height
         startButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
         settingsButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
-        exitButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
+        creditButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
 
         // Bind font size to scene width, and add other attributes: bold, black
         titleText.styleProperty().bind(Bindings.concat(
@@ -82,13 +82,13 @@ public class MenuController {
                 "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";"));
         settingsButton.styleProperty().bind(Bindings.concat(
                 "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";"));
-        exitButton.styleProperty().bind(Bindings.concat(
+        creditButton.styleProperty().bind(Bindings.concat(
                 "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";"));
 
         // Set up button event handlers
         startButton.setOnAction(event -> handleStartGame());
         settingsButton.setOnAction(event -> handleSettings());
-        exitButton.setOnAction(event -> handleExit());
+        creditButton.setOnAction(event -> handlecredit());
     }
 
     private void handleStartGame() {
@@ -152,7 +152,7 @@ public class MenuController {
         }
     }
 
-    private void handleExit() {
+    private void handlecredit() {
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         // System.out.println("Exiting application");
         // Utils.closeProgram();
