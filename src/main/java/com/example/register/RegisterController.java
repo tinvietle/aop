@@ -187,7 +187,7 @@ public class RegisterController {
         );
 
         difficultyComboBox.getItems().addAll("Easy", "Normal", "Hard");
-        difficultyComboBox.setValue("Normal");
+        difficultyComboBox.setValue("Hard");
 
         // Bind text field font size with smaller minimum size
         playerNamesContainer.getChildren().forEach(node -> {
