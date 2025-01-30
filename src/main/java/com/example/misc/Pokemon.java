@@ -1,7 +1,7 @@
 package com.example.misc;
 
 import java.util.List;
-import java.util.Map;
+// import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,14 +26,14 @@ public class Pokemon {
     @JsonProperty("group")
     String group;
     @JsonProperty("requirements")
-    Map<String, List<Integer>> requirementsMap;
+    List<List<Integer>> requirementMap;
     @JsonProperty("description")
     String description;
 
     boolean owned;
     Player owner;
     Player groupOwner;
-    Pokeball requirements;
+    Requirement requirement;
     int groupScore;
 
     public Pokemon() {}
@@ -43,40 +43,53 @@ public class Pokemon {
         @JsonProperty("name") String name,
         @JsonProperty("score") int score,
         @JsonProperty("group") String group,
-        @JsonProperty("requirements") Map<String, List<Integer>> requirementsMap,
+        @JsonProperty("requirements") List<List<Integer>> requirementMap,
         @JsonProperty("description") String description
     ) {
         this.name = name;
         this.score = score;
         this.group = group;
         this.description = description;
-        this.requirementsMap = requirementsMap;
-        this.requirements = mapToPokeball(requirementsMap); // Convert the map to a Pokeball object
+        this.requirementMap = requirementMap;
+        this.requirement = mapToPokeball(requirementMap); // Convert the map to a Pokeball object
         this.owned = false;
         this.owner = null;
         this.groupOwner = null;
     }
 
-    private Pokeball mapToPokeball(Map<String, List<Integer>> requirementsMap) {
-        Pokeball pokeball = new Pokeball();
-        for (Map.Entry<String, List<Integer>> entry : requirementsMap.entrySet()) {
-            switch (entry.getKey()) {
-                case "red ball":
-                    pokeball.red = entry.getValue();
-                    break;
-                case "great ball":
-                    pokeball.great = entry.getValue().get(0);
-                    break;
-                case "ultra ball":
-                    pokeball.ultra = entry.getValue().get(0);
-                    break;
-                case "master ball":
-                    pokeball.master = entry.getValue().get(0);
-                    break;
+    private Requirement mapToPokeball(List<List<Integer>> requirementMap) {
+        Requirement requirement = new Requirement();
+        for (List<Integer> line : requirementMap) {
+            Line pokeball = new Line(line);
+            // switch (entry.getKey()) {
+            //     case "red ball":
+            //         pokeball.red = entry.getValue();
+            //         break;
+            //     case "great ball":
+            //         pokeball.great = entry.getValue().get(0);
+            //         break;
+            //     case "ultra ball":
+            //         pokeball.ultra = entry.getValue().get(0);
+            //         break;
+            //     case "master ball":
+            //         pokeball.master = entry.getValue().get(0);
+            //         break;
+
+            requirement.addLine(pokeball);
             }
+
+        // if (red.size() > 0) {
+        //     for (int i = 0; i < red.size(); i++) {
+        //         Pokeball pokeballRequirement = new Pokeball(red.get(i), great, ultra, master);
+        //         requirement.addRequirement(pokeballRequirement);
+        //     }
+        // } else {
+        //     Pokeball pokeballRequirement = new Pokeball(red.get(0), great, ultra, master);
+        //     requirement.addRequirement(pokeballRequirement);
+        // }
+
+        return requirement;
         }
-        return pokeball;
-    }
 
     @Override
     public String toString() {
@@ -87,12 +100,12 @@ public class Pokemon {
         }
         if (owned) {
             return  "\nScore: " + score + '\n' +
-                    "Requirements: \n" + requirements.toString() + '\n' +
+                    "Requirement: \n" + requirement.toString() + '\n' +
                     "Description: " + description + '\n' +
                     "Owned by: " + owner.getName();
         }
         return  "\nScore: " + score + '\n' +
-                "Requirements: \n" + requirements.toString() + '\n' +
+                "Requirement: \n" + requirement.toString() + '\n' +
                 "Description: " + description ;
     }
 
@@ -180,8 +193,9 @@ public class Pokemon {
         return group;
     }
 
-    public Pokeball getRequirements() {
-        return requirements;
+    // function for jackson to set requirement
+    public Requirement getrequirement() {
+        return requirement;
     }
 
     public void setOwned(boolean owned) {
@@ -208,8 +222,14 @@ public class Pokemon {
         this.owner = owner;
         if (!this.owned) {
             this.owned = true;
-            requirements.addMasterBall();
+            Line masterBall = new Line(0, 0, 0, 1);
+            this.requirement.addLine(masterBall);
         }
         owner.addPokemon(this);
+    }
+
+    // Function to get requirement lines, used in gamecontroller
+    public Requirement getRequirementLines() {
+        return new Requirement(requirement);
     }
 }

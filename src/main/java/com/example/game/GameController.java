@@ -12,10 +12,11 @@ import com.example.capture.OnlyMedia;
 import com.example.help.HelpController;
 import com.example.misc.Group;
 import com.example.misc.GroupReader;
+import com.example.misc.Line;
 import com.example.misc.Player;
-import com.example.misc.Pokeball;
 import com.example.misc.Pokemon;
 import com.example.misc.PokemonReader;
+import com.example.misc.Requirement;
 import com.example.misc.SoundManager;
 import com.example.misc.Utils;
 import com.example.result.ResultDisplay;
@@ -23,7 +24,6 @@ import com.example.settings.SettingsController;
 
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -75,6 +75,9 @@ public class GameController {
     private Pokemon chosenPokemon;
     private boolean isPokemonActive = false;
     private boolean isInstruction = true;
+    private Requirement target;
+
+    private String difficulty;
 
     // FXML Components
     @FXML private GridPane playerInfo;
@@ -99,18 +102,21 @@ public class GameController {
     private boolean helpSceneOpened = false;
 
     // Constructor
-    public GameController() {
-        PokemonReader reader = new PokemonReader();
-        reader.readPokemons().forEach(pokemon -> pokemons.put(pokemon.getName(), pokemon));
+    public GameController(String difficulty) {
+        this.difficulty = difficulty;
+        if (this.difficulty != null) {
+            PokemonReader reader = new PokemonReader(this.difficulty);
+            reader.readPokemons().forEach(pokemon -> pokemons.put(pokemon.getName(), pokemon));
 
-        GroupReader groupReader = new GroupReader();
-        groupReader.readGroups().forEach(group -> {
-            group.mapToPokemons(pokemons);
-            groups.put(group.getName(), group);
-            for (Pokemon pokemon : group.getPokemons()) {
-                pokemon.setGroupScore(group.getScore());
-            }
-        });
+            GroupReader groupReader = new GroupReader();
+            groupReader.readGroups().forEach(group -> {
+                group.mapToPokemons(pokemons);
+                groups.put(group.getName(), group);
+                for (Pokemon pokemon : group.getPokemons()) {
+                    pokemon.setGroupScore(group.getScore());
+                }
+            });
+        }
     }
 
     @FXML
@@ -244,17 +250,20 @@ public class GameController {
 
     @FXML
     private void newGame() throws IOException {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         Stage stage = (Stage) borderPane.getScene().getWindow();
         GameUtils.loadScene("/com/example/menu/menu.fxml", "Age of Pokemon", stage, null);
     }
 
     @FXML
     private void closeProgram() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         Utils.closeProgram();
     }
 
     @FXML
     private void openSettings() throws IOException {   
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             GameUtils.loadScene("/com/example/settings/settings.fxml", "Settings", (Stage) borderPane.getScene().getWindow(), loader -> {
                 SettingsController settingsController = loader.getController();
@@ -268,6 +277,7 @@ public class GameController {
 
     @FXML
     private void openHelpScene() throws IOException {   
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             // GameUtils.loadScene("/com/example/help/help.fxml", "Help", (Stage) borderPane.getScene().getWindow(), loader -> {
             //     HelpController helpController = loader.getController();
@@ -358,6 +368,7 @@ public class GameController {
 
     @FXML
     private void userInstruction() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         isInstruction = !isInstruction;
         instructionButton.setText(isInstruction ? "Hide Instruction" : "Show Instruction");
     }
@@ -379,10 +390,11 @@ public class GameController {
                 return;
             }
             chosenPokemon = pokemons.get(pokemonName);
-            dicePaneController.setChosenPokemon(chosenPokemon);
+            // dicePaneController.setChosenPokemon(chosenPokemon);
+            target = chosenPokemon.getRequirementLines();
             disableAllPokemons(true);
             showInstruction("Continue rolling to catch the chosen Pokemon.", 400, 100, 1, 0, 3000);
-            dicePaneController.disableButtons(false, false);
+            // dicePaneController.disableButtons(false, false);
         }
     }
 
@@ -393,8 +405,13 @@ public class GameController {
     }
 
     @FXML
-    public void catchPokemon(Pokeball roll) {
-        if (roll.compare(chosenPokemon.getRequirements())) {
+    public void catchPokemon() {
+        if (chosenPokemon == null) {
+            GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You have not chosen a pokemon. Better luck next time!");
+            nextTurn();
+            return;
+        }
+        if (target != null && target.length() == 0) {
             System.out.println("Caught the pokemon");
 
             if (chosenPokemon.getOwner() != null) {
@@ -403,11 +420,11 @@ public class GameController {
             }
         
             curPlayer.updateScore(chosenPokemon.getScore());
-            curPlayer.addPokemon(chosenPokemon);
             chosenPokemon.setOwner(curPlayer);
             Group group = groups.get(chosenPokemon.getGroup());
             if (group != null && group.checkOwned(curPlayer)) {
                 curPlayer.updateScore(group.getScore());
+                curPlayer.updateNumGroup();
                 for (Pokemon pokemon : group.getPokemons()) {
                     System.out.println(curPlayer.getName() + " owns " + pokemon.getName());
                     pokemon.setGroupOwner(curPlayer);
@@ -435,11 +452,19 @@ public class GameController {
         } else {
             GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You failed to catch the Pokemon. Better luck next time!");
             System.out.println("Failed to catch the pokemon");
-            System.out.println("Requirements: " + chosenPokemon.getRequirements().toString());
-            System.out.println("Roll: " + roll.toString());
+            System.out.println("Requirements: " + chosenPokemon.getRequirementLines().toString());
+            // System.out.println("Roll: " + roll.toString());
             nextTurn();
         }
-        dicePaneController.setChosenPokemon(null);
+        // dicePaneController.setChosenPokemon(null);
+    }
+
+    public Requirement getTarget() {
+        return target;
+    }
+    
+    public void reduceTarget(Line line) {
+        this.target.removeLine(line);
     }
 
     public void disableAllPokemons(boolean disable) {
@@ -563,13 +588,15 @@ public class GameController {
     }
 
     public void endTurn() {
-        Pokeball roll = new Pokeball(dicePaneController.getResult());
-        catchPokemon(roll);
+        // Pokeball_old roll = new Pokeball_old(dicePaneController.getResult());
+        catchPokemon();
     }
 
     public void nextTurn() {
+        chosenPokemon = null;
         dicePaneController.resetDice();
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        target = null;
         setCurPlayer(players.get(currentPlayerIndex));
         showTurnTransition();
     }
@@ -638,4 +665,5 @@ public class GameController {
             controller.displayResults(players);
             });
     }
+
 }
