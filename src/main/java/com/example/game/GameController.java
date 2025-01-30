@@ -107,18 +107,22 @@ public class GameController {
         this.difficulty = difficulty;
     }
     public GameController() {
-        
-        PokemonReader reader = new PokemonReader(this.difficulty);
-        reader.readPokemons().forEach(pokemon -> pokemons.put(pokemon.getName(), pokemon));
+    }
 
-        GroupReader groupReader = new GroupReader();
-        groupReader.readGroups().forEach(group -> {
-            group.mapToPokemons(pokemons);
-            groups.put(group.getName(), group);
-            for (Pokemon pokemon : group.getPokemons()) {
-                pokemon.setGroupScore(group.getScore());
-            }
-        });
+    private void initializePokemons() {
+        if (this.difficulty != null) {
+            PokemonReader reader = new PokemonReader(this.difficulty);
+            reader.readPokemons().forEach(pokemon -> pokemons.put(pokemon.getName(), pokemon));
+    
+            GroupReader groupReader = new GroupReader();
+            groupReader.readGroups().forEach(group -> {
+                group.mapToPokemons(pokemons);
+                groups.put(group.getName(), group);
+                for (Pokemon pokemon : group.getPokemons()) {
+                    pokemon.setGroupScore(group.getScore());
+                }
+            });
+        }
     }
 
     @FXML
@@ -127,6 +131,7 @@ public class GameController {
         setupUIBindings();
         setupDiceController();
         initializeTurnOverlay();
+        initializePokemons();
         // borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
         //     if (newScene != null & !helpSceneOpened) {
         //         helpSceneOpened = true;
