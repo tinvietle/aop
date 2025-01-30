@@ -102,18 +102,12 @@ public class GameController {
     private boolean helpSceneOpened = false;
 
     // Constructor
-    
-    public void setDifficulty(String difficulty) {
+    public GameController(String difficulty) {
         this.difficulty = difficulty;
-    }
-    public GameController() {
-    }
-
-    private void initializePokemons() {
         if (this.difficulty != null) {
             PokemonReader reader = new PokemonReader(this.difficulty);
             reader.readPokemons().forEach(pokemon -> pokemons.put(pokemon.getName(), pokemon));
-    
+
             GroupReader groupReader = new GroupReader();
             groupReader.readGroups().forEach(group -> {
                 group.mapToPokemons(pokemons);
@@ -131,7 +125,6 @@ public class GameController {
         setupUIBindings();
         setupDiceController();
         initializeTurnOverlay();
-        initializePokemons();
         // borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
         //     if (newScene != null & !helpSceneOpened) {
         //         helpSceneOpened = true;

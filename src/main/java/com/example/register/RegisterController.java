@@ -271,8 +271,10 @@ public class RegisterController {
         try {
             // Load the game scene
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/game/game.fxml"));
+            // GameController controller = fxmlLoader.getController();
+            GameController controller = new GameController(difficulty); // Create controller with argument
+            fxmlLoader.setController(controller); // Manually set controller
             Parent gameRoot = fxmlLoader.load();
-            GameController controller = fxmlLoader.getController();
             
             // Get current scene dimensions
             Scene currentScene = registerRootPane.getScene();
@@ -301,7 +303,6 @@ public class RegisterController {
             slideInNew.setOnFinished(event -> {
                 container.getChildren().remove(registerRootPane);
                 controller.registerPlayer(playerNames);
-                controller.setDifficulty(difficulty);
             });
 
         } catch (IOException e) {
