@@ -126,12 +126,13 @@ public class GameController {
     }
 
     @FXML
-    private void initialize() throws IOException {
+    public void initialize() throws IOException {
+        initializePokemons();
         initializePokemonImages();
         setupUIBindings();
         setupDiceController();
         initializeTurnOverlay();
-        initializePokemons();
+        
         // borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
         //     if (newScene != null & !helpSceneOpened) {
         //         helpSceneOpened = true;

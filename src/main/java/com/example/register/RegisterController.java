@@ -302,6 +302,12 @@ public class RegisterController {
                 container.getChildren().remove(registerRootPane);
                 controller.registerPlayer(playerNames);
                 controller.setDifficulty(difficulty);
+                try {
+                    controller.initialize();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             });
 
         } catch (IOException e) {
