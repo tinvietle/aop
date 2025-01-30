@@ -60,6 +60,8 @@ public class RegisterController {
     private Stage primaryStage;
     private Scene previousScene;
 
+    private String difficulty;
+
     public void setPreviousScene(Stage stage, Scene scene) {
         this.primaryStage = stage;
         this.previousScene = scene;
@@ -241,7 +243,7 @@ public class RegisterController {
     private void handleStartGame() {
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         errorLabel.setText("");
-        String difficulty = difficultyComboBox.getValue();
+        difficulty = difficultyComboBox.getValue();
         // Use difficulty as needed
         // Validate player names
         int playerCount = playerCountSpinner.getValue();
@@ -299,6 +301,7 @@ public class RegisterController {
             slideInNew.setOnFinished(event -> {
                 container.getChildren().remove(registerRootPane);
                 controller.registerPlayer(playerNames);
+                controller.setDifficulty(difficulty);
             });
 
         } catch (IOException e) {

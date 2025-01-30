@@ -77,6 +77,8 @@ public class GameController {
     private boolean isInstruction = true;
     private Requirement target;
 
+    private String difficulty;
+
     // FXML Components
     @FXML private GridPane playerInfo;
     @FXML private DiceController dicePaneController;
@@ -100,8 +102,13 @@ public class GameController {
     private boolean helpSceneOpened = false;
 
     // Constructor
+    
+    public void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
+    }
     public GameController() {
-        PokemonReader reader = new PokemonReader();
+        
+        PokemonReader reader = new PokemonReader(this.difficulty);
         reader.readPokemons().forEach(pokemon -> pokemons.put(pokemon.getName(), pokemon));
 
         GroupReader groupReader = new GroupReader();
@@ -660,4 +667,5 @@ public class GameController {
             controller.displayResults(players);
             });
     }
+
 }
