@@ -122,6 +122,22 @@ public class SoundManager {
             mediaPlayer.stop();
         }
     }
+    
+    // New method to pause BGM instead of stopping it
+    public void pauseBGM() {
+        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+            mediaPlayer.pause();
+        }
+    }
+    
+    // New method to resume BGM if paused, or play a random BGM otherwise
+    public void resumeBGM() {
+        if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PAUSED) {
+            mediaPlayer.play();
+        } else {
+            playRandomBGM();
+        }
+    }
 
     public void setVolume(double volume) {
         this.volume = volume;
