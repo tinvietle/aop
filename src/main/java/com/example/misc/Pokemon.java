@@ -75,12 +75,12 @@ public class Pokemon {
         }
         if (owned) {
             return  "\nScore: " + score + '\n' +
-                    "Requirement: \n" + requirement.toString() + '\n' +
-                    "Description: " + description + '\n' +
+                    "Requirement: \n" + requirement.toString()  +
+                    "Description: " + description + '\n' + '\n' +
                     "Owned by: " + owner.getName();
         }
         return  "\nScore: " + score + '\n' +
-                "Requirement: \n" + requirement.toString() + '\n' +
+                "Requirement: \n" + requirement.toString()  +
                 "Description: " + description ;
     }
 
