@@ -252,8 +252,8 @@ public class RegisterController {
         for (int i = 0; i < playerCount; i++) {
             TextField nameField = (TextField) playerNamesContainer.getChildren().get(i);
             String name = nameField.getText().trim();
-            if (!name.matches("[A-Za-z]{1,10}")) {
-                errorLabel.setText("Error: Name must be 1 to 10 letters only.");
+            if (!name.matches("[A-Za-z0-9]{1,15}")) {
+                errorLabel.setText("Error: Name must contain only alphabet characters and numbers (max 15 characters).");
                 return;
             }
             if (nameSet.contains(name)) {

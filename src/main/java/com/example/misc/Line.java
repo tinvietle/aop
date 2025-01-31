@@ -54,7 +54,7 @@ public class Line {
             out.append("Ultra(").append(ultra).append(") ");
         }
         if (master > 0) {
-            out.append("Master( ").append(master).append(") ");
+            out.append("Master(").append(master).append(") ");
         }
 
         return out.toString();
