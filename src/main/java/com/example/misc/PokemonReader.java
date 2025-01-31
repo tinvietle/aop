@@ -38,11 +38,11 @@ public class PokemonReader {
             case "Easy":
                 return "src\\main\\resources\\com\\example\\assets\\stocks\\pokemon_easy.json";
             case "Normal":
-                return "src\\main\\resources\\com\\example\\assets\\stocks\\pokemon_medium.json";
+                return "src\\main\\resources\\com\\example\\assets\\stocks\\pokemon_normal.json";
             case "Hard":
-                return "src\\main\\resources\\com\\example\\assets\\stocks\\pokemon.json";
+                return "src\\main\\resources\\com\\example\\assets\\stocks\\pokemon_hard.json";
             default:
-                return "src\\main\\resources\\com\\example\\assets\\stocks\\pokemon.json";
+                return "src\\main\\resources\\com\\example\\assets\\stocks\\pokemon_hard.json";
         }
     }
 }

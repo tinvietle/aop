@@ -17,7 +17,6 @@ public class GroupReader {
                 new TypeReference<ArrayList<Group>>() {}
             );
 
-            // Print all Pokémon
             return groups;
         } catch (IOException e) {
             e.printStackTrace();

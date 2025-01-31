@@ -49,8 +49,6 @@ public class HelpController {
     private Stage primaryStage;
     private Scene previousScene;
 
-    
-
     @FXML
     private void initialize() {
         try {

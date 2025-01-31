@@ -1,7 +1,6 @@
 package com.example.misc;
 
 import java.util.List;
-// import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -61,33 +60,9 @@ public class Pokemon {
         Requirement requirement = new Requirement();
         for (List<Integer> line : requirementMap) {
             Line pokeball = new Line(line);
-            // switch (entry.getKey()) {
-            //     case "red ball":
-            //         pokeball.red = entry.getValue();
-            //         break;
-            //     case "great ball":
-            //         pokeball.great = entry.getValue().get(0);
-            //         break;
-            //     case "ultra ball":
-            //         pokeball.ultra = entry.getValue().get(0);
-            //         break;
-            //     case "master ball":
-            //         pokeball.master = entry.getValue().get(0);
-            //         break;
 
             requirement.addLine(pokeball);
-            }
-
-        // if (red.size() > 0) {
-        //     for (int i = 0; i < red.size(); i++) {
-        //         Pokeball pokeballRequirement = new Pokeball(red.get(i), great, ultra, master);
-        //         requirement.addRequirement(pokeballRequirement);
-        //     }
-        // } else {
-        //     Pokeball pokeballRequirement = new Pokeball(red.get(0), great, ultra, master);
-        //     requirement.addRequirement(pokeballRequirement);
-        // }
-
+        }
         return requirement;
         }
 
