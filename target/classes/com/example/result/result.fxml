@@ -7,27 +7,38 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox fx:id="rootBox" alignment="CENTER" spacing="50" styleClass="hbox" stylesheets="@result.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.result.ResultDisplay">
-    <padding>
-        <Insets bottom="40" left="40" right="40" top="40" />
-    </padding>
-    
-    <VBox fx:id="firstContainer" alignment="CENTER" prefWidth="500" spacing="20" styleClass="content-box">
-        <ImageView fx:id="trophyImage" fitHeight="300" fitWidth="300" preserveRatio="true">
+<Pane fx:id="rootPane" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.result.ResultDisplay">  
+   <children>
+      <ImageView fx:id="backgroundImage" fitHeight="696.0" fitWidth="720.0" pickOnBounds="true">
          <image>
-            <Image url="@../assets/trophy.png" />
-         </image></ImageView>
-        <Label fx:id="winerText" styleClass="winerText" text="Winner!" />
-        <Label fx:id="winnerName" style="-fx-font-size: 36px;" />
-        <Label fx:id="winnerScore" style="-fx-font-size: 32px;" />
-    </VBox>
-    
-    <VBox fx:id="leaderboardContainer" alignment="CENTER" prefWidth="500" spacing="20" styleClass="content-box">
-        <Label fx:id="leaderboardText" styleClass="leaderboardText" text="Leaderboard" />
-        <ListView fx:id="leaderboardList" />
-        <Button fx:id="newGameButton" maxWidth="Infinity" styleClass="action-button" text="New Game" />
-        <Button fx:id="exitButton" maxWidth="Infinity" styleClass="action-button" text="Exit" />
-    </VBox>
-</HBox>
+            <Image url="@../assets/result.jpg" />
+         </image>
+      </ImageView>
+      <HBox fx:id="rootBox" alignment="CENTER" spacing="50" styleClass="hbox" stylesheets="@result.css">
+          <padding>
+              <Insets bottom="40" left="40" right="40" top="40" />
+          </padding>
+          
+          <VBox fx:id="firstContainer" alignment="CENTER" spacing="20" styleClass="content-box">
+              <ImageView fx:id="trophyImage" fitHeight="300" fitWidth="300" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/trophy.png" />
+               </image>
+            </ImageView>
+              <Label fx:id="winerText" styleClass="winerText" text="Winner!" />
+              <Label fx:id="winnerName" style="-fx-font-size: 36px;" />
+              <Label fx:id="winnerScore" style="-fx-font-size: 32px;" />
+          </VBox>
+          
+          <VBox fx:id="leaderboardContainer" alignment="CENTER" spacing="20" styleClass="content-box">
+              <Label fx:id="leaderboardText" styleClass="leaderboardText" text="Leaderboard" />
+              <ListView fx:id="leaderboardList" />
+              <Button fx:id="newGameButton" maxWidth="Infinity" styleClass="action-button" text="New Game" />
+              <Button fx:id="exitButton" maxWidth="Infinity" styleClass="action-button" text="Exit" />
+          </VBox>
+      </HBox>
+   </children>
+</Pane>

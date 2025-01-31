@@ -21,12 +21,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class ResultDisplay {
     @FXML
     private HBox rootBox;
+    @FXML
+    private Pane rootPane;
+    @FXML
+    private ImageView backgroundImage;
     @FXML
     private ImageView trophyImage;
     @FXML
@@ -68,6 +73,14 @@ public class ResultDisplay {
         // Set button actions
         newGameButton.setOnAction(event -> handleNewGame());
         exitButton.setOnAction(event -> handleExit());
+
+        // Bind the root box size to the Pane size
+        rootBox.prefWidthProperty().bind(rootPane.widthProperty());
+        rootBox.prefHeightProperty().bind(rootPane.heightProperty());
+
+        // Bind the background image size to the window size
+        backgroundImage.fitWidthProperty().bind(rootBox.widthProperty());
+        backgroundImage.fitHeightProperty().bind(rootBox.heightProperty());
 
         // Bind the first container size to the window size
         firstContainer.prefWidthProperty().bind(rootBox.widthProperty().multiply(0.4));
@@ -183,7 +196,7 @@ public class ResultDisplay {
             StringBuilder tieDisplay = new StringBuilder();
             for (Player w : winners) {
                 tieDisplay.append(String.format(
-                    "Player: %s - %d points - %d pokemons - %d groups\n",
+                    "Player: %s - %dPts-%dPkmn - %dGrp\n",
                     w.getName(), w.getScore(), w.getNumCapturedPokemons(), w.getNumGroups()
                 ));
             }
@@ -193,7 +206,7 @@ public class ResultDisplay {
             Player w = winners.get(0);
             winerText.setText("Winner!");
             winnerName.setText(String.format(
-                "Player: %s - %d points - %d pokemons - %d groups",
+                "Player: %s - %dPts - %dPkmn - %dGrp",
                 w.getName(), w.getScore(), w.getNumCapturedPokemons(), w.getNumGroups()
             ));
             winnerScore.setText("");
@@ -254,8 +267,8 @@ public class ResultDisplay {
 
             stage.setTitle("Age of Pokemon");
             stage.setScene(menuScene);
-            stage.setMaximized(true); // Maximize the window
-            stage.setResizable(true); // Enable resizing
+            stage.setMaximized(true); 
+            stage.setResizable(true); 
             stage.centerOnScreen();
             stage.show();
         } catch (IOException e) {
