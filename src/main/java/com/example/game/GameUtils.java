@@ -85,12 +85,6 @@ public class GameUtils {
         fadeOut.setOnFinished(e -> callback.run());
     }
 
-    public static void updateToolTip_deprecated(Pokemon pokemon, ImageView image) {
-        Tooltip tooltip = new Tooltip(pokemon.toString());
-        tooltip.setShowDelay(javafx.util.Duration.ZERO);
-        Tooltip.install(image, tooltip);
-    }
-
     public static void updateToolTip(Pokemon pokemon, ImageView image, BorderPane borderPane) {
         TextFlow styledContent = pokemon.getStyledTooltipContent(borderPane);
         Tooltip tooltip = new Tooltip();
