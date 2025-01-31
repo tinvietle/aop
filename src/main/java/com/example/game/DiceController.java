@@ -172,51 +172,8 @@ public class DiceController {
                 }
             }
 
-            // // Count types of balls
-            // int totalTypes = 0;
-            // for (String ballType : ballsMap.keySet()){
-            //     if (ballsMap.get(ballType) > 0){
-            //         totalTypes++;
-            //         System.out.println("Ball type: " + ballType + " Count: " + ballsMap.get(ballType));
-            //     }
-            // }
-            // System.out.println("Total types: " + totalTypes);
-            // // Check if the new kept dice images satisfy the requirements of the chosen pokemon
-            // List<String> tempStatisfiedRequirements = new ArrayList<>();
-            // // Loop through requirements
-            // // print the requirements list map
-            // System.out.println("Requirements map: " + listRequirementsMap);
-            // for (String requirement : requirementList){
-            //     // If the requirement is not satisfied
-            //     if (!listRequirementsMap.get(requirement)){
-            //         // Split the string to get requirements
-            //         String[] requirementSplit = requirement.split(" ");
-            //         int length = requirementSplit.length;
-            //         // Check if the length of the requirement is equal to the total types of balls kept
-            //         if (length == totalTypes){
-            //             boolean isSatisfied = false;
-            //             // Loop through the each small requirement
-            //             for (int i = 0; i < length; i++){
-            //                 // Split the requirement to get the ball type and the count
-            //                 String[] parts = requirementSplit[i].split(":");
-            //                 String ballType = parts[0];
-            //                 int ballCount = Integer.parseInt(parts[1]);
-            //                 if (ballsMap.get(ballType) == ballCount){
-            //                     isSatisfied = true;
-            //                 } else {
-            //                     isSatisfied = false;
-            //                     break;
-            //                 }
-            //             }
-            //             if (isSatisfied){
-            //                 tempStatisfiedRequirements.add(requirement);
-            //             }
-            //         }
-            //     }
-            // }
             // if tempStatisfiedRequirements is empty, raise error
             // and set the opacity of new kept dice images to 1.0
-            System.out.println("Temp satisfied requirements: " + tempStatisfiedLines);
             if (tempStatisfiedLines.isEmpty() && !newKeptDiceImages.isEmpty()){
                 GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "The kept balls do not satisfy any lines of the chosen Pokemon. Please try again.");
                 for (ImageView diceImage : newKeptDiceImages){
@@ -241,23 +198,6 @@ public class DiceController {
                             chosenLine = line;
                         }
                     }
-                    // int maxTotalBalls = 0;
-                    // String maxRequirement = "";
-                    // for (String requirement : tempStatisfiedRequirements){
-                    //     String[] requirementSplit = requirement.split(" ");
-                    //     int totalBalls = 0;
-                    //     for (int i = 0; i < requirementSplit.length; i++){
-                    //         String[] parts = requirementSplit[i].split(":");
-                    //         int ballCount = Integer.parseInt(parts[1]);
-                    //         totalBalls += ballCount;
-                    //     }
-                    //     if (totalBalls > maxTotalBalls){
-                    //         maxTotalBalls = totalBalls;
-                    //         maxRequirement = requirement;
-                    //     }
-                    // }
-                    // // Set the listRequirementMap of the maxRequirement to true
-                    // listRequirementsMap.put(maxRequirement, true);
                 } 
                 gameController.reduceTarget(chosenLine);
             }
@@ -327,8 +267,6 @@ public class DiceController {
                     latch.countDown();
                 }).start();
             } else {
-                // set dice image to null
-                // diceImage.setImage(null);
                 diceImage.setOpacity(0.0);
             }
         }
@@ -396,20 +334,6 @@ public class DiceController {
                     // Show alert that it is not possible to choose Pokeball, only reroll or select Pokemon
                     GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "You cannot choose the Pokeball. Please select a Pokemon to catch.");
                 }
-
-                
-
-                // if (keepDice.contains(diceImage)) {
-                //     // Unkeep the dice
-                //     keepDice.remove(diceImage);
-                //     diceImage.setOpacity(1.0); // Reset opacity
-                //     numKeptDice--;
-                // } else {
-                //     // Keep the dice
-                //     keepDice.add(diceImage);
-                //     diceImage.setOpacity(0.5); // Mark as kept
-                //     numKeptDice++;
-                // }
             });
         }
     }
@@ -420,13 +344,6 @@ public class DiceController {
         if (firstRoll) {
             return;
         }
-
-        // if (gameController.getChosenPokemon() == null) {
-        //     Alert alert = Utils.confirmBox("You have not chosen a Pokemon", "You have not chosen a Pokemon", "Press OK if you want to end turn.");
-        //     Optional<ButtonType> result = alert.showAndWait();
-        //     boolean confirm = result.isPresent() && result.get() == ButtonType.OK;
-        //     if (!confirm) return;
-        // }
 
         // Disable the roll button and end button
         rollButton.setDisable(true);
@@ -506,11 +423,6 @@ public class DiceController {
             }
         }
 
-        // // Set the opacity to 1
-        // for (ImageView diceImage : keepDice) {
-        //     diceImage.setOpacity(1.0);
-        // }
-
         // Use StringBuilder to concatenate the name of file of the dice images
         for (ImageView diceImage : keepDice) {
             // Get the name of the file of the dice image and ignore the file type
@@ -563,20 +475,4 @@ public class DiceController {
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
-    // public void setChosenPokemon(Pokemon chosenPokemon) {
-    //     this.chosenPokemon = chosenPokemon;
-    //     if (chosenPokemon == null) {
-    //         return;
-    //     }
-    //     // Set the requirements of the chosen pokemon and map each requirement to false
-    //     Requirement requirements = chosenPokemon.getRequirement();
-    //     listRequirementsMap = new HashMap<>();
-    //     requirementList = new ArrayList<>();
-        
-    //     // Assuming Pokeball has a method to get all requirements as a list
-    //     for (String requirement : requirements.getAllRequirements()) {
-    //         listRequirementsMap.put(requirement, false);
-    //         requirementList.add(requirement);
-    //     }
-    // }
 }

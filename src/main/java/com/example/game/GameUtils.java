@@ -133,8 +133,6 @@ public class GameUtils {
             );
             tooltip.setStyle(newDynamicPadding);
         });
-        // String fixedPadding = "-fx-padding: 0.5em;";
-        // tooltip.setStyle(fixedPadding);
 
         // Set the show delay to 0 milliseconds (instant display)
         tooltip.setShowDelay(javafx.util.Duration.ZERO);

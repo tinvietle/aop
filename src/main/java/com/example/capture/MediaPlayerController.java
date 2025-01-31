@@ -82,9 +82,6 @@ public class MediaPlayerController {
             Scene scene = mediaView.getScene();
             mediaView.fitWidthProperty().bind(scene.widthProperty());
             mediaView.fitHeightProperty().bind(scene.heightProperty());
-
-            //mediaPlayer.setAutoPlay(true);
-
         }
 
     }

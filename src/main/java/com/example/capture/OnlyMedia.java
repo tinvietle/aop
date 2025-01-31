@@ -41,6 +41,12 @@ public class OnlyMedia {
         this.onVideoFinished = callback;
     }
 
+    @FXML
+    public void onSkip(ActionEvent event) {
+        stopMedia();
+        handleVideoEnd();
+    }
+
     public void initializeMedia(String mediaPath, double width, double height) {
         try {
             if (isMediaLoading) {
@@ -193,11 +199,5 @@ public class OnlyMedia {
     public void setPreviousScene(Stage primaryStage, Scene previousScene) {
         this.primaryStage = primaryStage;
         this.previousScene = previousScene;
-    }
-
-    @FXML
-    public void onSkip(ActionEvent event) {
-        stopMedia();
-        handleVideoEnd();
     }
 }

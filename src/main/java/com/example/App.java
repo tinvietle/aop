@@ -17,8 +17,6 @@ import javafx.stage.Stage;
  * JavaFX App
  */
 public class App extends Application {
-
-    // private static Scene scene;
  
     @Override
     public void start(Stage stage) {
@@ -39,29 +37,6 @@ public class App extends Application {
                 closeProgram();
             });
             stage.show();
-
-            // // Add listeners to maintain aspect ratio during resizing
-            // stage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            //     double newWidth = newVal.doubleValue();
-            //     double newHeight = newWidth / (16.0 / 10);
-
-            //     if (newHeight >= stage.getMinHeight()) {
-            //         stage.setHeight(newHeight);
-            //     } else {
-            //         stage.setWidth(stage.getMinHeight());
-            //     }
-            // });
-
-            // stage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            //     double newHeight = newVal.doubleValue();
-            //     double newWidth = newHeight * (16.0 / 10);
-
-            //     if (newWidth >= stage.getMinWidth()) {
-            //         stage.setWidth(newWidth);
-            //     } else {
-            //         stage.setHeight(stage.getMinWidth());
-            //     }
-            // });
             
         } catch (IOException | NullPointerException e) {
             // Print error

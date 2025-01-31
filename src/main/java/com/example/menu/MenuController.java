@@ -102,9 +102,6 @@ public class MenuController {
             stage.setScene(registerScene);
             stage.centerOnScreen();
 
-            // // Stop the background video
-            // VideoPlayer.stopBackgroundVideo(backgroundVideo);
-
         } catch (Exception e) {
             System.err.println("Error loading register scene: " + e.getMessage());
             e.printStackTrace();
@@ -135,8 +132,6 @@ public class MenuController {
 
     private void handlecredit() {
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
-        // System.out.println("Exiting application");
-        // Utils.closeProgram();
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));

@@ -125,16 +125,6 @@ public class GameController {
         setupUIBindings();
         setupDiceController();
         initializeTurnOverlay();
-        // borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
-        //     if (newScene != null & !helpSceneOpened) {
-        //         helpSceneOpened = true;
-        //         try {
-        //             openHelpScene();
-        //         } catch (IOException e) {
-        //             e.printStackTrace();
-        //         }
-        //     }
-        // });
     }
 
     private void initializePokemonImages() {
@@ -279,11 +269,6 @@ public class GameController {
     private void openHelpScene() throws IOException {   
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
-            // GameUtils.loadScene("/com/example/help/help.fxml", "Help", (Stage) borderPane.getScene().getWindow(), loader -> {
-            //     HelpController helpController = loader.getController();
-            //     helpController.setPreviousScene((Stage) borderPane.getScene().getWindow(), borderPane.getScene());
-            // });
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/help/help.fxml"));
             Parent helpRoot = loader.load();
 
@@ -390,11 +375,9 @@ public class GameController {
                 return;
             }
             chosenPokemon = pokemons.get(pokemonName);
-            // dicePaneController.setChosenPokemon(chosenPokemon);
             target = chosenPokemon.getRequirementLines();
             disableAllPokemons(true);
             showInstruction("Continue rolling to catch the chosen Pokemon.", 400, 100, 1, 0, 3000);
-            // dicePaneController.disableButtons(false, false);
         }
     }
 
@@ -453,10 +436,8 @@ public class GameController {
             GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You failed to catch the Pokemon. Better luck next time!");
             System.out.println("Failed to catch the pokemon");
             System.out.println("Requirements: " + chosenPokemon.getRequirementLines().toString());
-            // System.out.println("Roll: " + roll.toString());
             nextTurn();
         }
-        // dicePaneController.setChosenPokemon(null);
     }
 
     public Requirement getTarget() {
@@ -588,7 +569,6 @@ public class GameController {
     }
 
     public void endTurn() {
-        // Pokeball_old roll = new Pokeball_old(dicePaneController.getResult());
         catchPokemon();
     }
 
