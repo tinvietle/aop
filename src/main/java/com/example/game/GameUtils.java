@@ -65,6 +65,7 @@ public class GameUtils {
         stage.setTitle(title);
         stage.setScene(scene);
         stage.centerOnScreen();
+        stage.setMaximized(true);
         stage.show();
 
         return loader;
