@@ -71,11 +71,11 @@ public class OnlyMedia {
             // Apply media view settings
             configureMediaView(width, height);
             
-            // Apply media player settings
+            // Apply media player settings (now with autoPlay enabled for faster start)
             configureMediaPlayer();
             
-            // Play media when initialized
-            playMedia();
+            // Remove explicit call to playMedia(); autoPlay will handle playback once ready
+            // playMedia();
 
         } catch (Exception e) {
             System.err.println("Error initializing media player: " + e.getMessage());
@@ -135,7 +135,8 @@ public class OnlyMedia {
     }
 
     private void configureMediaPlayer() {
-        mediaPlayer.setAutoPlay(false); // Remove this line
+        // Set autoPlay to true for instant video playback
+        mediaPlayer.setAutoPlay(true);
         
         // Add error recovery
         mediaPlayer.setOnStalled(() -> {
