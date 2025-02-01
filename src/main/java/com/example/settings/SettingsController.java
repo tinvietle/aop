@@ -1,3 +1,11 @@
+/**
+ * OOP Java Project WiSe 2024/2025
+ * Age of Pokemon: A Pokemon-themed strategy game from Age of War
+ * @author Viet Tin Le - 1585762
+ * @author That Nhat Minh Ton - 1588341
+ * @author Tri An Yamashita - 1590012
+ * @version 1.0 - 2025-02-01
+ */
 package com.example.settings;
 
 import com.example.misc.SoundManager;
@@ -63,6 +71,20 @@ public class SettingsController {
 
     @FXML
     public void initialize() {  
+        /*
+         * Initializes the settings interface and components.
+         * 
+         * Features:
+         * - Sets up responsive UI layout bindings
+         * - Initializes volume controls
+         * - Configures sliders and labels
+         * - Handles component resizing
+         * - Sets up dynamic padding and fonts
+         * 
+         * Error Handling:
+         * - Validates FXML component injection
+         * - Reports initialization failures
+         */
         try {
             // First check if all required FXML elements are properly injected
             if (backgroundImage != null && settingsRootPane != null) {
@@ -166,6 +188,14 @@ public class SettingsController {
 
     @FXML
     private void backToMenu() {
+        /*
+         * Returns to the previous scene.
+         * 
+         * Features:
+         * - Plays button sound effect
+         * - Restores previous scene
+         * - Centers window on screen
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         if (primaryStage != null && previousScene != null) {
             primaryStage.setScene(previousScene);
@@ -174,6 +204,13 @@ public class SettingsController {
     }
 
     public void setPreviousScene(Stage stage, Scene scene) {
+        /*
+         * Stores references to the previous scene and stage.
+         * 
+         * Parameters:
+         * - stage: Stage to return to
+         * - scene: Scene to restore when going back
+         */
         this.primaryStage = stage;
         this.previousScene = scene;
     }

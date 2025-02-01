@@ -1,3 +1,11 @@
+/**
+ * OOP Java Project WiSe 2024/2025
+ * Age of Pokemon: A Pokemon-themed strategy game from Age of War
+ * @author Viet Tin Le - 1585762
+ * @author That Nhat Minh Ton - 1588341
+ * @author Tri An Yamashita - 1590012
+ * @version 1.0 - 2025-02-01
+ */
 package com.example.misc;
 
 import java.util.List;
@@ -45,6 +53,16 @@ public class Pokemon {
         @JsonProperty("requirements") List<List<Integer>> requirementMap,
         @JsonProperty("description") String description
     ) {
+        /*
+         * Creates a new Pokemon with specified attributes.
+         * 
+         * Parameters:
+         * - name: Pokemon's name
+         * - score: Points value of the Pokemon
+         * - group: Group identifier
+         * - requirementMap: List of catching requirements
+         * - description: Pokemon's description text
+         */
         this.name = name;
         this.score = score;
         this.group = group;
@@ -57,6 +75,15 @@ public class Pokemon {
     }
 
     private Requirement mapToPokeball(List<List<Integer>> requirementMap) {
+        /*
+         * Converts requirement map to Pokeball requirement object.
+         * 
+         * Parameters:
+         * - requirementMap: List of integer lists defining requirements
+         * 
+         * Returns:
+         * - Requirement object containing all Pokeball lines
+         */
         Requirement requirement = new Requirement();
         for (List<Integer> line : requirementMap) {
             Line pokeball = new Line(line);
@@ -68,6 +95,13 @@ public class Pokemon {
 
     @Override
     public String toString() {
+        /*
+         * Creates a string representation of the Pokemon.
+         * Includes group ownership, score, requirements and description.
+         * 
+         * Returns:
+         * - Formatted string with Pokemon information
+         */
         if (groupOwner != null) {
             return  "\nScore: " + score + '\n' +
                     "Group Score: " + groupScore + '\n' + 
@@ -85,6 +119,20 @@ public class Pokemon {
     }
 
     public TextFlow getStyledTooltipContent(BorderPane root) {
+        /*
+         * Creates a styled tooltip for Pokemon information display.
+         * 
+         * Parameters:
+         * - root: BorderPane for size binding reference
+         * 
+         * Returns:
+         * - TextFlow containing styled Pokemon information
+         * 
+         * Features:
+         * - Responsive font sizing
+         * - Custom styling
+         * - Centered layout
+         */
         // Create Text nodes without static styles
         Text leftCorner = new Text("<");
         leftCorner.getStyleClass().add("text-name");
@@ -145,55 +193,138 @@ public class Pokemon {
 
     // Getters and setters
     public String getName() {
+        /*
+         * Gets the Pokemon's name.
+         * 
+         * Returns:
+         * - String name of the Pokemon
+         */
         return name;
     }
 
     public String getDescription() {
+        /*
+         * Gets the Pokemon's description.
+         * 
+         * Returns:
+         * - String description of the Pokemon
+         */
         return description;
     }
 
     public int getScore() {
+        /*
+         * Gets the Pokemon's score.
+         * 
+         * Returns:
+         * - int score of the Pokemon
+         */
         return score;
     }
 
     public boolean getOwned() {
+        /*
+         * Checks if the Pokemon is owned.
+         * 
+         * Returns:
+         * - boolean indicating ownership status
+         */
         return owned;
     }
 
     public Player getOwner() {
+        /*
+         * Gets the owner of the Pokemon.
+         * 
+         * Returns:
+         * - Player who owns the Pokemon
+         */
         return owner;
     }
 
     public String getGroup() {
+        /*
+         * Gets the group of the Pokemon.
+         * 
+         * Returns:
+         * - String group identifier of the Pokemon
+         */
         return group;
     }
 
     // function for jackson to set requirement
     public Requirement getrequirement() {
+        /*
+         * Gets the requirement for the Pokemon.
+         * 
+         * Returns:
+         * - Requirement object for the Pokemon
+         */
         return requirement;
     }
 
     public void setOwned(boolean owned) {
+        /*
+         * Sets the ownership status of the Pokemon.
+         * 
+         * Parameters:
+         * - owned: boolean indicating new ownership status
+         */
         this.owned = owned;
     }
 
     public void setGroup(String group) {
+        /*
+         * Sets the group of the Pokemon.
+         * 
+         * Parameters:
+         * - group: String new group identifier
+         */
         this.group = group;
     }
 
     public void setGroupScore(int groupScore) {
+        /*
+         * Sets the group score of the Pokemon.
+         * 
+         * Parameters:
+         * - groupScore: int new group score
+         */
         this.groupScore = groupScore;
     }
 
     public void setGroupOwner(Player groupOwner) {
+        /*
+         * Sets the group owner of the Pokemon.
+         * 
+         * Parameters:
+         * - groupOwner: Player who owns the group
+         */
         this.groupOwner = groupOwner;
     }
 
     public Player getGroupOwner() {
+        /*
+         * Gets the group owner of the Pokemon.
+         * 
+         * Returns:
+         * - Player who owns the group
+         */
         return groupOwner;
     }
 
     public void setOwner(Player owner) {
+        /*
+         * Sets the owner of this Pokemon and updates related states.
+         * 
+         * Parameters:
+         * - owner: Player who caught the Pokemon
+         * 
+         * Actions:
+         * - Updates ownership status
+         * - Adds master ball requirement
+         * - Adds Pokemon to owner's collection
+         */
         this.owner = owner;
         if (!this.owned) {
             this.owned = true;
@@ -205,6 +336,12 @@ public class Pokemon {
 
     // Function to get requirement lines, used in gamecontroller
     public Requirement getRequirementLines() {
+        /*
+         * Creates a copy of Pokemon's catching requirements.
+         * 
+         * Returns:
+         * - New Requirement object with copied requirements
+         */
         return new Requirement(requirement);
     }
 }

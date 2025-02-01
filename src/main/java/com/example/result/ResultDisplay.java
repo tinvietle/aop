@@ -1,3 +1,11 @@
+/**
+ * OOP Java Project WiSe 2024/2025
+ * Age of Pokemon: A Pokemon-themed strategy game from Age of War
+ * @author Viet Tin Le - 1585762
+ * @author That Nhat Minh Ton - 1588341
+ * @author Tri An Yamashita - 1590012
+ * @version 1.0 - 2025-02-01
+ */
 package com.example.result;
 
 import java.io.IOException;
@@ -55,6 +63,16 @@ public class ResultDisplay {
 
     @FXML
     public void initialize() {
+        /*
+         * Initializes the result display scene.
+         * 
+         * Features:
+         * - Loads trophy image
+         * - Sets up background music
+         * - Configures button actions
+         * - Establishes responsive layout bindings
+         * - Sets up leaderboard styling
+         */
         try {
             Image trophyImg = new Image(getClass().getResourceAsStream("/com/example/assets/trophy.png"));
             if (trophyImg.isError()) {
@@ -174,6 +192,21 @@ public class ResultDisplay {
     }
 
     public void displayResults(List<Player> players) {
+        /*
+         * Displays final game results and rankings.
+         * 
+         * Parameters:
+         * - players: List of players to rank and display
+         * 
+         * Features:
+         * - Validates player count (2-6)
+         * - Sorts players by score, Pokemon count, and groups
+         * - Handles tie situations
+         * - Creates formatted leaderboard display
+         * 
+         * Throws:
+         * - IllegalArgumentException if player count is invalid
+         */
         if (players.size() < 2 || players.size() > 6) {
             throw new IllegalArgumentException("Player count must be between 2 and 6");
         }
@@ -243,6 +276,18 @@ public class ResultDisplay {
     }
 
     private List<Player> findWinners(List<Player> players) {
+        /*
+         * Identifies players tied for first place.
+         * 
+         * Parameters:
+         * - players: Sorted list of players
+         * 
+         * Returns:
+         * - List of players sharing the top score/stats
+         * 
+         * Note:
+         * - Considers score, captured Pokemon count, and group count
+         */
         List<Player> topPlayers = new ArrayList<>();
         topPlayers.add(players.get(0));
         for (int i = 1; i < players.size(); i++) {
@@ -258,6 +303,15 @@ public class ResultDisplay {
     }
 
     private void handleNewGame() {
+        /*
+         * Handles new game button click.
+         * 
+         * Features:
+         * - Loads main menu scene
+         * - Configures stage properties
+         * - Centers window on screen
+         * - Handles loading errors
+         */
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/menu/menu.fxml"));
             Scene menuScene = new Scene(fxmlLoader.load()); 
@@ -277,6 +331,12 @@ public class ResultDisplay {
     }
 
     private void handleExit() {
+        /*
+         * Handles exit button click.
+         * 
+         * Features:
+         * - Calls utility method to close program
+         */
         Utils.closeProgram();
     }
 }
