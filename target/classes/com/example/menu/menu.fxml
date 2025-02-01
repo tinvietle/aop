@@ -25,7 +25,7 @@
             <top>
                 <Label fx:id="titleText" styleClass="titleText" text="Age Of Pokemon" BorderPane.alignment="CENTER">
                     <font>
-                        <Font size="80.0" />
+                        <Font size="60.0" />
                     </font>
                     <effect>
                         <Glow level="0.6">
@@ -60,7 +60,7 @@
                                 </Glow>
                             </effect>
                         </Button>
-                        <Button fx:id="exitButton" prefHeight="60.0" prefWidth="500.0" styleClass="buttonText" text="Credits">
+                        <Button fx:id="creditButton" prefHeight="60.0" prefWidth="500.0" styleClass="buttonText" text="Credits">
                             <effect>
                                 <Glow level="0.3">
                                     <input>

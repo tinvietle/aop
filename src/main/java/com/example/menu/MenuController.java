@@ -6,10 +6,9 @@ import java.io.IOException;
 import com.example.App;
 import com.example.capture.OnlyMedia;
 import com.example.misc.SoundManager;
-import com.example.misc.Utils;
+import com.example.register.RegisterController;
 import com.example.settings.SettingsController;
 
-import javafx.animation.TranslateTransition;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +20,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class MenuController {
 
@@ -35,7 +33,7 @@ public class MenuController {
     private Button settingsButton;
 
     @FXML
-    private Button exitButton;
+    private Button creditButton;
 
     @FXML
     private StackPane rootPane;  // Add this FXML injection for the root pane
@@ -66,12 +64,12 @@ public class MenuController {
         // Bind buttons width to the root pane width
         startButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
         settingsButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
-        exitButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
+        creditButton.prefWidthProperty().bind(rootPane.widthProperty().multiply(0.6));
 
         // Bind buttons height to the root pane height
         startButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
         settingsButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
-        exitButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
+        creditButton.prefHeightProperty().bind(rootPane.heightProperty().multiply(0.1));
 
         // Bind font size to scene width, and add other attributes: bold, black
         titleText.styleProperty().bind(Bindings.concat(
@@ -82,50 +80,33 @@ public class MenuController {
                 "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";"));
         settingsButton.styleProperty().bind(Bindings.concat(
                 "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";"));
-        exitButton.styleProperty().bind(Bindings.concat(
+        creditButton.styleProperty().bind(Bindings.concat(
                 "-fx-font-size: ", rootPane.widthProperty().multiply(0.02), ";"));
 
         // Set up button event handlers
         startButton.setOnAction(event -> handleStartGame());
         settingsButton.setOnAction(event -> handleSettings());
-        exitButton.setOnAction(event -> handleExit());
+        creditButton.setOnAction(event -> handlecredit());
     }
 
     private void handleStartGame() {
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
-            // Load the next screen first
-            Parent registerRoot = App.loadFXML("register/register");
-            Scene currentScene = rootPane.getScene();
-            double sceneWidth = currentScene.getWidth();
-            
-            // Create a container for both screens
-            StackPane container = new StackPane();
-            registerRoot.setTranslateX(sceneWidth);
-            container.getChildren().addAll(rootPane, registerRoot);
-            
-            // Set the container as the new root
-            currentScene.setRoot(container);
-            
-            // Create parallel transitions for both screens
-            TranslateTransition slideOut = new TranslateTransition(Duration.millis(250), rootPane);
-            slideOut.setToX(-sceneWidth);
-            
-            TranslateTransition slideIn = new TranslateTransition(Duration.millis(250), registerRoot);
-            slideIn.setToX(0);
-            
-            // Play both transitions
-            slideOut.play();
-            slideIn.play();
-            
-            // When animation finishes, clean up
-            slideIn.setOnFinished(event -> {
-                VideoPlayer.stopBackgroundVideo(backgroundVideo);
-                container.getChildren().remove(rootPane);
-            });
-            
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("register/register.fxml"));
+            Parent registerRoot = loader.load();
+            RegisterController registerController = loader.getController();
+            Scene registerScene = new Scene(registerRoot);
+            Stage stage = (Stage) rootPane.getScene().getWindow();
+
+            registerController.setPreviousScene(stage, stage.getScene());
+            stage.setScene(registerScene);
+            stage.centerOnScreen();
+
+            // // Stop the background video
+            // VideoPlayer.stopBackgroundVideo(backgroundVideo);
+
         } catch (Exception e) {
-            System.err.println("Error during transition: " + e.getMessage());
+            System.err.println("Error loading register scene: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -152,7 +133,7 @@ public class MenuController {
         }
     }
 
-    private void handleExit() {
+    private void handlecredit() {
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         // System.out.println("Exiting application");
         // Utils.closeProgram();

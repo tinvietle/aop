@@ -6,15 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
-import com.example.misc.Utils;
-import com.example.misc.Pokemon;
-import com.example.misc.Pokeball_old;
 import com.example.misc.Line;
-import com.example.misc.Requirement;
+import com.example.misc.SoundManager;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -22,7 +18,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -41,9 +36,6 @@ public class DiceController {
     private int remainingDice = 0;
     private StringBuilder result = new StringBuilder();  
     private Runnable onRollComplete; // Callback for roll completion
-    // private Pokemon chosenPokemon;
-    private Map<String, Boolean> listRequirementsMap;
-    private List<String> requirementList;
 
     @FXML
     private Pane Pane;
@@ -126,6 +118,7 @@ public class DiceController {
 
     @FXML
     void rollHandler(ActionEvent event) {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         disableButtons(true, true);
         List<ImageView> diceImages = List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7);
 
@@ -426,6 +419,7 @@ public class DiceController {
 
     @FXML
     void endTurn(ActionEvent event) {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         if (firstRoll) {
             return;
         }

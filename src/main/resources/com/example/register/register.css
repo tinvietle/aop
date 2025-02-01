@@ -1,0 +1,140 @@
+.root-vbox {
+    -fx-background-color: rgba(0, 0, 0, 0.8);
+    -fx-spacing: 15;
+    -fx-alignment: top-center;
+}
+
+.main-title {
+    -fx-font-family: 'Pocket Monk';
+    -fx-font-size: 62;
+    -fx-text-fill: linear-gradient(to bottom, #ffd700, #ff8c00);
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, black, 10, 0.5, 0, 0);
+}
+
+.error-label {
+    -fx-text-fill: red;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}
+
+.subtitle-label {
+    -fx-font-size: 24;
+    -fx-text-fill: white;
+}
+
+.player-spinner {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f0f0f0);
+    -fx-border-color: linear-gradient(to bottom, #ffd700, #ff8c00);
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 5, 0.2, 0, 0);
+}
+
+.player-spinner .text-field {
+    -fx-font-size: 16px;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 5 10;
+    -fx-alignment: center;
+}
+
+.player-spinner .increment-arrow-button,
+.player-spinner .decrement-arrow-button {
+    -fx-background-color: linear-gradient(to bottom, #ffd700, #ff8c00);
+    -fx-background-radius: 3;
+    -fx-padding: 5 8 5 8;
+}
+
+.player-spinner .increment-arrow,
+.player-spinner .decrement-arrow {
+    -fx-background-color: white;
+}
+
+.player-names-container {
+    -fx-background-color: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+    -fx-padding: 15;
+    -fx-background-radius: 10;
+    -fx-border-color: linear-gradient(to bottom, #ffd700, #ff8c00);
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 15, 0.5, 0, 0);
+    -fx-alignment: top-center;
+    -fx-spacing: 12;
+}
+
+.text-field {
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+    -fx-padding: 4;
+    -fx-font-size: 12px;
+}
+
+.titleLabel {
+    -fx-text-fill: linear-gradient(to bottom, #4e4407, #ff8c00);
+    -fx-font-family: "Pocket Monk";
+}
+
+.start-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4CAF50;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: #4CAF50;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+}
+
+.start-button:hover {
+    -fx-background-color: rgba(74, 175, 80, 0.2);
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f44336;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: #f44336;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(244, 67, 54, 0.2);
+}
+
+.player-names-container .text-field {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-border-color: linear-gradient(to bottom, #ffd700, #ff8c00);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 4 8; /* Adjust padding to make the text field smaller */
+    -fx-font-size: 10px; /* Adjust font size to make the text field smaller */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0.1, 0, 0);
+}
+
+.player-names-container .text-field:focused {
+    -fx-background-color: white;
+    -fx-border-color: #ffd700;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(three-pass-box, rgba(255,215,0,0.4), 5, 0.3, 0, 0);
+}
+
+.difficulty-combo-box {
+    -fx-pref-width: 150px; 
+    -fx-pref-height: 30px; 
+    -fx-font-size: 12px; 
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f0f0f0);
+    -fx-border-color: linear-gradient(to bottom, #ffd700, #ff8c00);
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10;
+}
+
+.difficulty-combo-box .list-cell {
+    -fx-font-size: 12px; /* Smaller font size */
+}
