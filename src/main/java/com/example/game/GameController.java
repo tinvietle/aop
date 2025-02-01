@@ -463,23 +463,20 @@ public class GameController {
     }
 
     private void playVideo(Stage stage, String videoPath) throws IOException {
-        // Stop BGM before playing video
-        SoundManager.getInstance().stopBGM();
+        // Pause BGM before playing video instead of stopping it
+        SoundManager.getInstance().pauseBGM();
 
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));
         Scene onlyMediaScene = new Scene(fxmlLoader.load());
         OnlyMedia controller = fxmlLoader.getController();
 
-        // Get the size of current stage to pass to the controller
         controller.initializeMedia(videoPath, stage.getWidth(), stage.getHeight());
-
-        // Pass the stage and the previous scene to the controller
         controller.setPreviousScene(stage, stage.getScene());
         
-        // Add a callback to handle turn transition after video ends
+        // When video finishes, resume BGM using the new resumeBGM method
         controller.setOnVideoFinished(() -> {
             javafx.application.Platform.runLater(() -> {
-                SoundManager.getInstance().playRandomBGM();
+                SoundManager.getInstance().resumeBGM();
                 if (checkEndGame()) {
                     try {
                         endGame();
