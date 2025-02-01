@@ -30,7 +30,7 @@ public class VideoPlayer {
     private static void initializeMediaPlayer(MediaView mediaView) {
         try {
             isMediaLoading = true;
-            String videoPath = Paths.get("src\\main\\resources\\com\\example\\assets\\intro_pokemon_2.mp4").toUri().toString();
+            String videoPath = VideoPlayer.class.getResource("/com/example/assets/intro_pokemon_2.mp4").toExternalForm();
             
             // Create new Media instance
             currentMedia = new Media(videoPath);

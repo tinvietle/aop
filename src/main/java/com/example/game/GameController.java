@@ -420,8 +420,8 @@ public class GameController {
             }
             updatePlayerBoard(players);
 
-            String path = "src\\main\\resources\\com\\example\\assets\\stocks\\%s.mp4";
-            String videoPath = Paths.get(String.format(path, chosenPokemon.getName())).toUri().toString();
+            String path = "/com/example/assets/stocks/%s.mp4";
+            String videoPath = getClass().getResource(String.format(path, chosenPokemon.getName())).toExternalForm();
 
             try {
                 playVideo((Stage) playerInfo.getScene().getWindow(), videoPath);
@@ -622,7 +622,7 @@ public class GameController {
         GameUtils.loadScene("/com/example/result/result.fxml", "Results", stage, loader -> {
             Parent root = loader.getRoot(); // Reuse the already loaded root
             // Set background image programmatically
-            String imagePath = Paths.get("src\\main\\resources\\com\\example\\assets\\result.jpg").toUri().toString();
+            String imagePath = getClass().getResource("/com/example/assets/result.jpg").toExternalForm();
             Image backgroundImage = new Image(imagePath);
             BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
             if (root instanceof HBox) {
