@@ -16,6 +16,8 @@ public class SoundManager {
     private double sfxVolume = 0.5;
     private double masterVolume = 1.0;
     private double voiceVolume = 0.5;
+    // New field to hold the currently playing voice player
+    private MediaPlayer currentVoicePlayer;
 
     private SoundManager() {
         bgmList = new ArrayList<>();
@@ -108,12 +110,24 @@ public class SoundManager {
 
     public void playVoice(String voicePath) {
         try {
+            // Pause BGM before playing voice (if desired)
+    
             Media voiceMedia = new Media(getClass().getResource(voicePath).toString());
-            MediaPlayer voicePlayer = new MediaPlayer(voiceMedia);
-            voicePlayer.setVolume(voiceVolume * masterVolume);
-            voicePlayer.play();
+            currentVoicePlayer = new MediaPlayer(voiceMedia);
+            currentVoicePlayer.setVolume(voiceVolume * masterVolume);
+            currentVoicePlayer.setOnError(() -> {
+                System.err.println("Voice Media error: " + currentVoicePlayer.getError().getMessage());
+                currentVoicePlayer = null;
+            });
+            currentVoicePlayer.setOnEndOfMedia(() -> {
+                currentVoicePlayer.dispose();
+                currentVoicePlayer = null;
+            });
+            // Start voice playback after media is ready
+            currentVoicePlayer.setOnReady(() -> currentVoicePlayer.play());
         } catch (Exception e) {
             System.err.println("Error playing voice: " + e.getMessage());
+            currentVoicePlayer = null;
         }
     }
 
