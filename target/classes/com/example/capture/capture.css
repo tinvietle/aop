@@ -1,0 +1,7 @@
+.labelText{
+    -fx-background-color:  rgba(0, 0, 0, 0.7);
+    -fx-background-radius:  10px;
+    -fx-border-radius: 1px;
+    -fx-padding: 15px;
+    -fx-alignment: center;
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<Pane fx:id="root" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.help.HelpController">
+   <children>
+      <StackPane fx:id="contentPane">
+         <children>
+            <ImageView fx:id="gameTutorContent" fitHeight="500.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/helpScene/tutorial_1.png" />
+               </image>
+            </ImageView>
+         </children>
+      </StackPane>
+      <ImageView fx:id="frame" fitHeight="500.0" fitWidth="800.0" pickOnBounds="true">
+         <image>
+            <Image url="@../assets/helpScene/frame.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="nextButton" fitHeight="60.0" fitWidth="153.0" layoutX="759.0" layoutY="220.0" onMouseClicked="#onNextButtonClicked" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/helpScene/button.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="prevButton" fitHeight="60.0" fitWidth="50.0" layoutX="15.0" layoutY="220.0" onMouseClicked="#onPrevButtonClicked" pickOnBounds="true" preserveRatio="true" rotate="-180.0">
+         <image>
+            <Image url="@../assets/helpScene/button.png" />
+         </image>
+      </ImageView>
+      <Text fx:id="closeButton" fill="WHITE" layoutX="374.0" layoutY="480.0" onMouseClicked="#closeHelp" strokeType="OUTSIDE" strokeWidth="0.0" style="-fx-cursor: hand;" text="Close">
+         <font>
+            <Font name="Pocket Monk" size="22.0" />
+         </font>
+      </Text>
+   </children>
+</Pane>

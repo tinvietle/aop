@@ -1,0 +1,638 @@
+package com.example.game;
+
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
+import com.example.App;
+import com.example.capture.OnlyMedia;
+import com.example.help.HelpController;
+import com.example.misc.Group;
+import com.example.misc.GroupReader;
+import com.example.misc.Line;
+import com.example.misc.Player;
+import com.example.misc.Pokemon;
+import com.example.misc.PokemonReader;
+import com.example.misc.Requirement;
+import com.example.misc.SoundManager;
+import com.example.misc.Utils;
+import com.example.result.ResultDisplay;
+import com.example.settings.SettingsController;
+
+import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
+import javafx.beans.binding.Bindings;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+
+
+public class GameController {
+    // Constants
+    private static final int FADE_DURATION = 1000;
+
+    // Data Structures
+    private List<Player> players = new ArrayList<>();
+    private HashMap<String, Pokemon> pokemons = new HashMap<>();
+    private HashMap<String, ImageView> pokemonImages = new HashMap<>();
+    private HashMap<String, Group> groups = new HashMap<>();
+
+    // Game State
+    private Player curPlayer;
+    private int currentPlayerIndex = 0;
+    private Pokemon chosenPokemon;
+    private boolean isPokemonActive = false;
+    private boolean isInstruction = true;
+    private Requirement target;
+
+    private String difficulty;
+
+    // FXML Components
+    @FXML private GridPane playerInfo;
+    @FXML private DiceController dicePaneController;
+    @FXML private BorderPane borderPane;
+    @FXML private Pane dicePane;
+    @FXML private MenuBar menuBar;
+    @FXML private ImageView mapView;
+    @FXML private StackPane stackPane;
+    @FXML private Menu fileMenu, editMenu, helpMenu;
+    @FXML private MenuItem instructionButton;
+    @FXML private Accordion accordionView;
+    @FXML private StackPane turnOverlay, welcomeOverlay;
+    @FXML private Text turnText, welcomeText;
+    @FXML private Label turnLabel;
+
+    // Pokemon ImageViews
+    @FXML private ImageView cloyster, galvantula, gengar, gyarados, hawlucha, helioptile, 
+                         jellicent, klingklang, ludicolo, machamp, manectric, 
+                         pangoro, pikachu, talonflame;
+
+    private boolean helpSceneOpened = false;
+
+    // Constructor
+    public GameController(String difficulty) {
+        this.difficulty = difficulty;
+        if (this.difficulty != null) {
+            PokemonReader reader = new PokemonReader(this.difficulty);
+            reader.readPokemons().forEach(pokemon -> pokemons.put(pokemon.getName(), pokemon));
+
+            GroupReader groupReader = new GroupReader();
+            groupReader.readGroups().forEach(group -> {
+                group.mapToPokemons(pokemons);
+                groups.put(group.getName(), group);
+                for (Pokemon pokemon : group.getPokemons()) {
+                    pokemon.setGroupScore(group.getScore());
+                }
+            });
+        }
+    }
+
+    @FXML
+    private void initialize() throws IOException {
+        initializePokemonImages();
+        setupUIBindings();
+        setupDiceController();
+        initializeTurnOverlay();
+    }
+
+    private void initializePokemonImages() {
+        // Map ImageViews to Pokemon names
+        pokemonImages.put("cloyster", cloyster);
+        pokemonImages.put("galvantula", galvantula);
+        pokemonImages.put("gengar", gengar);
+        pokemonImages.put("gyarados", gyarados);
+        pokemonImages.put("hawlucha", hawlucha);
+        pokemonImages.put("helioptile", helioptile);
+        pokemonImages.put("jellicent", jellicent);
+        pokemonImages.put("klingklang", klingklang);
+        pokemonImages.put("ludicolo", ludicolo);
+        pokemonImages.put("machamp", machamp);
+        pokemonImages.put("manectric", manectric);
+        pokemonImages.put("pangoro", pangoro);
+        pokemonImages.put("pikachu", pikachu);
+        pokemonImages.put("talonflame", talonflame);
+
+        // Listen for when the BorderPane is added to a Scene
+        borderPane.sceneProperty().addListener((observable, oldScene, newScene) -> {
+            if (newScene != null) {
+                String css = this.getClass().getResource("/com/example/game/style.css").toExternalForm();
+                newScene.getStylesheets().add(css);
+            }
+        });
+
+        pokemons.values().forEach(pokemon -> {
+            ImageView image = pokemonImages.get(pokemon.getName());
+            GameUtils.updateToolTip(pokemon, image, borderPane);
+        });
+
+        disableAllPokemons(true);
+    }
+
+    private void setupUIBindings() {
+        // Get screen dimensions
+        double screenWidth = Screen.getPrimary().getBounds().getWidth();
+        double screenHeight = Screen.getPrimary().getBounds().getHeight();
+
+        // Set stackPane size to screen dimensions
+        stackPane.setPrefWidth(screenWidth);
+        stackPane.setPrefHeight(screenHeight);
+
+        // Set menuBar and UI dimensions based on screen size
+        menuBar.prefWidthProperty().bind(borderPane.widthProperty());
+        menuBar.prefHeightProperty().bind(borderPane.heightProperty().multiply(24.0 / 500.0));
+
+        stackPane.prefWidthProperty().bind(borderPane.widthProperty());
+        stackPane.prefHeightProperty().bind(borderPane.heightProperty().multiply(400.0 / 500.0));
+
+        mapView.fitWidthProperty().bind(stackPane.widthProperty());
+        mapView.fitHeightProperty().bind(stackPane.heightProperty());
+
+        dicePane.prefWidthProperty().bind(borderPane.widthProperty());
+        dicePane.prefHeightProperty().bind(borderPane.heightProperty().multiply(76.0 / 500.0));
+
+        playerInfo.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.2));
+        playerInfo.prefHeightProperty().bind(borderPane.heightProperty().multiply(200 / 500.0));
+
+        accordionView.prefWidthProperty().bind(borderPane.widthProperty().multiply(0.2));
+        accordionView.prefHeightProperty().bind(borderPane.heightProperty().multiply(200 / 500.0));
+
+        // Bind turn label
+        turnLabel.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", borderPane.heightProperty().multiply(0.05), ";"));
+
+        // Bind all ImageView sizes to the stackPane size
+        bindImageView(talonflame, 490.0, 165.0, 0.2, 0.2);   // Example ratios
+        bindImageView(cloyster, 249.0, 310.0, 0.09, 0.1);
+        bindImageView(galvantula, 300.0, 253.0, 0.09, 0.1);
+        bindImageView(gengar, 220.0, 33.0, 0.09, 0.1);
+        bindImageView(gyarados, 500, 108.0, 0.15, 0.15);
+        bindImageView(hawlucha, 480.0, 300.0, 0.09, 0.1);
+        bindImageView(helioptile, 418.0, 253.0, 0.07, 0.07);
+        bindImageView(jellicent, 500.0, 29.0, 0.09, 0.09);
+        bindImageView(klingklang, 225, 200, 0.09, 0.1);
+        bindImageView(ludicolo, 210.0,100.0, 0.09, 0.1);
+        bindImageView(machamp, 350.0, 33.0, 0.15, 0.15);
+        bindImageView(manectric, 420.0, 335.0, 0.09, 0.1);
+        bindImageView(pangoro, 380.0, 130.0, 0.13, 0.13);
+        bindImageView(pikachu, 145.0, 253.0, 0.07, 0.07);
+
+        // Bind text of each Menu to the BorderPane
+        fileMenu.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", borderPane.heightProperty().multiply(0.02), ";",
+                "-fx-text-fill: black;"));
+        editMenu.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", borderPane.heightProperty().multiply(0.02), ";",
+                "-fx-text-fill: black;")); 
+        helpMenu.styleProperty().bind(Bindings.concat(
+                "-fx-font-size: ", borderPane.heightProperty().multiply(0.02), ";",
+                "-fx-text-fill: black;"));
+    }
+
+    private void setupDiceController() {
+        dicePaneController.setGameController(this);
+        dicePaneController.setOnRollComplete(this::endTurn);
+    }
+
+    private void initializeTurnOverlay() {
+        try {
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
+            StackPane overlay = loader.load();
+            turnOverlay = overlay;
+            turnText = (Text) overlay.lookup("#turnText");
+            turnOverlay.setOpacity(0);
+            stackPane.getChildren().add(overlay);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void newGame() throws IOException {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
+        Stage stage = (Stage) borderPane.getScene().getWindow();
+        GameUtils.loadScene("/com/example/menu/menu.fxml", "Age of Pokemon", stage, null);
+    }
+
+    @FXML
+    private void closeProgram() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
+        Utils.closeProgram();
+    }
+
+    @FXML
+    private void openSettings() throws IOException {   
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
+        try {
+            GameUtils.loadScene("/com/example/settings/settings.fxml", "Settings", (Stage) borderPane.getScene().getWindow(), loader -> {
+                SettingsController settingsController = loader.getController();
+                settingsController.setPreviousScene((Stage) borderPane.getScene().getWindow(), borderPane.getScene());
+            });
+        } catch (Exception e) {
+            System.err.println("Error opening settings: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void openHelpScene() throws IOException {   
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/help/help.fxml"));
+            Parent helpRoot = loader.load();
+
+            HelpController helpController = loader.getController();
+
+            // Get the root StackPane of the current scene
+            StackPane rootPane = (StackPane) borderPane.getScene().getRoot();
+
+            // Apply Gaussian blur only to the rootPane (background content)
+            StackPane backgrounPane = new StackPane();
+            backgrounPane.getChildren().addAll(rootPane.getChildren());
+            rootPane.getChildren().clear();
+
+            // Apply the blur effect to the background
+            GaussianBlur blur = new GaussianBlur(10);
+            backgrounPane.setEffect(blur);
+
+            // Add the background to the root pane
+            rootPane.getChildren().add(backgrounPane);
+
+            double prefHeight = borderPane.getHeight() / 2 * 1.3;
+            double prefWidth = prefHeight * 1.6;          
+
+            // Make sure helpRoot is scaleable
+            if (helpRoot instanceof Region) {
+                Region region = (Region) helpRoot;
+                region.setMaxWidth(prefWidth);
+                region.setMaxHeight(prefHeight);
+            }
+
+            // Create an overlay to prevent clicking on the background
+            Pane overlay = new Pane();
+            overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5);");
+            overlay.setPrefSize(rootPane.getWidth(), rootPane.getHeight());
+            rootPane.getChildren().add(overlay);
+
+            // Add the popup to the root pane and center it
+            rootPane.getChildren().add(helpRoot);
+            StackPane.setAlignment(helpRoot, Pos.BOTTOM_CENTER); // Center the popup
+
+            // Calculate the starting Y position (below the screen)
+            helpRoot.setTranslateY(rootPane.getHeight()); // Start at the bottom of the scene
+
+            // Animate the popup (wipe in from bottom)
+            TranslateTransition transition = new TranslateTransition(Duration.millis(300), helpRoot);
+            transition.setFromY(rootPane.getHeight()); // Start position at the bottom
+            transition.setToY(-rootPane.getHeight()*0.5 + prefHeight/2.2); // Final position centered (300px for the height)
+            transition.setInterpolator(Interpolator.EASE_OUT);
+            transition.play();
+
+            // Add listener to scale the popup when the scene is resized
+            rootPane.heightProperty().addListener((obs, oldVal, newVal) -> {
+                double newHeight = newVal.doubleValue() / 2 * 1.3;
+                double newWidth = newHeight * 1.6;
+                if (helpRoot instanceof Region) {
+                    Region region = (Region) helpRoot;
+                    region.setMaxWidth(newWidth);
+                    region.setMaxHeight(newHeight);
+                    
+                }
+                helpRoot.setTranslateY(-rootPane.getHeight() * 0.5 + newHeight / 2.2); // Update position
+            });
+
+            // Handle closing the popup (remove blur and popup immediately)
+            helpController.setCloseAction((Void v) -> {
+                rootPane.getChildren().remove(helpRoot); // Remove the popup immediately
+                rootPane.getChildren().remove(overlay); // Remove the overlay
+                backgrounPane.setEffect(null); // Remove the blur effect from the background
+                if (!helpSceneOpened) {
+                    showTurnTransition();
+                    helpSceneOpened = true;
+                }
+                
+            });
+
+        } catch (Exception e) {
+            System.err.println("Error opening settings: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void userInstruction() {
+        SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
+        isInstruction = !isInstruction;
+        instructionButton.setText(isInstruction ? "Hide Instruction" : "Show Instruction");
+    }
+
+    @FXML
+    private void choosePokemon(MouseEvent event) {
+        if (!isPokemonActive) return;
+
+        String pokemonName = ((Node) event.getSource()).getId();
+        Pokemon attemptedPokemon = pokemons.get(pokemonName);
+        if (confirmChoose()) {
+            SoundManager.getInstance().playVoice("/com/example/assets/voice/" + pokemonName + ".wav");
+            if (attemptedPokemon.getGroupOwner() != null) {
+                GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "This Pokemon is part of a group already owned by Player " + attemptedPokemon.getGroupOwner().getName());
+                return;
+            }
+            if (attemptedPokemon.getOwner() == curPlayer) {
+                GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "You already own this Pokemon.");
+                return;
+            }
+            chosenPokemon = pokemons.get(pokemonName);
+            target = chosenPokemon.getRequirementLines();
+            disableAllPokemons(true);
+            showInstruction("Continue rolling to catch the chosen Pokemon.", 400, 100, 1, 0, 3000);
+        }
+    }
+
+    private boolean confirmChoose() {
+        Alert alert = Utils.confirmBox("Choose a Pokemon", "Are you sure?", "Press OK to choose.");
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == ButtonType.OK;
+    }
+
+    @FXML
+    public void catchPokemon() {
+        if (chosenPokemon == null) {
+            GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You have not chosen a pokemon. Better luck next time!");
+            nextTurn();
+            return;
+        }
+        if (target != null && target.length() == 0) {
+
+            if (chosenPokemon.getOwner() != null) {
+                chosenPokemon.getOwner().updateScore(-chosenPokemon.getScore());
+                chosenPokemon.getOwner().removePokemon(chosenPokemon);
+            }
+        
+            curPlayer.updateScore(chosenPokemon.getScore());
+            chosenPokemon.setOwner(curPlayer);
+            Group group = groups.get(chosenPokemon.getGroup());
+            if (group != null && group.checkOwned(curPlayer)) {
+                curPlayer.updateScore(group.getScore());
+                curPlayer.updateNumGroup();
+                for (Pokemon pokemon : group.getPokemons()) {
+                    pokemon.setGroupOwner(curPlayer);
+                    ImageView image = pokemonImages.get(pokemon.getName());
+                    image.setOpacity(0.5);
+                    GameUtils.updateToolTip(pokemon, image, borderPane);
+
+                    curPlayer.updateScore(-pokemon.getScore());
+                }
+            } else {
+                ImageView image = pokemonImages.get(chosenPokemon.getName());
+                GameUtils.updateToolTip(chosenPokemon, image, borderPane);
+            }
+            updatePlayerBoard(players);
+
+            String path = "src\\main\\resources\\com\\example\\assets\\stocks\\%s.mp4";
+            String videoPath = Paths.get(String.format(path, chosenPokemon.getName())).toUri().toString();
+
+            try {
+                playVideo((Stage) playerInfo.getScene().getWindow(), videoPath);
+            } catch (IOException e) {
+                e.printStackTrace();
+                nextTurn(); // Ensure turn proceeds even if video fails
+            }
+        } else {
+            GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You failed to catch the Pokemon. Better luck next time!");
+            nextTurn();
+        }
+    }
+
+    public Requirement getTarget() {
+        return target;
+    }
+    
+    public void reduceTarget(Line line) {
+        this.target.removeLine(line);
+    }
+
+    public void disableAllPokemons(boolean disable) {
+        isPokemonActive = !disable;
+        if (disable) {
+            pokemons.values().forEach(pokemon -> GameUtils.disablePokemon(pokemonImages.get(pokemon.getName())));
+        } else {
+            for (Pokemon pokemon : pokemons.values()) {
+                ImageView image = pokemonImages.get(pokemon.getName());
+                GameUtils.enablePokemon(image);
+            }
+        }
+    }
+
+    private void bindImageView(ImageView imageView, double X, double Y, double width, double height) {
+        imageView.layoutXProperty().bind(stackPane.widthProperty().multiply(X / 800.0));
+        imageView.layoutYProperty().bind(stackPane.heightProperty().multiply(Y / 400.0));
+        imageView.fitWidthProperty().bind(stackPane.widthProperty().multiply(width));
+        imageView.fitHeightProperty().bind(stackPane.heightProperty().multiply(height));
+    }
+
+    private void playVideo(Stage stage, String videoPath) throws IOException {
+        // Pause BGM before playing video instead of stopping it
+        SoundManager.getInstance().pauseBGM();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/capture/onlymedia.fxml"));
+        Scene onlyMediaScene = new Scene(fxmlLoader.load());
+        OnlyMedia controller = fxmlLoader.getController();
+
+        controller.initializeMedia(videoPath, stage.getWidth(), stage.getHeight());
+        controller.setPreviousScene(stage, stage.getScene());
+        
+        // When video finishes, resume BGM using the new resumeBGM method
+        controller.setOnVideoFinished(() -> {
+            javafx.application.Platform.runLater(() -> {
+                SoundManager.getInstance().resumeBGM();
+                if (checkEndGame()) {
+                    try {
+                        endGame();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    nextTurn();
+                }
+            });
+        });
+
+        stage.setTitle("JavaFX MediaPlayer!");
+        stage.setScene(onlyMediaScene);
+        stage.setResizable(true);
+        stage.centerOnScreen();
+        stage.show();
+    }
+
+    public void registerPlayer(String[] names) {
+        for (String name : names) {
+            Player player = new Player(name);
+            players.add(player);
+        }
+
+        updatePlayerBoard(players);
+        // Set initial player and show first turn
+        setCurPlayer(players.get(0));
+        if (!helpSceneOpened){
+            try {
+                openHelpScene();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else{
+            showTurnTransition();
+        }
+    }
+
+    private void showTurnTransition() {
+        dicePaneController.disableButtons(true, true);
+
+        if (turnOverlay == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
+                StackPane overlay = loader.load();
+                turnOverlay = overlay;
+                turnText = (Text) overlay.lookup("#turnText");
+                stackPane.getChildren().add(overlay);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        turnText.setText(curPlayer.getName() + "'s Turn");
+        GameUtils.fadeTransition(turnOverlay, FADE_DURATION, 2000, () -> {
+            showInstruction("Click on the Roll button at the bottom left corner to roll one time.", 400, 100, 1, 0, 3000);
+            if (isInstruction) {
+                GameUtils.delay(3000, () -> dicePaneController.disableButtons(false, false));
+            } else {
+                dicePaneController.disableButtons(false, false);
+            }
+        });
+    }
+
+    public void updatePlayerBoard(List<Player> players) {
+        playerInfo.getChildren().clear();
+        Label playerHeader = new Label("Players");
+        Label scoreHeader = new Label("Scores");
+        playerInfo.add(playerHeader, 0, 0);
+        playerInfo.add(scoreHeader, 1, 0);
+
+        int i = 0;
+        for (Player player: players) {
+            Label name = new Label(player.getName());
+            Label score = new Label(Integer.toString(player.getScore()));
+            playerInfo.add(name, 0, i+1);
+            playerInfo.add(score, 1, i+1);
+            i++;
+        }
+    }
+
+    public void endTurn() {
+        catchPokemon();
+    }
+
+    public void nextTurn() {
+        chosenPokemon = null;
+        dicePaneController.resetDice();
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+        target = null;
+        setCurPlayer(players.get(currentPlayerIndex));
+        showTurnTransition();
+    }
+
+    public void setCurPlayer(Player player) {
+        this.curPlayer = player;
+        turnLabel.setText("Turn: " + player.getName());
+    }
+
+    public boolean showInstruction(String text, double width, double height, double x, double y, long outDelay) {
+        try {
+            if (!isInstruction) return false;
+
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/Dialog.fxml"));
+            StackPane dialog = loader.load();
+            DialogController dialogController = loader.getController();
+
+            // Set initial opacity to 0 to prevent flashing
+            dialog.setOpacity(0);
+            
+            // Calculate center position if x and y are 0
+            if (x == 0 && y == 0) {
+                double screenWidth = Screen.getPrimary().getBounds().getWidth();
+                double screenHeight = Screen.getPrimary().getBounds().getHeight();
+                x = (screenWidth - width) / 2;
+                y = (screenHeight - height) / 2;
+            }
+            
+            dialogController.customizeDialog(text, width, height, x, y);
+            stackPane.getChildren().add(dialog);
+            
+            GameUtils.fadeTransition((Node) dialog, FADE_DURATION, outDelay, () -> {
+                stackPane.getChildren().remove(dialog);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    private boolean checkEndGame() {
+        for (Pokemon pokemon : pokemons.values()) {
+            if (pokemon.getOwner() == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void endGame() throws IOException {
+        Stage stage = (Stage) borderPane.getScene().getWindow(); 
+        GameUtils.loadScene("/com/example/result/result.fxml", "Results", stage, loader -> {
+            Parent root = loader.getRoot(); // Reuse the already loaded root
+            // Set background image programmatically
+            String imagePath = Paths.get("src\\main\\resources\\com\\example\\assets\\result.jpg").toUri().toString();
+            Image backgroundImage = new Image(imagePath);
+            BackgroundImage background = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+            if (root instanceof HBox) {
+                ((HBox) root).setBackground(new Background(background));
+            }
+            
+            // For testing purposes
+            ResultDisplay controller = loader.getController();
+            controller.displayResults(players);
+            });
+    }
+
+}
