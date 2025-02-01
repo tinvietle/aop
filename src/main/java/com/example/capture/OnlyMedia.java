@@ -50,7 +50,6 @@ public class OnlyMedia {
     public void initializeMedia(String mediaPath, double width, double height) {
         try {
             if (isMediaLoading) {
-                System.out.println("Media is currently loading, please wait...");
                 return;
             }
 
@@ -92,7 +91,6 @@ public class OnlyMedia {
 
     private void setupMediaPlayerEvents(String mediaPath, double width, double height) {
         mediaPlayer.setOnReady(() -> {
-            System.out.println("Media is ready");
             isMediaLoading = false;
         });
 
@@ -116,9 +114,7 @@ public class OnlyMedia {
             });
         });
 
-        mediaPlayer.statusProperty().addListener((observable, oldStatus, newStatus) -> {
-            System.out.println("MediaPlayer Status: " + newStatus);
-        });
+        mediaPlayer.statusProperty().addListener((observable, oldStatus, newStatus) -> {});
     }
 
     private void configureMediaView(double width, double height) {
@@ -145,7 +141,6 @@ public class OnlyMedia {
         
         // Add error recovery
         mediaPlayer.setOnStalled(() -> {
-            System.out.println("Media playback stalled, attempting to resume...");
             mediaPlayer.seek(mediaPlayer.getCurrentTime());
         });
 
@@ -168,7 +163,6 @@ public class OnlyMedia {
         }
 
         if (mediaPlayer != null) {
-            System.out.println("Cleaning up media player resources");
             mediaPlayer.stop();
             mediaPlayer.dispose();
             mediaPlayer = null;

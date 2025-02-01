@@ -220,10 +220,6 @@ public class DiceController {
             return;
         } 
         else if (remainingDice == 0){
-            System.out.println("Triggering end by remaining dice");
-            System.out.println("Total dice: " + totalDice);
-            System.out.println("Num kept dice: " + numKeptDice);
-            System.out.println("Remaining dice: " + remainingDice);
             // Retrieve all not null dice and set the opacity to 0.5
             for (ImageView diceImage : diceImages) {
                 if (diceImage.getOpacity() != 0.0) {
@@ -290,9 +286,6 @@ public class DiceController {
                     } 
                     
                     if (totalDice - numKeptDice <= 1) {
-                        System.out.println("Triggering end turn");
-                        System.out.println("Total dice: " + totalDice);
-                        System.out.println("Num kept dice: " + numKeptDice);
                         disableButtons(true, false);
                         // Set the opacity of the dice to 0.5
                         diceImages.get(numKeptDice).setOpacity(0.5);
@@ -433,8 +426,6 @@ public class DiceController {
         // Remove the last comma and space
         result.delete(result.length() - 2, result.length());
 
-        System.out.println("Result: " + result.toString());
-
         // Notify the roll completion
         if (onRollComplete != null) {
             onRollComplete.run();
@@ -450,8 +441,6 @@ public class DiceController {
     }
 
     public void resetDice() {
-        System.out.println("Resetting turn");
-
         // Reset the number of kept dice
         numKeptDice = 0;
         totalDice = 7;

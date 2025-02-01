@@ -259,7 +259,6 @@ public class ResultDisplay {
 
     private void handleNewGame() {
         try {
-            System.out.println("New Game");
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("/com/example/menu/menu.fxml"));
             Scene menuScene = new Scene(fxmlLoader.load()); 
 

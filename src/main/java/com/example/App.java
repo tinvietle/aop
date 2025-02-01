@@ -56,7 +56,6 @@ public class App extends Application {
 
     public void closeProgram() {
         if (Utils.confirmExit()) {
-            System.out.println("Close Program");
             System.exit(0);
         }
     }

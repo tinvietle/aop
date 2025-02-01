@@ -295,7 +295,6 @@ public class GameController {
             // Make sure helpRoot is scaleable
             if (helpRoot instanceof Region) {
                 Region region = (Region) helpRoot;
-                System.out.println("Setting prefWidth: " + prefWidth + ", prefHeight: " + prefHeight);
                 region.setMaxWidth(prefWidth);
                 region.setMaxHeight(prefHeight);
             }
@@ -395,7 +394,6 @@ public class GameController {
             return;
         }
         if (target != null && target.length() == 0) {
-            System.out.println("Caught the pokemon");
 
             if (chosenPokemon.getOwner() != null) {
                 chosenPokemon.getOwner().updateScore(-chosenPokemon.getScore());
@@ -409,7 +407,6 @@ public class GameController {
                 curPlayer.updateScore(group.getScore());
                 curPlayer.updateNumGroup();
                 for (Pokemon pokemon : group.getPokemons()) {
-                    System.out.println(curPlayer.getName() + " owns " + pokemon.getName());
                     pokemon.setGroupOwner(curPlayer);
                     ImageView image = pokemonImages.get(pokemon.getName());
                     image.setOpacity(0.5);
@@ -434,8 +431,6 @@ public class GameController {
             }
         } else {
             GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You failed to catch the Pokemon. Better luck next time!");
-            System.out.println("Failed to catch the pokemon");
-            System.out.println("Requirements: " + chosenPokemon.getRequirementLines().toString());
             nextTurn();
         }
     }
@@ -508,7 +503,6 @@ public class GameController {
         for (String name : names) {
             Player player = new Player(name);
             players.add(player);
-            System.out.println("Player registered: " + player.getName());
         }
 
         updatePlayerBoard(players);
@@ -620,11 +614,9 @@ public class GameController {
     private boolean checkEndGame() {
         for (Pokemon pokemon : pokemons.values()) {
             if (pokemon.getOwner() == null) {
-                System.out.println("Game not ended yet");
                 return false;
             }
         }
-        System.out.println("Game ended");
         return true;
     }
 

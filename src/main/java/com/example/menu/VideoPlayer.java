@@ -15,7 +15,6 @@ public class VideoPlayer {
     public static void playBackgroundVideo(MediaView mediaView) {
         try {
             if (isMediaLoading) {
-                System.out.println("Media is currently loading, please wait...");
                 return;
             }
 
@@ -55,7 +54,6 @@ public class VideoPlayer {
 
     private static void setupMediaPlayerEvents(MediaPlayer player, MediaView mediaView) {
         player.setOnReady(() -> {
-            System.out.println("Media is ready");
             isMediaLoading = false;
         });
 
@@ -68,13 +66,10 @@ public class VideoPlayer {
         });
 
         player.setOnEndOfMedia(() -> {
-            System.out.println("Media playback completed");
             player.seek(javafx.util.Duration.ZERO);
         });
 
-        player.statusProperty().addListener((observable, oldStatus, newStatus) -> {
-            System.out.println("MediaPlayer Status: " + newStatus);
-        });
+        player.statusProperty().addListener((observable, oldStatus, newStatus) -> {});
     }
 
     private static void configureMediaView(MediaView mediaView) {
@@ -99,7 +94,6 @@ public class VideoPlayer {
         
         // Add error recovery
         mediaPlayer.setOnStalled(() -> {
-            System.out.println("Media playback stalled, attempting to resume...");
             mediaPlayer.seek(mediaPlayer.getCurrentTime());
         });
     }
@@ -114,7 +108,6 @@ public class VideoPlayer {
         }
 
         if (mediaPlayer != null) {
-            System.out.println("Cleaning up media player resources");
             mediaPlayer.stop();
             mediaPlayer.dispose();
             mediaPlayer = null;

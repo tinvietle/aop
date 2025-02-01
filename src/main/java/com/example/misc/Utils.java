@@ -10,7 +10,6 @@ import javafx.stage.StageStyle;
 public class Utils {
     static public void closeProgram() {
         if (confirmExit()) {
-            System.out.println("Close Program");
             System.exit(0);
         }
     }
