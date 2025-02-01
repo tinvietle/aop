@@ -1,7 +1,6 @@
 package com.example.game;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -581,7 +580,7 @@ public class GameController {
         try {
             if (!isInstruction) return false;
 
-            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/Dialog.fxml"));
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/dialog.fxml"));
             StackPane dialog = loader.load();
             DialogController dialogController = loader.getController();
 

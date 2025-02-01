@@ -101,14 +101,12 @@ public class DiceController {
 
 
         try {
-            File dir = new File(getClass().getResource("/com/example/assets/balls").toURI());
-            File[] files = dir.listFiles((d, name) -> name.endsWith(".png"));
-            if (files != null) {
-                for (File file : files) {
-                    diceSides.add(file.toURI().toString());
-                }
+            String path = "/com/example/assets/balls/%s.png";
+            List<String> ballNames = List.of("1Pokeball", "2Pokeball", "3Pokeball", "GreatBall", "UltraBall", "MasterBall");
+            for (String name: ballNames) {
+                diceSides.add(getClass().getResource(String.format(path, name)).toExternalForm());
             }
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

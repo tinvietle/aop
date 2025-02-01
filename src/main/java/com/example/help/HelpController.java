@@ -2,7 +2,9 @@ package com.example.help;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 import javafx.animation.TranslateTransition;
@@ -43,7 +45,7 @@ public class HelpController {
     @FXML
     private Text closeButton;
 
-    private String[] tutorialImages;
+    private List<String> tutorialImages = new ArrayList<>();
     private int currentIndex = 0;
 
     private Stage primaryStage;
@@ -58,20 +60,20 @@ public class HelpController {
             clip.heightProperty().bind(root.heightProperty());
             root.setClip(clip);
 
-            // Load only images with "tutorial" in their names from the directory
-            File dir = new File(getClass().getResource("/com/example/assets/helpScene").toURI());
-            tutorialImages = Arrays.stream(dir.listFiles((d, name) -> name.endsWith(".png") && name.contains("tutorial")))
-                    .map(file -> file.toURI().toString())
-                    .sorted()
-                    .toArray(String[]::new);
+            String path = "/com/example/assets/helpScene/tutorial_%s.png";
+            int count = 1;
+            while (count <= 10) {
+                tutorialImages.add(getClass().getResource(String.format(path, count)).toExternalForm());
+                count++;
+            }
 
             // Check if there are any tutorial images
-            if (tutorialImages.length == 0) {
+            if (tutorialImages.size() == 0) {
                 throw new IllegalStateException("No tutorial images found in the directory.");
             }
 
             // Display the first tutorial image
-            gameTutorContent.setImage(new Image(tutorialImages[currentIndex]));
+            gameTutorContent.setImage(new Image(tutorialImages.get(currentIndex)));
 
             // Set initial button visibility
             updateNavigationButtons();
@@ -123,14 +125,14 @@ public class HelpController {
             closeButton.setOnMouseEntered(e -> closeButton.setEffect(glowEffect));
             closeButton.setOnMouseExited(e -> closeButton.setEffect(null));
 
-        } catch (URISyntaxException | IllegalStateException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @FXML
     private void onNextButtonClicked() {
-        if (currentIndex < tutorialImages.length - 1) {
+        if (currentIndex < tutorialImages.size() - 1) {
             currentIndex++;
             updateTutorialImage(true); // true for forward transition
         }
@@ -165,7 +167,7 @@ public class HelpController {
 
         slideOut.setOnFinished(e -> {
             // Update the image after the slide-out transition
-            gameTutorContent.setImage(new Image(tutorialImages[currentIndex]));
+            gameTutorContent.setImage(new Image(tutorialImages.get(currentIndex)));
 
             // Reset the position of the ImageView for the slide-in transition
             gameTutorContent.setTranslateX(isForward ? gameTutorContent.getFitWidth() : -gameTutorContent.getFitWidth());
@@ -186,7 +188,7 @@ public class HelpController {
         prevButton.setVisible(currentIndex > 0);
 
         // Hide nextButton if on the last tutorial
-        nextButton.setVisible(currentIndex < tutorialImages.length - 1);
+        nextButton.setVisible(currentIndex < tutorialImages.size() - 1);
     }
 
     public void setPreviousScene(Stage stage, Scene scene) {

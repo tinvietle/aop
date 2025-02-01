@@ -80,17 +80,22 @@ public class SoundManager {
                 mediaPlayer.dispose();
             }
 
-            Media media = new Media(getClass().getResource(bgmPath).toString());
-            mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setVolume(volume * masterVolume);
-            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            URL resourceUrl = getClass().getResource(bgmPath);
+            if (resourceUrl != null) {
+                Media media = new Media(resourceUrl.toString());
+                mediaPlayer = new MediaPlayer(media);
+                mediaPlayer.setVolume(volume * masterVolume);
+                mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
-            // Add error handling for media player
-            mediaPlayer.setOnError(() -> {
-                System.err.println("Media error: " + mediaPlayer.getError().getMessage());
-            });
+                // Add error handling for media player
+                mediaPlayer.setOnError(() -> {
+                    System.err.println("Media error: " + mediaPlayer.getError().getMessage());
+                });
 
-            mediaPlayer.play();
+                mediaPlayer.play();
+            } else {
+                System.err.println("BGM file not found: " + bgmPath);
+            }
         } catch (Exception e) {
             System.err.println("Error playing BGM: " + e.getMessage());
         }
@@ -98,10 +103,15 @@ public class SoundManager {
 
     public void playSFX(String sfxPath) {
         try {
-            Media sfxMedia = new Media(getClass().getResource(sfxPath).toString());
-            MediaPlayer sfxPlayer = new MediaPlayer(sfxMedia);
-            sfxPlayer.setVolume(sfxVolume * masterVolume);
-            sfxPlayer.play();
+            URL resourceUrl = getClass().getResource(sfxPath);
+            if (resourceUrl != null) {
+                Media sfxMedia = new Media(resourceUrl.toString());
+                MediaPlayer sfxPlayer = new MediaPlayer(sfxMedia);
+                sfxPlayer.setVolume(sfxVolume * masterVolume);
+                sfxPlayer.play();
+            } else {
+                System.err.println("SFX file not found: " + sfxPath);
+            }
         } catch (Exception e) {
             System.err.println("Error playing SFX: " + e.getMessage());
         }
@@ -109,21 +119,24 @@ public class SoundManager {
 
     public void playVoice(String voicePath) {
         try {
-            // Pause BGM before playing voice (if desired)
-    
-            Media voiceMedia = new Media(getClass().getResource(voicePath).toString());
-            currentVoicePlayer = new MediaPlayer(voiceMedia);
-            currentVoicePlayer.setVolume(voiceVolume * masterVolume);
-            currentVoicePlayer.setOnError(() -> {
-                System.err.println("Voice Media error: " + currentVoicePlayer.getError().getMessage());
-                currentVoicePlayer = null;
-            });
-            currentVoicePlayer.setOnEndOfMedia(() -> {
-                currentVoicePlayer.dispose();
-                currentVoicePlayer = null;
-            });
-            // Start voice playback after media is ready
-            currentVoicePlayer.setOnReady(() -> currentVoicePlayer.play());
+            URL resourceUrl = getClass().getResource(voicePath);
+            if (resourceUrl != null) {
+                Media voiceMedia = new Media(resourceUrl.toString());
+                currentVoicePlayer = new MediaPlayer(voiceMedia);
+                currentVoicePlayer.setVolume(voiceVolume * masterVolume);
+                currentVoicePlayer.setOnError(() -> {
+                    System.err.println("Voice Media error: " + currentVoicePlayer.getError().getMessage());
+                    currentVoicePlayer = null;
+                });
+                currentVoicePlayer.setOnEndOfMedia(() -> {
+                    currentVoicePlayer.dispose();
+                    currentVoicePlayer = null;
+                });
+                // Start voice playback after media is ready
+                currentVoicePlayer.setOnReady(() -> currentVoicePlayer.play());
+            } else {
+                System.err.println("Voice file not found: " + voicePath);
+            }
         } catch (Exception e) {
             System.err.println("Error playing voice: " + e.getMessage());
             currentVoicePlayer = null;
