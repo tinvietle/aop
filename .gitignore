@@ -1,1 +1,2 @@
-stocks
+target/classes/com/example/assets/
+src/main/resources/com/example/assets/
