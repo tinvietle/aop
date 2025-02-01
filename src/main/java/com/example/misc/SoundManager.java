@@ -24,7 +24,6 @@ public class SoundManager {
                 URL resourceUrl = getClass().getResource("/com/example/assets/bgm/track" + i + ".mp3");
                 if (resourceUrl != null) {
                     bgmList.add(resourceUrl.toString());
-                    System.out.println("Found BGM track: " + i);
                 }
             }
             if (bgmList.isEmpty()) {
