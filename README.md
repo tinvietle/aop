@@ -67,6 +67,7 @@ AOP
 
 2. **Enable Maven (Recommended):**
    - Ensure your project supports Maven for better dependency management.
+   - If you use VSCode, go to the Extension tab and download the package "Extension for Java" which include Maven extension for Java.
 
 3. **Enable JavaFX:**
    - If the project uses Maven and includes a JavaFX dependency in the `pom.xml`, you don't need to download JavaFX SDK separately.
