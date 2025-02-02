@@ -1,4 +1,12 @@
 src/main/resources/com/example/assets/
 target/classes/com/example/assets/
 
+
+instruction.txt
+launch4j.log
+JRE/
+config.xml
 aop.jar
+AgeOfPokemon.exe
+icon.ico
+instruction.md

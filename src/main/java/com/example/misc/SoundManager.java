@@ -12,9 +12,9 @@ public class SoundManager {
     private static SoundManager instance;
     private MediaPlayer mediaPlayer;
     private List<String> bgmList;
-    private double volume = 0.1;
-    private double sfxVolume = 0.5;
-    private double masterVolume = 1.0;
+    private double volume = 0.3;
+    private double sfxVolume = 0.7;
+    private double masterVolume = 0.7;
     private double voiceVolume = 0.5;
     // New field to hold the currently playing voice player
     private MediaPlayer currentVoicePlayer;
