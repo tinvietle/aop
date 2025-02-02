@@ -232,7 +232,7 @@ public class OnlyMedia {
             mediaPlayer.seek(mediaPlayer.getCurrentTime());
         });
 
-        mediaPlayer.setVolume(SoundManager.getInstance().getVolume() * SoundManager.getInstance().getMasterVolume());
+        mediaPlayer.setVolume(SoundManager.getInstance().getVolume() * SoundManager.getInstance().getMasterVolume() * 2);
     }
 
     public void playMedia() {
