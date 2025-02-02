@@ -1,3 +1,11 @@
+/**
+ * OOP Java Project WiSe 2024/2025
+ * Age of Pokemon: A Pokemon-themed strategy game from Age of War
+ * @author Viet Tin Le - 1585762
+ * @author That Nhat Minh Ton - 1588341
+ * @author Tri An Yamashita - 1590012
+ * @version 1.0 - 2025-02-01
+ */
 package com.example.menu;
 
 
@@ -21,6 +29,16 @@ import javafx.scene.media.MediaView;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+/*
+ * Controller for the main menu screen of the Pokemon game.
+ * 
+ * Features:
+ * - Background video playback
+ * - Background music management
+ * - Responsive UI layout
+ * - Scene navigation
+ * - Button event handling
+ */
 public class MenuController {
 
     @FXML
@@ -43,6 +61,16 @@ public class MenuController {
 
     @FXML
     public void initialize() {
+        /*
+         * Initializes the menu interface and media components.
+         * 
+         * Features:
+         * - Loads custom font
+         * - Manages background music
+         * - Sets up video background
+         * - Configures responsive UI bindings
+         * - Initializes button handlers
+         */
         // Load Pocket Monk font
         Font.loadFont(getClass().getResourceAsStream("/com/example/assets/font/PocketMonk.otf"), 14);
 
@@ -90,6 +118,15 @@ public class MenuController {
     }
 
     private void handleStartGame() {
+        /*
+         * Handles transition to the registration screen.
+         * 
+         * Actions:
+         * - Plays button sound effect
+         * - Loads registration scene
+         * - Sets up navigation
+         * - Centers window on screen
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("register/register.fxml"));
@@ -109,6 +146,15 @@ public class MenuController {
     }
 
     private void handleSettings() {
+        /*
+         * Opens the settings configuration screen.
+         * 
+         * Actions:
+         * - Plays button sound effect
+         * - Loads settings scene
+         * - Sets up navigation
+         * - Centers window on screen
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/settings/settings.fxml"));
@@ -131,6 +177,15 @@ public class MenuController {
     }
 
     private void handlecredit() {
+        /*
+         * Displays the game credits video.
+         * 
+         * Actions:
+         * - Plays button sound effect
+         * - Loads credit video player
+         * - Configures media view
+         * - Sets up scene transition
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
 
         try {

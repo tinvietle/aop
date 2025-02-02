@@ -1,3 +1,11 @@
+/**
+ * OOP Java Project WiSe 2024/2025
+ * Age of Pokemon: A Pokemon-themed strategy game from Age of War
+ * @author Viet Tin Le - 1585762
+ * @author That Nhat Minh Ton - 1588341
+ * @author Tri An Yamashita - 1590012
+ * @version 1.0 - 2025-02-01
+ */
 package com.example.game;
 
 import java.io.IOException;
@@ -22,17 +30,49 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/*
+ * Provides utility functions for game operations.
+ * This class manages:
+ * - Pokemon UI state
+ * - Scene transitions
+ * - Alert dialogs
+ * - Animations and effects
+ * - Tooltip management
+ */
 public class GameUtils {
+    
     public static void disablePokemon(ImageView pokemon) {
-
+        /*
+         * Disables interaction with a Pokemon image.
+         * 
+         * Parameters:
+         * - pokemon: ImageView to disable
+         */
         pokemon.setStyle("-fx-cursor: default;");
     }
 
     public static void enablePokemon(ImageView pokemon) {
+        /*
+         * Enables interaction with a Pokemon image.
+         * 
+         * Parameters:
+         * - pokemon: ImageView to enable
+         */
         pokemon.setStyle("-fx-cursor: hand;");
     }
 
     public static void delay(long millis, Runnable continuation) {
+        /*
+         * Creates a delayed execution of a task.
+         * 
+         * Parameters:
+         * - millis: Delay duration in milliseconds
+         * - continuation: Task to execute after delay
+         * 
+         * Implementation:
+         * - Uses JavaFX Task for non-blocking delay
+         * - Executes continuation on completion
+         */
       Task<Void> sleeper = new Task<Void>() {
           @Override
           protected Void call() throws Exception {
@@ -46,6 +86,18 @@ public class GameUtils {
     }
 
     public static FXMLLoader loadScene(String fxmlPath, String title, Stage stage, Consumer<FXMLLoader> beforeShow) throws IOException {
+        /*
+         * Loads and configures a new scene from FXML.
+         * 
+         * Parameters:
+         * - fxmlPath: Path to FXML resource
+         * - title: Window title for stage
+         * - stage: Stage to show scene in
+         * - beforeShow: Optional actions before showing scene
+         * 
+         * Returns:
+         * - FXMLLoader instance for scene access
+         */
         FXMLLoader loader = new FXMLLoader(App.class.getResource(fxmlPath));
         Parent root = loader.load();
 
@@ -72,6 +124,15 @@ public class GameUtils {
     }
 
     public static void fadeTransition(Node node, long fadeDuration, long fadeOutDelay, Runnable callback) {
+        /*
+         * Applies fade in/out transitions to a node.
+         * 
+         * Parameters:
+         * - node: Node to animate
+         * - fadeDuration: Duration of fade effect
+         * - fadeOutDelay: Delay before fade out
+         * - callback: Action to perform after fade
+         */
         FadeTransition fadeIn = new FadeTransition(Duration.millis(fadeDuration), node);
         fadeIn.setFromValue(0);
         fadeIn.setToValue(1);
@@ -86,6 +147,19 @@ public class GameUtils {
     }
 
     public static void updateToolTip(Pokemon pokemon, ImageView image, BorderPane borderPane) {
+        /*
+         * Updates tooltip content and styling for a Pokemon.
+         * 
+         * Parameters:
+         * - pokemon: Pokemon to display info for
+         * - image: ImageView to attach tooltip to
+         * - borderPane: Parent pane for size bindings
+         * 
+         * Features:
+         * - Responsive tooltip sizing
+         * - Dynamic padding adjustments
+         * - Instant display on hover
+         */
         TextFlow styledContent = pokemon.getStyledTooltipContent(borderPane);
         Tooltip tooltip = new Tooltip();
         
@@ -138,6 +212,19 @@ public class GameUtils {
     }
 
     public static void showAlert(AlertType alertType, String title, String message) {
+        /*
+         * Displays a styled alert dialog.
+         * 
+         * Parameters:
+         * - alertType: Type of alert to show
+         * - title: Alert window title
+         * - message: Alert content message
+         * 
+         * Features:
+         * - Custom styling
+         * - Resizable dialog
+         * - Minimum height constraint
+         */
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(title);
@@ -154,6 +241,17 @@ public class GameUtils {
     }
 
     private static void styleDialog(Alert alert) {
+        /*
+         * Applies custom styling to an alert dialog.
+         * 
+         * Parameters:
+         * - alert: Alert to style
+         * 
+         * Features:
+         * - Transparent stage style
+         * - Custom CSS application
+         * - Dialog pane styling
+         */
         alert.initStyle(javafx.stage.StageStyle.TRANSPARENT);
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add(

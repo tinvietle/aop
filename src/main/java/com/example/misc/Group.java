@@ -1,3 +1,11 @@
+/**
+ * OOP Java Project WiSe 2024/2025
+ * Age of Pokemon: A Pokemon-themed strategy game from Age of War
+ * @author Viet Tin Le - 1585762
+ * @author That Nhat Minh Ton - 1588341
+ * @author Tri An Yamashita - 1590012
+ * @version 1.0 - 2025-02-01
+ */
 package com.example.misc;
 
 import java.util.List;
@@ -33,6 +41,14 @@ public class Group {
         @JsonProperty("score") int score,
         @JsonProperty("pokemon") List<String> pokemons
     ) {
+        /*
+         * Creates a Group with specified attributes.
+         * 
+         * Parameters:
+         * - name: Group identifier
+         * - score: Points value for completing the group
+         * - pokemonNames: List of Pokemon names in this group
+         */
         this.name = name;
         this.score = score;
         this.pokemonNames = pokemons;
@@ -47,6 +63,16 @@ public class Group {
     }
 
     public boolean checkOwned(Player player) {
+        /*
+         * Checks if all Pokemon in the group are owned by a specific player.
+         * 
+         * Parameters:
+         * - player: Player to check ownership against
+         * 
+         * Returns:
+         * - true if player owns all Pokemon in group
+         * - false otherwise
+         */
         for (Pokemon pokemon : pokemons) {
             if (pokemon.getOwner() != player) {
                 return false;
@@ -65,10 +91,22 @@ public class Group {
     }
 
     public String getName() {
+        /*
+         * Gets the group's name.
+         * 
+         * Returns:
+         * - String name identifier of the group
+         */
         return name;
     }
 
     public int getScore() {
+        /*
+         * Gets the group's score value.
+         * 
+         * Returns:
+         * - Integer score for completing the group
+         */
         return score;
     }
 

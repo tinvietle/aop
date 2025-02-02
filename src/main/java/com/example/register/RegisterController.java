@@ -1,3 +1,11 @@
+/**
+ * OOP Java Project WiSe 2024/2025
+ * Age of Pokemon: A Pokemon-themed strategy game from Age of War
+ * @author Viet Tin Le - 1585762
+ * @author That Nhat Minh Ton - 1588341
+ * @author Tri An Yamashita - 1590012
+ * @version 1.0 - 2025-02-01
+ */
 package com.example.register;
 
 import java.io.IOException;
@@ -25,6 +33,16 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/*
+ * Controller for the registration screen where players enter their names.
+ * 
+ * Features:
+ * - Player name registration
+ * - Difficulty selection
+ * - Dynamic UI scaling
+ * - Scene transitions
+ * - Input validation
+ */
 public class RegisterController {
 
     @FXML
@@ -63,12 +81,29 @@ public class RegisterController {
     private String difficulty;
 
     public void setPreviousScene(Stage stage, Scene scene) {
+        /*
+         * Sets up navigation between scenes.
+         * 
+         * Parameters:
+         * - stage: The main application stage
+         * - scene: The scene to return to when back is pressed
+         */
         this.primaryStage = stage;
         this.previousScene = scene;
     }
 
     @FXML
     public void initialize() {
+        /*
+         * Initializes the registration interface and bindings.
+         * 
+         * Features:
+         * - Sets up responsive UI bindings
+         * - Configures player count spinner
+         * - Initializes difficulty selector
+         * - Binds component sizes and fonts
+         * - Sets up event handlers
+         */
         // Bind background image size to root pane size
         backgroundImage.fitWidthProperty().bind(registerRootPane.widthProperty());
         backgroundImage.fitHeightProperty().bind(registerRootPane.heightProperty());
@@ -204,6 +239,18 @@ public class RegisterController {
     }
 
     private void updatePlayerNameFields(int count) {
+        /*
+         * Updates the player name input fields based on selected count.
+         * 
+         * Parameters:
+         * - count: Number of player name fields to create
+         * 
+         * Features:
+         * - Creates text fields dynamically
+         * - Sets up field properties and styling
+         * - Adds sound effects on focus
+         * - Maintains responsive layout
+         */
         playerNamesContainer.getChildren().clear();
         for (int i = 1; i <= count; i++) {
             TextField nameField = new TextField();
@@ -233,6 +280,14 @@ public class RegisterController {
     }
 
     private void handleBack() {
+        /*
+         * Handles navigation back to previous scene.
+         * 
+         * Actions:
+         * - Plays button sound effect
+         * - Transitions to previous scene
+         * - Centers window on screen
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         if (primaryStage != null && previousScene != null) {
             primaryStage.setScene(previousScene);
@@ -241,6 +296,17 @@ public class RegisterController {
     }
 
     private void handleStartGame() {
+        /*
+         * Processes game start and player registration.
+         * 
+         * Features:
+         * - Validates player names
+         * - Checks for duplicates
+         * - Loads game scene
+         * - Creates transition animation
+         * - Initializes game controller
+         * - Handles registration errors
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         errorLabel.setText("");
         difficulty = difficultyComboBox.getValue();
@@ -311,4 +377,3 @@ public class RegisterController {
         }
     }
 }
-
