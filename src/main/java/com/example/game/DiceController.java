@@ -1,7 +1,13 @@
+/**
+ * OOP Java Project WiSe 2024/2025
+ * Age of Pokemon: A Pokemon-themed strategy game from Age of War
+ * @author Viet Tin Le - 1585762
+ * @author That Nhat Minh Ton - 1588341
+ * @author Tri An Yamashita - 1590012
+ * @version 1.0 - 2025-02-01
+ */
 package com.example.game;
 
-import java.io.File;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +28,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
+/*
+ * Controls the dice rolling mechanics and game flow.
+ * This class manages:
+ * - Dice rolling animations and logic
+ * - Turn management
+ * - Pokemon catching mechanics
+ * - UI interaction and button states
+ * - Score tracking
+ */
 public class DiceController {
 
     private static final int ROLL_ITERATIONS = 15;
@@ -51,6 +66,16 @@ public class DiceController {
     @FXML
     void initialize() {
 
+        /*
+         * Initializes the dice controller UI components.
+         * 
+         * Features:
+         * - Binds dice images to responsive layout
+         * - Configures button dimensions
+         * - Sets up layout positions
+         * - Loads dice face images
+         * - Initializes click listeners
+         */
         // Bind the width and height of the dice images to the parent pane
         dice1.fitWidthProperty().bind(Pane.widthProperty().multiply(0.0625));
         dice1.fitHeightProperty().bind(dice1.fitWidthProperty());
@@ -110,12 +135,24 @@ public class DiceController {
             e.printStackTrace();
         }
 
+        // Initialize dice click listeners
         initializeDiceClickListeners();
         endButton.setDisable(false);
     }
 
     @FXML
     void rollHandler(ActionEvent event) {
+        /*
+         * Handles the dice rolling action.
+         * 
+         * Features:
+         * - Plays sound effect
+         * - Manages button states
+         * - Processes kept dice
+         * - Validates Pokemon catching requirements
+         * - Updates game state
+         * - Manages first roll special cases
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         disableButtons(true, true);
         List<ImageView> diceImages = List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7);
@@ -164,6 +201,7 @@ public class DiceController {
 
             List<Line> tempStatisfiedLines = new ArrayList<>();
 
+            // Get all the lines that are satisfied by the kept balls
             for (Line line : gameController.getTarget().getLines()) {
                 if (line.satisfied(ballsMap)) {
                     tempStatisfiedLines.add(line);
@@ -211,8 +249,10 @@ public class DiceController {
             }
         }
 
+        // Calculate the remaining dice
         remainingDice = firstRoll ? totalDice : totalDice - numKeptDice;
 
+        // If remaining dice is less than 0, raise error
         if (remainingDice < 0) {
             disableButtons(true, false);
             return;
@@ -249,8 +289,10 @@ public class DiceController {
         keepDice.clear();
         keepDice.addAll(diceImages.subList(0, numKeptDice));
 
+        // Create a CountDownLatch to synchronize dice rolling threads
         CountDownLatch latch = new CountDownLatch(remainingDice);
 
+        // Roll the remaining dice asynchronously
         for (int i = numKeptDice; i < 7; i++) {
             // Set the opacity of the dice to 1.0
             diceImages.get(i).setOpacity(1.0);
@@ -265,6 +307,7 @@ public class DiceController {
             }
         }
 
+        // Wait for all dice to finish rolling before enabling buttons
         new Thread(() -> {
             try {
                 latch.await();
@@ -297,6 +340,17 @@ public class DiceController {
     }
 
     private void rollEachDice(ImageView dice) {
+        /*
+         * Animates the rolling of a single die.
+         * 
+         * Parameters:
+         * - dice: The ImageView representing the die to animate
+         * 
+         * Implementation:
+         * - Randomly cycles through dice faces
+         * - Controls animation timing
+         * - Updates dice image
+         */
         for (int i = 0; i < ROLL_ITERATIONS; i++) {
             String imagePath = diceSides.get(random.nextInt(diceSides.size()));
             Platform.runLater(() -> dice.setImage(new Image(imagePath)));
@@ -309,6 +363,15 @@ public class DiceController {
     }
 
     private void initializeDiceClickListeners() {
+        /*
+         * Sets up mouse click handlers for dice selection.
+         * 
+         * Features:
+         * - Toggles dice selection state
+         * - Validates selection rules
+         * - Handles kept dice restrictions
+         * - Shows error alerts for invalid actions
+         */
         List<ImageView> diceImages = List.of(dice1, dice2, dice3, dice4, dice5, dice6, dice7);
 
         for (ImageView diceImage : diceImages) {
@@ -331,6 +394,16 @@ public class DiceController {
 
     @FXML
     void endTurn(ActionEvent event) {
+        /*
+         * Processes the end of a player's turn.
+         * 
+         * Features:
+         * - Validates final dice selections
+         * - Updates Pokemon catch progress
+         * - Records turn results
+         * - Manages button states
+         * - Triggers completion callback
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         if (firstRoll) {
             return;
@@ -431,14 +504,35 @@ public class DiceController {
     }
 
     public String getResult(){
+        /*
+         * Returns the formatted result of the current roll.
+         * 
+         * Returns:
+         * - String containing the names of kept dice faces
+         */
         return result.toString();
     }
 
     public void setOnRollComplete(Runnable onRollComplete) {
+        /*
+         * Sets the callback for roll completion.
+         * 
+         * Parameters:
+         * - onRollComplete: Runnable to execute when rolling finishes
+         */
         this.onRollComplete = onRollComplete;
     }
 
     public void resetDice() {
+        /*
+         * Resets the dice controller to initial state.
+         * 
+         * Actions:
+         * - Resets counters and flags
+         * - Clears results
+         * - Resets dice appearance
+         * - Enables buttons
+         */
         // Reset the number of kept dice
         numKeptDice = 0;
         totalDice = 7;
@@ -455,11 +549,24 @@ public class DiceController {
     }
 
     public void disableButtons(boolean roll, boolean end){
+        /*
+         * Controls the enabled state of roll and end buttons.
+         * 
+         * Parameters:
+         * - roll: Whether to disable the roll button
+         * - end: Whether to disable the end button
+         */
         rollButton.setDisable(roll);
         endButton.setDisable(end);
     }
 
     public void setGameController(GameController gameController) {
+        /*
+         * Sets the reference to the main game controller.
+         * 
+         * Parameters:
+         * - gameController: The GameController instance to link
+         */
         this.gameController = gameController;
     }
 }

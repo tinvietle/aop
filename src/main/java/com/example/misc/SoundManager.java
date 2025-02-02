@@ -1,3 +1,11 @@
+/**
+ * OOP Java Project WiSe 2024/2025
+ * Age of Pokemon: A Pokemon-themed strategy game from Age of War
+ * @author Viet Tin Le - 1585762
+ * @author That Nhat Minh Ton - 1588341
+ * @author Tri An Yamashita - 1590012
+ * @version 1.0 - 2025-02-01
+ */
 package com.example.misc;
 
 import java.net.URL;
@@ -20,6 +28,14 @@ public class SoundManager {
     private MediaPlayer currentVoicePlayer;
 
     private SoundManager() {
+        /*
+         * Initializes the SoundManager singleton.
+         * 
+         * Features:
+         * - Loads BGM tracks from resources
+         * - Creates empty BGM list
+         * - Handles missing resources
+         */
         bgmList = new ArrayList<>();
         try {
             for (int i = 1; i <= 10; i++) {
@@ -37,6 +53,12 @@ public class SoundManager {
     }
 
     public static SoundManager getInstance() {
+        /*
+         * Gets the singleton instance of SoundManager.
+         * 
+         * Returns:
+         * - SoundManager singleton instance
+         */
         if (instance == null) {
             instance = new SoundManager();
         }
@@ -44,6 +66,15 @@ public class SoundManager {
     }
 
     public void playRandomBGM() {
+        /*
+         * Plays a random background music track.
+         * 
+         * Features:
+         * - Stops current BGM if playing
+         * - Randomly selects from available tracks
+         * - Sets volume based on master and BGM volume
+         * - Loops indefinitely
+         */
         try {
             if (bgmList.isEmpty()) {
                 System.err.println("No BGM files found!");
@@ -74,6 +105,17 @@ public class SoundManager {
     }
 
     public void playBGM(String bgmPath) {
+        /*
+         * Plays a specific background music track.
+         * 
+         * Parameters:
+         * - bgmPath: Resource path to the BGM file
+         * 
+         * Features:
+         * - Stops current BGM if playing
+         * - Sets volume and looping
+         * - Handles playback errors
+         */
         try {
             if (mediaPlayer != null) {
                 mediaPlayer.stop();
@@ -102,6 +144,16 @@ public class SoundManager {
     }
 
     public void playSFX(String sfxPath) {
+        /*
+         * Plays a sound effect once.
+         * 
+         * Parameters:
+         * - sfxPath: Resource path to the sound effect file
+         * 
+         * Features:
+         * - Uses SFX volume settings
+         * - No looping
+         */
         try {
             URL resourceUrl = getClass().getResource(sfxPath);
             if (resourceUrl != null) {
@@ -118,6 +170,17 @@ public class SoundManager {
     }
 
     public void playVoice(String voicePath) {
+        /*
+         * Plays a voice clip.
+         * 
+         * Parameters:
+         * - voicePath: Resource path to the voice file
+         * 
+         * Features:
+         * - Uses voice volume settings
+         * - Auto-disposes after playback
+         * - Error handling for media issues
+         */
         try {
             URL resourceUrl = getClass().getResource(voicePath);
             if (resourceUrl != null) {
@@ -166,6 +229,12 @@ public class SoundManager {
     }
 
     public void setVolume(double volume) {
+        /*
+         * Sets the background music volume.
+         * 
+         * Parameters:
+         * - volume: Volume level between 0.0 and 1.0
+         */
         this.volume = volume;
         if (mediaPlayer != null) {
             mediaPlayer.setVolume(masterVolume * this.volume);
@@ -173,22 +242,52 @@ public class SoundManager {
     }
 
     public double getVolume() {
+        /*
+         * Gets the current background music volume.
+         * 
+         * Returns:
+         * - Current volume level between 0.0 and 1.0
+         */
         return volume;
     }
 
     public void setSFXVolume(double volume) {
+        /*
+         * Sets the sound effects volume.
+         * 
+         * Parameters:
+         * - volume: Volume level between 0.0 and 1.0
+         */
         this.sfxVolume = volume;
     }
 
     public double getSFXVolume() {
+        /*
+         * Gets the current sound effects volume.
+         * 
+         * Returns:
+         * - Current volume level between 0.0 and 1.0
+         */
         return sfxVolume;
     }
 
     public double getMasterVolume() {
+        /*
+         * Gets the current master volume.
+         * 
+         * Returns:
+         * - Current master volume level between 0.0 and 1.0
+         */
         return masterVolume;
     }
 
     public void setMasterVolume(double masterVolume) {
+        /*
+         * Sets the master volume.
+         * 
+         * Parameters:
+         * - masterVolume: Volume level between 0.0 and 1.0
+         */
         this.masterVolume = masterVolume;
         if (mediaPlayer != null) {
             mediaPlayer.setVolume(masterVolume * volume);
@@ -196,10 +295,22 @@ public class SoundManager {
     }
 
     public double getVoiceVolume() {
+        /*
+         * Gets the current voice playback volume.
+         * 
+         * Returns:
+         * - Current voice volume level between 0.0 and 1.0
+         */
         return voiceVolume;
     }
 
     public void setVoiceVolume(double volume) {
+        /*
+         * Sets the voice playback volume.
+         * 
+         * Parameters:
+         * - volume: Volume level between 0.0 and 1.0
+         */
         this.voiceVolume = volume;
     }
 }

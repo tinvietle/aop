@@ -1,3 +1,11 @@
+/**
+ * OOP Java Project WiSe 2024/2025
+ * Age of Pokemon: A Pokemon-themed strategy game from Age of War
+ * @author Viet Tin Le - 1585762
+ * @author That Nhat Minh Ton - 1588341
+ * @author Tri An Yamashita - 1590012
+ * @version 1.0 - 2025-02-01
+ */
 package com.example.game;
 
 import java.io.IOException;
@@ -57,7 +65,16 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-
+/*
+ * Main controller for the Pokemon catching game.
+ * This class manages:
+ * - Game state and flow
+ * - Player management
+ * - Pokemon catching mechanics
+ * - UI layout and responsiveness
+ * - Scene transitions and animations
+ * - Media playback
+ */
 public class GameController {
     // Constants
     private static final int FADE_DURATION = 1000;
@@ -102,6 +119,17 @@ public class GameController {
 
     // Constructor
     public GameController(String difficulty) {
+        /*
+         * Initializes the game controller with specified difficulty.
+         * 
+         * Parameters:
+         * - difficulty: Game difficulty level that affects Pokemon requirements
+         * 
+         * Features:
+         * - Loads Pokemon data
+         * - Initializes group configurations
+         * - Sets up scoring system
+         */
         this.difficulty = difficulty;
         if (this.difficulty != null) {
             PokemonReader reader = new PokemonReader(this.difficulty);
@@ -120,6 +148,15 @@ public class GameController {
 
     @FXML
     private void initialize() throws IOException {
+        /*
+         * Initializes the game interface and components.
+         * 
+         * Features:
+         * - Sets up Pokemon images
+         * - Configures UI bindings
+         * - Initializes dice controller
+         * - Sets up turn transition overlay
+         */
         initializePokemonImages();
         setupUIBindings();
         setupDiceController();
@@ -127,6 +164,15 @@ public class GameController {
     }
 
     private void initializePokemonImages() {
+        /*
+         * Sets up Pokemon image views and their interactions.
+         * 
+         * Features:
+         * - Maps Pokemon names to image views
+         * - Configures CSS styling
+         * - Sets up tooltips
+         * - Initializes click handlers
+         */
         // Map ImageViews to Pokemon names
         pokemonImages.put("cloyster", cloyster);
         pokemonImages.put("galvantula", galvantula);
@@ -160,6 +206,15 @@ public class GameController {
     }
 
     private void setupUIBindings() {
+        /*
+         * Establishes responsive UI layout bindings.
+         * 
+         * Features:
+         * - Configures screen dimensions
+         * - Binds component sizes
+         * - Sets up menu styling
+         * - Positions Pokemon images
+         */
         // Get screen dimensions
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
@@ -220,11 +275,26 @@ public class GameController {
     }
 
     private void setupDiceController() {
+        /*
+         * Configures the dice controller for the game.
+         * 
+         * Features:
+         * - Sets game controller reference
+         * - Defines roll completion behavior
+         */
         dicePaneController.setGameController(this);
         dicePaneController.setOnRollComplete(this::endTurn);
     }
 
     private void initializeTurnOverlay() {
+        /*
+         * Initializes the turn transition overlay.
+         * 
+         * Features:
+         * - Loads FXML for turn overlay
+         * - Sets up text and opacity
+         * - Adds overlay to stack pane
+         */
         try {
             FXMLLoader loader = new FXMLLoader(App.class.getResource("/com/example/game/nextTurn.fxml"));
             StackPane overlay = loader.load();
@@ -239,6 +309,14 @@ public class GameController {
 
     @FXML
     private void newGame() throws IOException {
+        /*
+         * Starts a new game by loading the main menu scene.
+         * 
+         * Features:
+         * - Plays button sound effect
+         * - Loads main menu FXML
+         * - Sets up stage and scene
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         Stage stage = (Stage) borderPane.getScene().getWindow();
         GameUtils.loadScene("/com/example/menu/menu.fxml", "Age of Pokemon", stage, null);
@@ -246,12 +324,28 @@ public class GameController {
 
     @FXML
     private void closeProgram() {
+        /*
+         * Closes the application.
+         * 
+         * Features:
+         * - Plays button sound effect
+         * - Calls utility method to close program
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         Utils.closeProgram();
     }
 
     @FXML
     private void openSettings() throws IOException {   
+        /*
+         * Opens the settings scene.
+         * 
+         * Features:
+         * - Plays button sound effect
+         * - Loads settings FXML
+         * - Sets up stage and scene
+         * - Handles exceptions
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             GameUtils.loadScene("/com/example/settings/settings.fxml", "Settings", (Stage) borderPane.getScene().getWindow(), loader -> {
@@ -266,6 +360,16 @@ public class GameController {
 
     @FXML
     private void openHelpScene() throws IOException {   
+        /*
+         * Opens the help scene with a popup overlay.
+         * 
+         * Features:
+         * - Plays button sound effect
+         * - Loads help FXML
+         * - Applies Gaussian blur to background
+         * - Animates popup appearance
+         * - Handles closing of popup
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/help/help.fxml"));
@@ -351,6 +455,14 @@ public class GameController {
 
     @FXML
     private void userInstruction() {
+        /*
+         * Toggles the display of user instructions.
+         * 
+         * Features:
+         * - Plays button sound effect
+         * - Updates instruction visibility state
+         * - Changes button text accordingly
+         */
         SoundManager.getInstance().playSFX("/com/example/assets/soundeffect/button.wav");
         isInstruction = !isInstruction;
         instructionButton.setText(isInstruction ? "Hide Instruction" : "Show Instruction");
@@ -358,20 +470,37 @@ public class GameController {
 
     @FXML
     private void choosePokemon(MouseEvent event) {
+        /*
+         * Handles Pokemon selection by the player.
+         * 
+         * Parameters:
+         * - event: Mouse event containing source Pokemon
+         * 
+         * Features:
+         * - Validates selection
+         * - Plays Pokemon sound
+         * - Checks ownership status
+         * - Updates game state
+         */
         if (!isPokemonActive) return;
 
+        // Get the name of the Pokemon clicked
         String pokemonName = ((Node) event.getSource()).getId();
         Pokemon attemptedPokemon = pokemons.get(pokemonName);
+        // Confirm selection
         if (confirmChoose()) {
             SoundManager.getInstance().playVoice("/com/example/assets/voice/" + pokemonName + ".wav");
+            // Check if the Pokemon is already owned by the player
             if (attemptedPokemon.getGroupOwner() != null) {
                 GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "This Pokemon is part of a group already owned by Player " + attemptedPokemon.getGroupOwner().getName());
                 return;
             }
+            // Check if the Pokemon is already owned by owner
             if (attemptedPokemon.getOwner() == curPlayer) {
                 GameUtils.showAlert(Alert.AlertType.WARNING, "Invalid Pick", "You already own this Pokemon.");
                 return;
             }
+            // Update game state
             chosenPokemon = pokemons.get(pokemonName);
             target = chosenPokemon.getRequirementLines();
             disableAllPokemons(true);
@@ -380,18 +509,39 @@ public class GameController {
     }
 
     private boolean confirmChoose() {
+        /*
+         * Displays a confirmation dialog for Pokemon selection.
+         * 
+         * Returns:
+         * - true if player confirms selection
+         * - false otherwise
+         */
+        // Show confirmation dialog
         Alert alert = Utils.confirmBox("Choose a Pokemon", "Are you sure?", "Press OK to choose.");
         Optional<ButtonType> result = alert.showAndWait();
+        // Return true if OK is pressed
         return result.isPresent() && result.get() == ButtonType.OK;
     }
 
     @FXML
     public void catchPokemon() {
+        /*
+         * Processes Pokemon catching attempt.
+         * 
+         * Features:
+         * - Validates catch conditions
+         * - Updates scores
+         * - Manages ownership changes
+         * - Triggers animations
+         * - Handles group completion
+         */
+        // Check if a Pokemon is chosen
         if (chosenPokemon == null) {
             GameUtils.showAlert(Alert.AlertType.ERROR, "Failed to Catch", "You have not chosen a pokemon. Better luck next time!");
             nextTurn();
             return;
         }
+        // Check if the target is met
         if (target != null && target.length() == 0) {
 
             if (chosenPokemon.getOwner() != null) {
@@ -402,6 +552,7 @@ public class GameController {
             curPlayer.updateScore(chosenPokemon.getScore());
             chosenPokemon.setOwner(curPlayer);
             Group group = groups.get(chosenPokemon.getGroup());
+            // Check if the group is completed
             if (group != null && group.checkOwned(curPlayer)) {
                 curPlayer.updateScore(group.getScore());
                 curPlayer.updateNumGroup();
@@ -414,9 +565,11 @@ public class GameController {
                     curPlayer.updateScore(-pokemon.getScore());
                 }
             } else {
+                // Update the Pokemon image
                 ImageView image = pokemonImages.get(chosenPokemon.getName());
                 GameUtils.updateToolTip(chosenPokemon, image, borderPane);
             }
+            // Update player board
             updatePlayerBoard(players);
 
             String path = "/com/example/assets/stocks/%s.mp4";
@@ -435,14 +588,32 @@ public class GameController {
     }
 
     public Requirement getTarget() {
+        /*
+         * Retrieves the current target requirement for catching a Pokemon.
+         * 
+         * Returns:
+         * - Requirement object representing the target
+         */
         return target;
     }
     
     public void reduceTarget(Line line) {
+        /*
+         * Reduces the target requirement by removing a line.
+         * 
+         * Parameters:
+         * - line: Line object to be removed from the target requirement
+         */
         this.target.removeLine(line);
     }
 
     public void disableAllPokemons(boolean disable) {
+        /*
+         * Enables or disables all Pokemon image views.
+         * 
+         * Parameters:
+         * - disable: true to disable all Pokemon, false to enable
+         */
         isPokemonActive = !disable;
         if (disable) {
             pokemons.values().forEach(pokemon -> GameUtils.disablePokemon(pokemonImages.get(pokemon.getName())));
@@ -455,6 +626,16 @@ public class GameController {
     }
 
     private void bindImageView(ImageView imageView, double X, double Y, double width, double height) {
+        /*
+         * Binds the layout and size properties of an ImageView to the stack pane.
+         * 
+         * Parameters:
+         * - imageView: ImageView to be bound
+         * - X: X-coordinate ratio for layout binding
+         * - Y: Y-coordinate ratio for layout binding
+         * - width: Width ratio for size binding
+         * - height: Height ratio for size binding
+         */
         imageView.layoutXProperty().bind(stackPane.widthProperty().multiply(X / 800.0));
         imageView.layoutYProperty().bind(stackPane.heightProperty().multiply(Y / 400.0));
         imageView.fitWidthProperty().bind(stackPane.widthProperty().multiply(width));
@@ -462,6 +643,20 @@ public class GameController {
     }
 
     private void playVideo(Stage stage, String videoPath) throws IOException {
+        /*
+         * Plays a video in a new scene.
+         * 
+         * Parameters:
+         * - stage: Stage to display the video
+         * - videoPath: Path to the video file
+         * 
+         * Features:
+         * - Pauses background music
+         * - Loads media player FXML
+         * - Sets up media playback
+         * - Resumes background music after video
+         * - Handles video completion
+         */
         // Pause BGM before playing video instead of stopping it
         SoundManager.getInstance().pauseBGM();
 
@@ -496,6 +691,18 @@ public class GameController {
     }
 
     public void registerPlayer(String[] names) {
+        /*
+         * Registers players for the game.
+         * 
+         * Parameters:
+         * - names: Array of player names
+         * 
+         * Features:
+         * - Creates Player objects
+         * - Updates player board
+         * - Sets initial player
+         * - Shows first turn transition
+         */
         for (String name : names) {
             Player player = new Player(name);
             players.add(player);
@@ -516,6 +723,16 @@ public class GameController {
     }
 
     private void showTurnTransition() {
+        /*
+         * Displays the turn transition overlay.
+         * 
+         * Features:
+         * - Disables dice buttons
+         * - Loads turn overlay if not already loaded
+         * - Sets turn text
+         * - Fades in and out the overlay
+         * - Shows instruction for rolling dice
+         */
         dicePaneController.disableButtons(true, true);
 
         if (turnOverlay == null) {
@@ -542,6 +759,16 @@ public class GameController {
     }
 
     public void updatePlayerBoard(List<Player> players) {
+        /*
+         * Updates the player board with current scores.
+         * 
+         * Parameters:
+         * - players: List of Player objects
+         * 
+         * Features:
+         * - Clears existing player info
+         * - Adds player names and scores to the grid
+         */
         playerInfo.getChildren().clear();
         Label playerHeader = new Label("Players");
         Label scoreHeader = new Label("Scores");
@@ -559,10 +786,26 @@ public class GameController {
     }
 
     public void endTurn() {
+        /*
+         * Ends the current player's turn.
+         * 
+         * Features:
+         * - Attempts to catch Pokemon
+         * - Advances to the next turn if necessary
+         */
         catchPokemon();
     }
 
     public void nextTurn() {
+        /*
+         * Advances to the next player's turn.
+         * 
+         * Actions:
+         * - Resets game state
+         * - Updates current player
+         * - Shows turn transition
+         * - Prepares UI for next player
+         */
         chosenPokemon = null;
         dicePaneController.resetDice();
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
@@ -572,11 +815,31 @@ public class GameController {
     }
 
     public void setCurPlayer(Player player) {
+        /*
+         * Sets the current player for the game.
+         * 
+         * Parameters:
+         * - player: Player object representing the current player
+         */
         this.curPlayer = player;
         turnLabel.setText("Turn: " + player.getName());
     }
 
     public boolean showInstruction(String text, double width, double height, double x, double y, long outDelay) {
+        /*
+         * Displays an instruction dialog on the screen.
+         * 
+         * Parameters:
+         * - text: Instruction text to display
+         * - width: Width of the dialog
+         * - height: Height of the dialog
+         * - x: X-coordinate for dialog position
+         * - y: Y-coordinate for dialog position
+         * - outDelay: Delay before fading out the dialog
+         * 
+         * Returns:
+         * - true if instruction is shown, false otherwise
+         */
         try {
             if (!isInstruction) return false;
 
@@ -608,6 +871,13 @@ public class GameController {
     }
 
     private boolean checkEndGame() {
+        /*
+         * Checks if game ending conditions are met.
+         * 
+         * Returns:
+         * - true if all Pokemon are caught
+         * - false if uncaught Pokemon remain
+         */
         for (Pokemon pokemon : pokemons.values()) {
             if (pokemon.getOwner() == null) {
                 return false;
@@ -617,6 +887,15 @@ public class GameController {
     }
 
     private void endGame() throws IOException {
+        /*
+         * Handles game completion and results display.
+         * 
+         * Features:
+         * - Loads result scene
+         * - Sets up background
+         * - Displays final scores
+         * - Shows player rankings
+         */
         Stage stage = (Stage) borderPane.getScene().getWindow(); 
         GameUtils.loadScene("/com/example/result/result.fxml", "Results", stage, loader -> {
             Parent root = loader.getRoot(); // Reuse the already loaded root
