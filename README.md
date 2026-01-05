@@ -291,9 +291,6 @@ The project uses Git for version control with organized commit history and branc
 - Performance testing for resource-intensive operations
 - Cross-platform compatibility verification
 
-### Known Issues & Future Enhancements
-_(This section can be expanded based on project status)_
-
 ---
 
 ## Documentation
@@ -356,7 +353,7 @@ All dependencies are managed through Maven and use permissive licenses:
 ## Contact & Support
 
 ### Academic Context
-This project was developed as part of an Object-Oriented Programming course at [University Name], Winter Semester 2024/2025.
+This project was developed as part of an Object-Oriented Programming course at [Frankfurt University of Applied Science], Winter Semester 2024/2025.
 
 ### Development Team Contact
 For technical inquiries or project demonstrations:
@@ -369,13 +366,3 @@ For technical inquiries or project demonstrations:
 ## Conclusion
 
 **Age of Pokemon** demonstrates professional software development practices, combining technical excellence with engaging gameplay. The project showcases strong object-oriented design, clean architecture, and attention to detail in both functionality and user experience. This application represents a complete, polished product suitable for portfolio demonstration and further development.
-
-### Key Takeaways
-✅ Professional desktop application development with Java  
-✅ Modern UI/UX design with JavaFX  
-✅ Clean, maintainable code architecture  
-✅ Complete game logic implementation  
-✅ Multimedia integration  
-✅ Cross-platform compatibility  
-✅ Comprehensive documentation  
-✅ Team collaboration and version control  
