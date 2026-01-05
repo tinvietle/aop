@@ -249,7 +249,7 @@ git clone [repository-url]
 cd aop
 
 # Download and extract assets
-# Download assets.zip from Google Drive: [Download Link]
+# Download assets.zip from Google Drive: [Download link](https://drive.google.com/file/d/1x1IxnKer0q6n_n-lcB70AvnMa732DxmZ/view?usp=sharing)
 # Extract to: src/main/resources/com/example/assets/
 
 # Build with Maven
@@ -262,11 +262,7 @@ mvn javafx:run
 > ⚠️ **Important**: The application requires the assets folder to run. Download `assets.zip` from Google Drive and extract it to the correct location before building.
 
 #### Generating Executable
-The project includes Launch4j configuration for creating Windows executables:
-```bash
-# Use Launch4j with the provided launch4j.xml configuration
-launch4j launch4j.xml
-```
+The project includes Launch4j configuration for creating Windows executables.
 
 ---
 
