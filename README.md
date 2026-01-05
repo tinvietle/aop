@@ -145,7 +145,7 @@ aop/
 
 > **📦 Note on Assets**: Due to the large size of multimedia assets (images, audio, video), the `assets/` folder is not included in the GitHub repository. 
 > 
-> **Download Assets**: `assets.zip` is available on Google Drive: [Download Link]
+> **Download Assets**: `assets.zip` is available on Google Drive: [Download link](https://drive.google.com/file/d/1x1IxnKer0q6n_n-lcB70AvnMa732DxmZ/view?usp=sharing)
 > 
 > After downloading, extract the contents to `src/main/resources/com/example/assets/` to run the application from source.
 
@@ -235,11 +235,6 @@ aop/
 
 ## Installation & Deployment
 
-### For End Users (Windows)
-1. Download the application package containing `AgeOfPokemon.exe`
-2. Ensure the bundled JRE folder is present in the same directory
-3. Double-click `AgeOfPokemon.exe` to launch
-
 ### For Developers
 
 #### Prerequisites
@@ -309,8 +304,7 @@ _(This section can be expanded based on project status)_
 
 ### Available Documentation
 - **[OOP_Java___AOP.pdf](report/OOP_Java___AOP.pdf)**: Complete project report with detailed analysis
-- **README.md**: User installation and execution guide
-- **COMPANY_README.md**: Technical and business overview (this document)
+- **README.md**: documentation for this project
 - **JavaDoc Comments**: Inline code documentation
 - **FXML Files**: UI structure documentation
 - **Screenshots**: Visual documentation in `report/` folder
