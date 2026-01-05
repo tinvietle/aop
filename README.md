@@ -134,7 +134,6 @@ aop/
 ├── pom.xml                                  # Maven configuration
 ├── launch4j.xml                             # Windows executable config
 ├── README.md                                # User documentation
-├── COMPANY_README.md                        # This document
 ├── assets.zip                               # Compressed assets (not in repo)
 └── report/                                  # Project documentation
     ├── OOP_Java___AOP.pdf                   # Full project report
