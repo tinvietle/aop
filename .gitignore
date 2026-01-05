@@ -1,7 +1,3 @@
-src/main/resources/com/example/assets/
-target/classes/com/example/assets/
-
-
 instruction.txt
 launch4j.log
 JRE/
@@ -10,3 +6,8 @@ aop.jar
 AgeOfPokemon.exe
 icon.ico
 instruction.md
+
+# Assets - too large for GitHub, available on Google Drive
+src/main/resources/com/example/assets/
+assets.zip
+target/classes/com/example/assets/
